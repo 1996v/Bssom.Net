@@ -10,12 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using BssomSerializers.Resolver;
 
-[assembly: InternalsVisibleTo("Benchmark")]
-[assembly: InternalsVisibleTo(MapCodeGenResolver.ModuleName)]
-[assembly: InternalsVisibleTo(IDictionaryResolver.ModuleName)]
-[assembly: InternalsVisibleTo(ICollectionResolver.ModuleName)]
-[assembly: InternalsVisibleTo("AssemblyBuilder")]
-[assembly: InternalsVisibleTo("BssomSerializers.Test")]
+
 namespace BssomSerializers
 {
     public static class BssomSerializer
