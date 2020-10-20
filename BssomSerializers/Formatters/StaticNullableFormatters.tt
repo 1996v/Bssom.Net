@@ -1,0 +1,119 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+
+<#  
+  var buildInTypes = new string[]{"Int8","Int16","Int32","Int64","UInt8","UInt16","UInt32","UInt64","Float32","Float64","Boolean"};//datetime,string
+  var nativeTypes = new string[] {"Char","Decimal","Guid"};//nativeDatetime
+#>
+using BssomSerializers.Binary;
+using BssomSerializers.BssMap.KeyResolvers;
+using BssomSerializers.Internal;
+using BssomSerializers.BssomBuffer;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BssomSerializers.Formatters
+{
+ <#foreach(var name in buildInTypes){#>
+    /// <summary>
+    /// Format <see cref="<#=AliasMap(name)#>"/>? as BssomType.Null or BssomType.<#=name#> 
+    /// </summary>
+    public sealed class StaticNullable<#=name#>Formatter : IBssomFormatter<<#=AliasMap(name)#>?>
+    {
+        public static readonly StaticNullable<#=name#>Formatter Instance = new StaticNullable<#=name#>Formatter();
+
+        private StaticNullable<#=name#>Formatter()
+        {
+        }
+
+        public int Size(ref BssomSizeContext context, <#=AliasMap(name)#>? value)
+        {
+            if(value == null)
+                return BssomBinaryPrimitives.NullSize;
+            return BssomBinaryPrimitives.<#=name#>Size + BssomBinaryPrimitives.BuildInTypeCodeSize;
+        }
+
+        public <#=AliasMap(name)#>? Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
+        {
+            if (reader.TryReadNull())
+                return default;
+            return reader.Read<#=name#>();
+        }
+
+        public void Serialize(ref BssomWriter writer, ref BssomSerializeContext context, <#=AliasMap(name)#>? value)
+        {
+            if (value == null)
+            {
+                writer.WriteNull();
+                return;
+            }
+            writer.Write(value.Value);
+        }
+    }
+<#}#>
+
+ <#foreach(var name in nativeTypes){#>
+    /// <summary>
+    /// Format <see cref="<#=AliasMap(name)#>"/>? as BssomType.Null or BssomType.<#=name#> 
+    /// </summary>
+    public sealed class StaticNullable<#=name#>Formatter : IBssomFormatter<<#=AliasMap(name)#>?>
+    {
+        public static readonly StaticNullable<#=name#>Formatter Instance = new StaticNullable<#=name#>Formatter();
+
+        private StaticNullable<#=name#>Formatter()
+        {
+        }
+
+        public int Size(ref BssomSizeContext context, <#=AliasMap(name)#>? value)
+        {
+            if(value == null)
+                return BssomBinaryPrimitives.NullSize;
+            return BssomBinaryPrimitives.<#=name#>Size + BssomBinaryPrimitives.NativeTypeCodeSize;
+        }
+
+        public <#=AliasMap(name)#>? Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
+        {
+            if (reader.TryReadNull())
+                return default;
+            return reader.Read<#=name#>();
+        }
+
+        public void Serialize(ref BssomWriter writer, ref BssomSerializeContext context, <#=AliasMap(name)#>? value)
+        {
+            if (value == null)
+            {
+                writer.WriteNull();
+                return;
+            }
+            writer.Write(value.Value);
+        }
+    }
+<#}#>
+}
+
+
+<#+    
+string AliasMap(string name)
+{
+    if(name=="Int8")
+            return "SByte";
+    else if(name=="UInt8")
+            return "Byte";
+    else if(name=="Float32")
+            return "Single";
+    else if(name=="Float64")
+            return "Double";
+    else 
+            return name;
+} 
+#>

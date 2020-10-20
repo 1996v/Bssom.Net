@@ -1,0 +1,189 @@
+﻿            int keyLength = key.Length;
+            if (paras.MapHead.MaxDepth < keyLength)
+                goto ReturnFalse;
+
+            ref byte refBase = ref ref1;
+            int keyPos = 0;
+            AutomateReadOneKeyState token = AutomateReadOneKeyState.ReadNextBranch;
+            BssMapRouteToken t = default;
+            byte nextKeyByteCount = 0;
+            ulong value1 = 0;
+            int mapHeadSize = paras.MapHeadSize;
+            
+            switch (token)
+            {
+                case AutomateReadOneKeyState.ReadNextBranch:
+                    {
+                        t = Unsafe.ReadUnaligned<BssMapRouteToken>(ref ref1);
+                        ref1 = ref Unsafe.Add(ref ref1, 1);
+
+                        while (t >= BssMapRouteToken.LessThen1 && t <= BssMapRouteToken.LessThen8)
+                        {
+                            ref1 = ref Unsafe.Add(ref ref1, 1);//skip FixUInt16Code
+                            ushort nextOff = BssomBinaryPrimitives.ReadUInt16LittleEndian(ref ref1);
+
+                            //read branch keyByte
+                            if (t == BssMapRouteToken.LessThen8)
+                            {
+                                //Read Little Endian 8Bytes
+                                value1 = BssomBinaryPrimitives.ReadUInt64LittleEndian(ref Unsafe.Add(ref ref1, 2));
+                                ref1 = ref Unsafe.Add(ref ref1, 2 + 8);
+                            }
+                            else
+                            {
+                                nextKeyByteCount = BssMapRouteTokenHelper.GetLessThenByteCount(t);
+
+                                //Read Raw(lessthan 8 byte)
+                                value1 = 0;
+                                Unsafe.CopyBlock(ref Unsafe.As<ulong, byte>(ref value1), ref Unsafe.Add(ref ref1, 2), nextKeyByteCount);
+                                value1 = BssomBinaryPrimitives.ReadRawUInt64LittleEndian(value1);
+                                ref1 = ref Unsafe.Add(ref ref1, 2 + nextKeyByteCount);
+                            }
+
+                            if (key[keyPos] > value1)//goto lessElse
+                            {
+                                ref1 = ref Unsafe.Add(ref refBase, nextOff - mapHeadSize);
+                                if (Unsafe.ReadUnaligned<BssMapRouteToken>(ref ref1) != BssMapRouteToken.LessElse)
+                                    throw BssomSerializationOperationException.UnexpectedCodeRead(ref1, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                                ref1 = ref Unsafe.Add(ref ref1, 1);
+                            }
+
+                            //read children branch head
+                            t = Unsafe.ReadUnaligned<BssMapRouteToken>(ref ref1);
+                            ref1 = ref Unsafe.Add(ref ref1, 1);
+                        }
+
+                        while (t >= BssMapRouteToken.EqualNext1 && t <= BssMapRouteToken.EqualNextN)
+                        {
+                            ref1 = ref Unsafe.Add(ref ref1, 1);//skip FixUInt16Code
+                            ushort nextOff = BssomBinaryPrimitives.ReadUInt16LittleEndian(ref ref1);
+                            ref1 = ref Unsafe.Add(ref ref1, 2);
+
+                            //read keyByte
+                            if (t == BssMapRouteToken.EqualNextN || t == BssMapRouteToken.EqualNext8)
+                            {
+                                //Read Little Endian 8Bytes
+                                value1 = BssomBinaryPrimitives.ReadUInt64LittleEndian(ref ref1);
+                                ref1 = ref Unsafe.Add(ref ref1, 8);
+                            }
+                            else // t >= BssMapRouteToken.EqualNext1 && t < BssMapRouteToken.EqualNext8)
+                            {
+                                nextKeyByteCount = BssMapRouteTokenHelper.GetEqualNextOrLastByteCount(t);
+
+                                //Read Raw(lessthan 8 byte)
+                                value1 = 0;
+                                Unsafe.CopyBlock(ref Unsafe.As<ulong, byte>(ref value1), ref ref1, nextKeyByteCount);
+                                value1 = BssomBinaryPrimitives.ReadRawUInt64LittleEndian(value1);
+                                ref1 = ref Unsafe.Add(ref ref1, nextKeyByteCount);
+                            }
+                            
+                            ulong keyValue = key[keyPos];
+                            if (keyValue > value1)
+                            {
+                                ref1 = ref Unsafe.Add(ref refBase, nextOff - mapHeadSize);
+
+                                //read next loop head
+                                t = Unsafe.ReadUnaligned<BssMapRouteToken>(ref ref1);
+                                ref1 = ref Unsafe.Add(ref ref1, 1);
+                            }
+                            else if (keyValue == value1)
+                            {
+                                if (keyPos != keyLength - 1)
+                                {
+                                    if (t != BssMapRouteToken.EqualNextN)
+                                    {
+                                        //skip keyType and valoffset
+                                        ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                    }
+                                    keyPos++;
+                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                }
+                                else
+                                {
+                                    if (t == BssMapRouteToken.EqualNextN)
+                                        goto ReturnFalse;
+
+                                    goto TryReadValue;
+                                }
+                            }
+                            else//keyValue < value1
+                            {
+                                goto ReturnFalse;
+                            }
+                        }
+
+                        if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
+                        {
+                            ref1 = ref Unsafe.Add(ref ref1, 1);//skip FixUInt16Code
+                            ushort nextOff = BssomBinaryPrimitives.ReadUInt16LittleEndian(ref ref1);
+                            ref1 = ref Unsafe.Add(ref ref1, 2);
+
+                            //read keyByte
+                            if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
+                            {
+                                //Read Little Endian 8Bytes
+                                value1 = BssomBinaryPrimitives.ReadUInt64LittleEndian(ref ref1);
+                                ref1 = ref Unsafe.Add(ref ref1, 8);
+                            }
+                            else // t >= BssMapRouteToken.EqualLast1 && t < BssMapRouteToken.EqualLast8)
+                            {
+                                nextKeyByteCount = BssMapRouteTokenHelper.GetEqualNextOrLastByteCount(t);
+
+                                //Read Raw(lessthan 8 byte)
+                                value1 = 0;
+                                Unsafe.CopyBlock(ref Unsafe.As<ulong, byte>(ref value1), ref ref1, nextKeyByteCount);
+                                value1 = BssomBinaryPrimitives.ReadRawUInt64LittleEndian(value1);
+                                ref1 = ref Unsafe.Add(ref ref1, nextKeyByteCount);
+                            }
+
+                            if (key[keyPos] == value1)
+                            {
+                                if (keyPos != keyLength - 1)
+                                {
+                                    if (t != BssMapRouteToken.EqualLastN)
+                                    {
+                                        //skip keyType and valoffset
+                                        ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                    }
+                                    keyPos++;
+                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                }
+                                else
+                                {
+                                    if (t == BssMapRouteToken.EqualLastN)
+                                        goto ReturnFalse;
+
+                                    goto TryReadValue;
+                                }
+                            }
+                            else
+                            {
+                                goto ReturnFalse;
+                            }
+                        }
+
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                    }
+
+                case AutomateReadOneKeyState.ReadChildren:
+                    {
+                        t = Unsafe.ReadUnaligned<BssMapRouteToken>(ref ref1);
+                        if (t == BssMapRouteToken.HasChildren)
+                        {
+                            ref1 = ref Unsafe.Add(ref ref1, 1);
+                            goto case AutomateReadOneKeyState.ReadNextBranch;
+                        }
+                        goto ReturnFalse;
+                    }
+            }
+
+        TryReadValue:
+            //verify keyType
+            if (keyIsNativeType)
+            {
+                if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
+                    throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                ref1 = Unsafe.Add(ref ref1, 1);
+            }
+            if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
+                   throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));

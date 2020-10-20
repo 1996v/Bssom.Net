@@ -1,0 +1,107 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using BssomSerializers.Binary;
+using BssomSerializers.BssMap.KeyResolvers;
+using BssomSerializers.Internal;
+using BssomSerializers.BssomBuffer;
+using BssomSerializers.BssMap;
+using BssomSerializers.Resolver;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
+using System.Text;
+
+namespace BssomSerializers.Internal
+{
+<# 
+    Func<string,string> GetFclName = (n) => {
+        if(n=="Int8")
+             return "SByte";
+         else if(n=="UInt8")
+             return "Byte";
+         else if(n=="Float32")
+             return "Single";
+         else if(n=="Float64")
+             return "Double";
+         else 
+             return n;
+    };
+
+  var buildInTypes = new string[]{"Int8","Int16","Int32","Int64","UInt8","UInt16","UInt32","UInt64","Float32","Float64","Boolean"};//datetime,string
+  var nativeTypes = new string[] {"Char","Decimal","Guid"};//nativeDatetime
+    foreach(var name in buildInTypes.Union(nativeTypes)) {
+        var isNativeType=nativeTypes.Contains(name);
+        var fclName=GetFclName(name);
+        var typeCode="BssomType."+name+"Code";
+        var isNativeTypeStr="false";
+        if(nativeTypes.Contains(name)){
+            isNativeTypeStr="true";
+            typeCode="NativeBssomType."+name+"Code";
+        }
+#>
+    internal sealed class <#=name#>Array1ElementWriter : IArray1ElementWriter<<#=fclName#>>
+    {
+        public readonly static <#=name#>Array1ElementWriter Instance = new <#=name#>Array1ElementWriter();
+
+        public void WriteElement(ref BssomWriter writer, BssomSerializerOptions option, BssomFieldOffsetInfo offsetInfo, <#=fclName#> value)
+        {
+            if (offsetInfo.Array1ElementTypeIsNativeType == <#=isNativeTypeStr#> && offsetInfo.Array1ElementType == <#=typeCode#>)
+                writer.WriteWithOutTypeHead(value);
+            else
+                BssomSerializationArgumentException.InvalidOffsetInfoFormat<<#=fclName#>>();
+        }
+        public <#=fclName#> ReadElement(ref BssomReader reader, BssomSerializerOptions option, BssomFieldOffsetInfo offsetInfo)
+        {
+            if (offsetInfo.Array1ElementTypeIsNativeType == <#=isNativeTypeStr#> && offsetInfo.Array1ElementType == <#=typeCode#>)
+                return reader.Read<#=name#>WithOutTypeHead();
+            return BssomSerializationArgumentException.InvalidOffsetInfoFormat<<#=fclName#>>();
+        }
+        public void WriteObjectElement(ref BssomWriter writer, BssomSerializerOptions option, BssomFieldOffsetInfo offsetInfo, object value)
+        {
+            WriteElement(ref writer, option, offsetInfo, (<#=fclName#>)value);
+        }
+        public object ReadObjectElement(ref BssomReader reader, BssomSerializerOptions option, BssomFieldOffsetInfo offsetInfo)
+        {
+            return ReadElement(ref reader, option, offsetInfo);
+        }      
+    }
+<#    }#>
+    internal sealed class DateTimeArray1ElementWriter : IArray1ElementWriter<DateTime>
+    {
+        public readonly static DateTimeArray1ElementWriter Instance = new DateTimeArray1ElementWriter();
+    
+        public void WriteElement(ref BssomWriter writer, BssomSerializerOptions option, BssomFieldOffsetInfo offsetInfo, DateTime value)
+        {
+            if (offsetInfo.Array1ElementTypeIsNativeType == false && offsetInfo.Array1ElementType == BssomType.DateTimeCode)
+                writer.Write(value, true, false);
+            else if (offsetInfo.Array1ElementTypeIsNativeType == true && offsetInfo.Array1ElementType == NativeBssomType.DateTimeCode)
+                writer.Write(value, false, false);
+            else
+                BssomSerializationArgumentException.InvalidOffsetInfoFormat<DateTime>();
+        }
+        public DateTime ReadElement(ref BssomReader reader, BssomSerializerOptions option, BssomFieldOffsetInfo offsetInfo)
+        {
+            if (offsetInfo.Array1ElementTypeIsNativeType == false && offsetInfo.Array1ElementType == BssomType.DateTimeCode)
+                return reader.ReadStandDateTimeWithOutTypeHead();
+            else if (offsetInfo.Array1ElementTypeIsNativeType == true && offsetInfo.Array1ElementType == NativeBssomType.DateTimeCode)
+                return reader.ReadNativeDateTimeWithOutTypeHead();
+            else
+                return BssomSerializationArgumentException.InvalidOffsetInfoFormat<DateTime>();
+        }
+        public void WriteObjectElement(ref BssomWriter writer, BssomSerializerOptions option, BssomFieldOffsetInfo offsetInfo, object value)
+        {
+            WriteElement(ref writer, option, offsetInfo, (DateTime)value);
+        }
+        public object ReadObjectElement(ref BssomReader reader, BssomSerializerOptions option, BssomFieldOffsetInfo offsetInfo)
+        {
+            return ReadElement(ref reader, option, offsetInfo);
+        } 
+    }
+}

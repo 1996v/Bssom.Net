@@ -1,0 +1,116 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading.Tasks;
+using BssomSerializers.Binary;
+using BssomSerializers.BssMap.KeyResolvers;
+using BssomSerializers.Internal;
+using BssomSerializers.BssomBuffer;
+using BssomSerializers.BssMap;
+namespace BssomSerializers.BssMap.KeyResolvers
+{
+<# 
+    Func<string,string> GetFclName = (n) => {
+        if(n=="Int8")
+             return "SByte";
+         else if(n=="UInt8")
+             return "Byte";
+         else if(n=="Float32")
+             return "Single";
+         else if(n=="Float64")
+             return "Double";
+         else 
+             return n;
+    };
+
+  var buildInTypes = new string[]{"Int8","Int16","Int32","Int64","UInt8","UInt16","UInt32","UInt64","Float32","Float64","Boolean"};//datetime,string
+  var nativeTypes = new string[] {"Char","Decimal","Guid"};//nativeDatetime
+  foreach(var name in buildInTypes.Union(nativeTypes)) {
+        var isNativeType=nativeTypes.Contains(name);
+        var fclName=GetFclName(name);
+        var typeCodeStr="BssomType."+name+"Code";
+        var boolT="false";
+
+        var write="Write"+name+"LittleEndian";
+        if(name=="Int8")
+            write="WriteInt8";
+        if(name=="UInt8")
+            write="WriteUInt8";
+        if(name=="Decimal")
+            write="WriteDecimal";
+        if(name=="Guid")
+            write="WriteGuid";
+        if(name=="Boolean")
+            write="WriteBoolean";
+        var read="Read"+name+"LittleEndian";
+        if(name=="Int8")
+            read="ReadInt8";
+        if(name=="Decimal")
+            read="ReadDecimal";
+        if(name=="Guid")
+            read="ReadGuid";
+        if(name=="Boolean")
+            read="ReadBoolean";
+        if(name=="UInt8")
+            read="ReadUInt8";
+        if(isNativeType){
+            typeCodeStr="NativeBssomType."+name+"Code";
+            boolT="true";
+        }
+      
+#>
+    internal class BssMap<#=name#>KeyResolver : IBssMapKeyResolver<<#=fclName#>>
+    {
+        public static BssMap<#=name#>KeyResolver Insance = new BssMap<#=name#>KeyResolver();
+
+        public byte KeyType => <#=typeCodeStr#>;
+
+        public bool KeyIsNativeType => <#=boolT#>;
+
+        public Raw64BytesISegment GetMap1KeySegment(<#=fclName#> key)
+        {
+            byte[] bs = new byte[BssomBinaryPrimitives.<#=name#>Size];
+            Unsafe.WriteUnaligned(ref bs[0], key);
+            return new Raw64BytesISegment(bs);
+        }
+
+        public Raw64BytesISegment GetMap1KeySegment(object key)
+        {
+            return GetMap1KeySegment((<#=fclName#>)key);
+        }
+
+        public UInt64BytesISegment GetMap2KeySegment(<#=fclName#> key)
+        {
+            byte[] bs = new byte[BssomBinaryPrimitives.<#=name#>Size];
+            BssomBinaryPrimitives.<#=write#>(ref bs[0], key);
+            return new UInt64BytesISegment(bs);
+        }
+
+        public UInt64BytesISegment GetMap2KeySegment(object key)
+        {
+            return GetMap2KeySegment((<#=fclName#>)key);
+        }
+
+        public unsafe <#=fclName#> ReadMap2Key(IIteration<byte> key)
+        {
+            return BssomBinaryPrimitives.<#=read#>(ref key.GetFirstElementReference(out bool isContiguousMemoryArea));
+        }
+
+        object IBssMapKeyResolver.ReadMap2Key(IIteration<byte> key)
+        {
+            return ReadMap2Key(key);
+        }
+    }
+<#}#>
+}

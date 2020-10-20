@@ -1,0 +1,3 @@
+﻿
+            //seek valOffset
+            reader.BssomBuffer.Seek(BssomBinaryPrimitives.ReadUInt32LittleEndian(ref Unsafe.Add(ref ref1, 1 + 1)) + paras.ReadPosition);

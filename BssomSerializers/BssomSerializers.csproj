@@ -1,0 +1,145 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>
+      net45;net47;netstandard2.0;netcoreapp3.1;netcoreapp2.1
+    </TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net45|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net45|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net47|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net47|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.1|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp2.1|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp3.1|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp3.1|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Buffers" Version="4.5.1" />
+    <PackageReference Include="System.Collections" Version="4.3.0" />
+    <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.7.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Binary\BssomReader.BuildInTypeImpl.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>BssomReader.BuildInTypeImpl.cs</LastGenOutput>
+    </None>
+    <None Update="Binary\BssomWriter.BuildInTypeImpl.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>BssomWriter.BuildInTypeImpl.cs</LastGenOutput>
+    </None>
+    <None Update="BssMap\BssMapObjMarshalReader.Helper.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>BssMapObjMarshalReader.Helper.cs</LastGenOutput>
+    </None>
+    <None Update="BssomMarshal\Array1ElementWriters.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Array1ElementWriters.cs</LastGenOutput>
+    </None>
+    <None Update="Formatters\Formatter.Array1.Array.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Formatter.Array1.Array.cs</LastGenOutput>
+    </None>
+    <None Update="Formatters\Formatter.Array1.ArraySegement.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Formatter.Array1.ArraySegement.cs</LastGenOutput>
+    </None>
+    <None Update="Formatters\Formatter.Array1.Helper.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Formatter.Array1.Helper.cs</LastGenOutput>
+    </None>
+    <None Update="Formatters\Formatter.Array1.List.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Formatter.Array1.List.cs</LastGenOutput>
+    </None>
+    <None Update="Formatters\PrimitiveFormatter.General.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>PrimitiveFormatter.General.cs</LastGenOutput>
+    </None>
+    <None Update="Formatters\StaticNullableFormatters.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>StaticNullableFormatters.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Binary\BssomReader.BuildInTypeImpl.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>BssomReader.BuildInTypeImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Binary\BssomWriter.BuildInTypeImpl.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>BssomWriter.BuildInTypeImpl.tt</DependentUpon>
+    </Compile>
+    <Compile Update="BssMap\BssMapObjMarshalReader.Helper.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>BssMapObjMarshalReader.Helper.tt</DependentUpon>
+    </Compile>
+    <Compile Update="BssomMarshal\Array1ElementWriters.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Array1ElementWriters.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Formatters\Formatter.Array1.Array.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Formatter.Array1.Array.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Formatters\Formatter.Array1.ArraySegement.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Formatter.Array1.ArraySegement.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Formatters\Formatter.Array1.Helper.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Formatter.Array1.Helper.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Formatters\Formatter.Array1.List.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Formatter.Array1.List.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Formatters\PrimitiveFormatter.General.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>PrimitiveFormatter.General.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Formatters\StaticNullableFormatters.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>StaticNullableFormatters.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+
+</Project>

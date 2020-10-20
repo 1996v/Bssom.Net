@@ -1,0 +1,89 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using BssomSerializers.Internal;
+using BssomSerializers.Binary;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading.Tasks;
+namespace BssomSerializers
+{
+    //BuildInTypeCode
+    public partial struct BssomWriter
+    {
+<# 
+    Func<string,string> GetFclName = (n) => {
+        if(n=="Int8")
+             return "SByte";
+         else if(n=="UInt8")
+             return "Byte";
+         else if(n=="Float32")
+             return "Single";
+         else if(n=="Float64")
+             return "Double";
+         else 
+             return n;
+    };
+
+  var buildInTypes = new string[]{"Int8","Int16","Int32","Int64","UInt8","UInt16","UInt32","UInt64","Float32","Float64","Boolean"};//datetime,string
+  var nativeTypes = new string[] {"Char","Decimal","Guid"};//nativeDatetime
+  foreach(var name in buildInTypes.Union(nativeTypes)) {
+        var isNativeType=nativeTypes.Contains(name);
+        var fclName=GetFclName(name);
+        var eleSize="BssomBinaryPrimitives."+name+"Size";
+        var lenWithOutHeadStr="BssomBinaryPrimitives.BuildInTypeCodeSize";
+        var lenStr="BssomBinaryPrimitives."+name+"Size + BssomBinaryPrimitives.BuildInTypeCodeSize;";
+        var writeTypeStr="BssomBinaryPrimitives.WriteBuildInType(ref refb,BssomType."+name+"Code);";
+        var codeSizeStr="BuildInTypeCodeSize";
+        if(nativeTypes.Contains(name)){
+            lenWithOutHeadStr="BssomBinaryPrimitives.NativeTypeCodeSize";
+            eleSize="BssomBinaryPrimitives."+name+"Size";
+            lenStr="BssomBinaryPrimitives."+name+"Size + BssomBinaryPrimitives.NativeTypeCodeSize;";
+            writeTypeStr="BssomBinaryPrimitives.WriteNativeType(ref refb, NativeBssomType."+name+"Code);";
+            codeSizeStr="NativeTypeCodeSize";
+}
+#>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal void Write(<#=fclName#> value)
+        {
+            const int len = <#=lenStr#>
+            ref byte refb = ref BufferWriter.GetRef(len);
+            <#=writeTypeStr#>
+            BssomBinaryPrimitives.<#=WriteFunctionNameMap(name)#>(ref Unsafe.Add(ref refb, BssomBinaryPrimitives.<#=codeSizeStr#>), value);
+            BufferWriter.Advance(len);
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal void WriteWithOutTypeHead(<#=fclName#> value)
+        {
+            BssomBinaryPrimitives.<#=WriteFunctionNameMap(name)#>(ref BufferWriter.GetRef(<#=eleSize#>), value);
+            BufferWriter.Advance(<#=eleSize#>);
+        }
+<#    } #>
+    }
+}
+
+<#+    
+string WriteFunctionNameMap(string name)
+{
+    if(name=="Int8")
+            return "WriteInt8";
+    else if(name=="UInt8")
+             return "WriteUInt8";
+    else if(name=="Decimal")
+            return "WriteDecimal";
+    else if(name=="Boolean")
+            return "WriteBoolean";
+    else if(name=="Guid")
+            return "WriteGuid";
+    else 
+            return "Write"+name+"LittleEndian";
+} 
+#>

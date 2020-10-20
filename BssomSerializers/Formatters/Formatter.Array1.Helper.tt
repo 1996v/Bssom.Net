@@ -1,0 +1,279 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading.Tasks;
+using BssomSerializers.Binary;
+using BssomSerializers.BssMap.KeyResolvers;
+using BssomSerializers.Internal;
+using BssomSerializers.BssomBuffer;
+namespace BssomSerializers.Internal
+{
+    internal static partial class Array1FormatterHelper
+    {
+        public readonly static string DeserializeSetPrefix = "DeserializeSet";
+        public readonly static string FillPrefix = "Fill";
+
+<# 
+    Func<string,string> GetFclName = (n) => {
+        if(n=="Int8")
+             return "SByte";
+         else if(n=="UInt8")
+             return "Byte";
+         else if(n=="Float32")
+             return "Single";
+         else if(n=="Float64")
+             return "Double";
+         else 
+             return n;
+    };
+
+  var buildInTypes = new string[]{"Int8","Int16","Int32","Int64","UInt8","UInt16","UInt32","UInt64","Float32","Float64","Boolean"};//datetime,string
+  var nativeTypes = new string[] {"Char","Decimal","Guid"};//nativeDatetime
+    foreach(var name in buildInTypes.Union(nativeTypes)) {
+        var isNativeType=nativeTypes.Contains(name);
+        var fclName=GetFclName(name);
+        var typeCodeStr="BuildInTypeCodeSize";
+        if(nativeTypes.Contains(name))
+            typeCodeStr="NativeTypeCodeSize";
+        
+        var sizeWithOutTypeHeadStr="BssomBinaryPrimitives.Array1TypeSizeWithOutTypeHeadAndLength(BssomBinaryPrimitives."+name+"Size, count)";
+        //Size
+        var codeStr="BssomBinaryPrimitives.Array1BuildInTypeCodeSize";
+        if(isNativeType)
+            codeStr="BssomBinaryPrimitives.Array1NativeTypeCodeSize";
+        var sizeStr="BssomBinaryPrimitives.Array1BuildInTypeSize(BssomBinaryPrimitives."+name+"Size, count)";
+        if(isNativeType)
+            sizeStr="BssomBinaryPrimitives.Array1NativeTypeSize(BssomBinaryPrimitives."+name+"Size, count)";
+        //Deserialize
+        var tryEnsureStr="TryReadNullWithEnsureArray1BuildInType(BssomType."+name+"Code)";
+        if(isNativeType)
+            tryEnsureStr="TryReadNullWithEnsureArray1NativeType(NativeBssomType."+name+"Code)";
+        //Serialize
+        var writeTypeStr="WriteArray1BuildInType(BssomType."+name+"Code)";
+        if(isNativeType)
+            writeTypeStr="WriteArray1NativeType(NativeBssomType."+name+"Code)";
+#>
+        #region Serialize/Size IEnumerable<<#=fclName#>> to Array1 . Deserialize to HashSet<<#=fclName#>> /Fill to class:IColloction<<#=fclName#>>
+
+        public static void SerializeIEnumerable(ref BssomWriter writer, ref BssomSerializeContext context, IEnumerable<<#=fclName#>> value)
+        {
+            if (value == null)
+            {
+                writer.WriteNull();
+                return;
+            }
+            writer.<#=writeTypeStr#>;
+            if (value.TryGetICollectionCount(out int count))
+            {
+                writer.WriteVariableNumber(<#=sizeWithOutTypeHeadStr#>);
+                writer.WriteVariableNumber(count);
+                foreach (var item in value)
+                {
+                    context.CancellationToken.ThrowIfCancellationRequested();
+                    writer.WriteWithOutTypeHead(item);
+                }
+            }
+            else
+            {
+                count = 0;
+                long posLen = writer.FillUInt32FixNumber();//len
+                long posCount = writer.FillUInt32FixNumber();//count
+                foreach (var item in value)
+                {
+                    context.CancellationToken.ThrowIfCancellationRequested();
+                    count++;
+                    writer.WriteWithOutTypeHead(item);
+                }
+                long cPos = writer.Position;
+                writer.BufferWriter.Seek(posLen);
+                writer.WriteBackFixNumber((int)(cPos - posCount));
+                writer.WriteBackFixNumber(count);
+                writer.BufferWriter.Seek(cPos);
+            }
+        }
+
+        public static int SizeIEnumerable(ref BssomSizeContext context, IEnumerable<<#=fclName#>> value)
+        {
+            if (value == null)
+                return BssomBinaryPrimitives.NullSize;
+
+            if (value.TryGetICollectionCount(out int count))
+            {
+                return <#=sizeStr#>;
+            }
+            count = value.Count();
+<#      var fillCountSizeStr ="BssomBinaryPrimitives.Array1BuildInTypeWithNeedFillCount(BssomBinaryPrimitives."+name+"Size, count)";
+        if(isNativeType)
+             fillCountSizeStr="BssomBinaryPrimitives.Array1NativeTypeWithNeedFillCount(BssomBinaryPrimitives."+name+"Size, count)";
+#>
+            return <#=fillCountSizeStr#>;
+        }
+
+        public static HashSet<<#=fclName#>> DeserializeSet<#=name#>(ref BssomReader reader, ref BssomDeserializeContext context)
+        {
+            if (reader.<#=tryEnsureStr#>)
+                return default;
+
+            reader.SkipVariableNumber();
+            int count = reader.ReadVariableNumber();
+            HashSet<<#=fclName#>> hash = new HashSet<<#=fclName#>>();
+            for (int i = 0; i < count; i++)
+            {
+                context.CancellationToken.ThrowIfCancellationRequested();
+                hash.Add(reader.Read<#=name#>WithOutTypeHead());
+            }
+            return hash;
+        }
+
+        public static void Fill<#=name#><T>(ref T t, ref BssomReader reader, ref BssomDeserializeContext context, int count) where T : ICollection<<#=fclName#>>
+        {
+            var coll = (ICollection<<#=fclName#>>)t;
+            for (int i = 0; i < count; i++)
+            {
+                context.CancellationToken.ThrowIfCancellationRequested();
+                coll.Add(reader.Read<#=name#>WithOutTypeHead());
+            }
+        }
+
+        #endregion
+
+<#}#>
+        #region DateTime
+        public static void SerializeIEnumerable(ref BssomWriter writer, ref BssomSerializeContext context, IEnumerable<DateTime> value)
+        {
+            if (value == null)
+            {
+                writer.WriteNull();
+                return;
+            }
+            
+            if (value.TryGetICollectionCount(out int count))
+            {
+                if (context.Option.IsUseStandardDateTime)
+                    writer.WriteArray1BuildInType(BssomType.DateTimeCode);
+                else
+                    writer.WriteArray1NativeType(NativeBssomType.DateTimeCode);
+
+                long posLen = writer.FillUInt32FixNumber();//len
+                writer.WriteVariableNumber(count);
+                foreach (var item in value)
+                {
+                    context.CancellationToken.ThrowIfCancellationRequested();
+                    writer.Write(item, context.Option.IsUseStandardDateTime, false);
+                }
+
+                writer.WriteBackFixNumber(posLen, checked((int)(writer.Position - posLen - BssomBinaryPrimitives.FixUInt32NumberSize)));
+            }
+            else
+            {
+                if (context.Option.IsUseStandardDateTime)
+                    writer.WriteArray1BuildInType(BssomType.DateTimeCode);
+                else
+                    writer.WriteArray1NativeType(NativeBssomType.DateTimeCode);
+                count = 0;
+                long posLen = writer.FillUInt32FixNumber();
+                long posCount = writer.FillUInt32FixNumber();
+                foreach (var item in value)
+                {
+                    context.CancellationToken.ThrowIfCancellationRequested();
+                    count++;
+                    writer.Write(item, context.Option.IsUseStandardDateTime, false);
+                }
+                long cPos = writer.Position;
+                writer.BufferWriter.Seek(posLen);
+                writer.WriteBackFixNumber((int)(cPos - posCount));
+                writer.WriteBackFixNumber(count);
+                writer.BufferWriter.Seek(cPos);
+            }
+        }
+
+        public static int SizeIEnumerable(ref BssomSizeContext context, IEnumerable<DateTime> value)
+        {
+            if (value == null)
+                return BssomBinaryPrimitives.NullSize;
+
+            if (value.TryGetICollectionCount(out int count))
+            {
+                if (context.Option.IsUseStandardDateTime)
+                {
+                    long dataLen = 0;
+                    foreach (var item in value)
+                    {
+                        dataLen += BssomBinaryPrimitives.StandardDateTimeSize(item);
+                    }
+                    return BssomBinaryPrimitives.DateTimeArraySize(count, dataLen);
+                }
+                else
+                {
+                    return BssomBinaryPrimitives.NativeDateTimeArraySize(count);
+                }
+            }
+            else
+            {
+                if (context.Option.IsUseStandardDateTime)
+                {
+                    long dataLen = 0;
+                    foreach (var item in value)
+                    {
+                        dataLen += BssomBinaryPrimitives.StandardDateTimeSize(item);
+                    }
+                    return BssomBinaryPrimitives.DateTimeArraySizeWithOutCount(dataLen);
+                }
+                else
+                {
+                    return BssomBinaryPrimitives.NativeDateTimeArraySizeWithOutCount(value.Count());
+                }
+            }
+        }
+
+        public static HashSet<DateTime> DeserializeSetDateTime(ref BssomReader reader, ref BssomDeserializeContext context)
+        {
+            if (reader.TryReadNullWithEnsureBuildInType(BssomType.Array1))
+                return default;
+
+            HashSet<DateTime> hash;
+            int count;
+            byte type = reader.ReadBssomType();
+            switch (type)
+            {
+                case BssomType.DateTimeCode:
+                    reader.SkipVariableNumber();
+                    count = reader.ReadVariableNumber();
+                    hash = new HashSet<DateTime>();
+                    for (int i = 0; i < count; i++)
+                    {
+                        context.CancellationToken.ThrowIfCancellationRequested();
+                        hash.Add(reader.ReadStandDateTimeWithOutTypeHead());
+                    }
+                    break;
+                case BssomType.NativeCode:
+                    reader.EnsureType(NativeBssomType.DateTimeCode);
+                    reader.SkipVariableNumber();
+                    count = reader.ReadVariableNumber();
+                    hash = new HashSet<DateTime>();
+                    for (int i = 0; i < count; i++)
+                    {
+                        context.CancellationToken.ThrowIfCancellationRequested();
+                        hash.Add(reader.ReadNativeDateTimeWithOutTypeHead());
+                    }
+                    break;
+                default:
+                    throw BssomSerializationOperationException.UnexpectedCodeRead(type, reader.Position);
+            }
+
+            return hash;
+        }
+        #endregion
+    }
+}

@@ -1,0 +1,154 @@
+﻿            int keyLength = key.Length;
+            if (paras.MapHead.MaxDepth < keyLength)
+                goto ReturnFalse;
+
+            reader.BssomBuffer.Seek(paras.MapRouteDataStartPos);
+            int keyPos = 0;
+            AutomateReadOneKeyState token = AutomateReadOneKeyState.ReadNextBranch;
+            BssMapRouteToken t = default;
+            byte nextKeyByteCount = 0;
+            ulong value1 = 0;
+
+            switch (token)
+            {
+                case AutomateReadOneKeyState.ReadNextBranch:
+                    {
+                        t = reader.ReadMapToken();
+
+                        while (t >= BssMapRouteToken.LessThen1 && t <= BssMapRouteToken.LessThen8)
+                        {
+                            reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);//skip FixUInt16Code
+                            ushort nextOff = reader.ReadUInt16WithOutTypeHead();
+                            //read branch keyByte
+                            if (t == BssMapRouteToken.LessThen8)
+                            {
+                                //Read Little Endian 8Bytes
+                                value1 = reader.ReadUInt64WithOutTypeHead();
+
+                            }
+                            else
+                            {
+                                nextKeyByteCount = BssMapRouteTokenHelper.GetLessThenByteCount(t);
+
+                                //Read Raw(lessthan 8 byte)
+                                value1 = BssomBinaryPrimitives.ReadRawUInt64LittleEndian(reader.ReadRaw64(nextKeyByteCount));
+                            }
+                            if (key[keyPos] > value1)
+                            {
+                                reader.BssomBuffer.Seek(nextOff + paras.ReadPosition);
+                                reader.EnsureMapToken(BssMapRouteToken.LessElse);
+                            }
+                            t = reader.ReadMapToken();
+                        }
+
+                        while (t >= BssMapRouteToken.EqualNext1 && t <= BssMapRouteToken.EqualNextN)
+                        {
+                            reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);//skip FixUInt16Code
+                            ushort nextOff = reader.ReadUInt16WithOutTypeHead();
+
+                            //read keyByte
+                            if (t == BssMapRouteToken.EqualNextN || t == BssMapRouteToken.EqualNext8)
+                            {
+                                //Read Little Endian 8Bytes
+                                value1 = reader.ReadUInt64WithOutTypeHead();
+                            }
+                            else // t >= BssMapRouteToken.EqualNext1 && t < BssMapRouteToken.EqualNext8)
+                            {
+                                nextKeyByteCount = BssMapRouteTokenHelper.GetEqualNextOrLastByteCount(t);
+
+                                //Read Raw(lessthan 8 byte)
+                                value1 = BssomBinaryPrimitives.ReadRawUInt64LittleEndian(reader.ReadRaw64(nextKeyByteCount));
+                            }
+                            ulong keyValue = key[keyPos];
+                            if (keyValue > value1)
+                            {
+                                reader.BssomBuffer.SeekWithOutVerify(nextOff + paras.ReadPosition, BssomSeekOrgin.Begin);
+                                t = reader.ReadMapToken();
+                            }
+                            else if (keyValue == value1)
+                            {
+                                if (keyPos != keyLength - 1)
+                                {
+                                    if (t != BssMapRouteToken.EqualNextN)
+                                    {
+                                        //skip keyType and valoffset
+                                        reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                    }
+                                    keyPos++;
+                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                }
+                                else
+                                {
+                                    if (t == BssMapRouteToken.EqualNextN)
+                                        goto ReturnFalse;
+
+                                    goto TryReadValue;
+                                }
+                            }
+                            else//keyValue < value1
+                            {
+                                goto ReturnFalse;
+                            }
+                        }
+
+                        if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
+                        {
+                            reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);//skip FixUInt16Code
+                            ushort nextOff = reader.ReadUInt16WithOutTypeHead();
+
+                            //read keyByte
+                            if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
+                            {
+                                //Read Little Endian 8Bytes
+                                value1 = reader.ReadUInt64WithOutTypeHead();
+                            }
+                            else // t >= BssMapRouteToken.EqualLast1 && t < BssMapRouteToken.EqualLast8)
+                            {
+                                nextKeyByteCount = BssMapRouteTokenHelper.GetEqualNextOrLastByteCount(t);
+
+                                //Read Raw(lessthan 8 byte)
+                                value1 = BssomBinaryPrimitives.ReadRawUInt64LittleEndian(reader.ReadRaw64(nextKeyByteCount));
+                            }
+
+                            if (key[keyPos] == value1)
+                            {
+                                if (keyPos != keyLength - 1)
+                                {
+                                    if (t != BssMapRouteToken.EqualLastN)
+                                    {
+                                        //skip keyType and valoffset
+                                        reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                    }
+                                    keyPos++;
+                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                }
+                                else
+                                {
+                                    if (t == BssMapRouteToken.EqualLastN)
+                                        goto ReturnFalse;
+
+                                    goto TryReadValue;
+                                }
+                            }
+                            else
+                            {
+                                goto ReturnFalse;
+                            }
+                        }
+
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                    }
+                case AutomateReadOneKeyState.ReadChildren:
+                    t = reader.ReadMapToken();
+                    if (t == BssMapRouteToken.HasChildren)
+                    {
+                        goto case AutomateReadOneKeyState.ReadNextBranch;
+                    }
+                    goto ReturnFalse;
+            }
+
+        TryReadValue:
+            //verify keyType
+            if (keyIsNativeType)
+                reader.EnsureType(BssomType.NativeCode);
+            reader.EnsureType(keyType);

@@ -1,0 +1,3 @@
+﻿            //seek valOffset
+            reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);
+            reader.BssomBuffer.Seek(reader.ReadUInt32WithOutTypeHead() + paras.ReadPosition);

@@ -1,0 +1,149 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#  
+    Func<string,string> GetFclName = (n) => {
+        if(n=="Int8")
+             return "SByte";
+         else if(n=="UInt8")
+             return "Byte";
+         else if(n=="Float32")
+             return "Single";
+         else if(n=="Float64")
+             return "Double";
+         else 
+             return n;
+    };
+    var types = new string[]{"UInt8","Int8","Char","Int16","UInt16","Int32","UInt32","Int64","UInt64","Float32","Float64","Decimal","Boolean","Guid","DateTime"}; 
+    var argTypes = new string[]{"ulong[]","ISegment<ulong>"/*,"StackArray<ulong>"*/};
+#>
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using BssomSerializers.Binary;
+using BssomSerializers.BssMap.KeyResolvers;
+using BssomSerializers.Internal;
+using BssomSerializers.BssomBuffer;
+namespace BssomSerializers.BssMap
+{
+    internal static class BssMapObjMarshalReader
+    {
+        #region TryGetValue-Inline
+
+ <#
+    foreach(var name in types)
+    {
+        var fclName=GetFclName(name);    
+        #>
+       public static unsafe <#=fclName#> TryGet<#=name#>Value(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, ref byte ref1, out bool isGet)
+        {  
+<#@ include file="BssMapObjMarshalReader.TryGetFast.t4" #>
+<#@ include file="BssMapObjMarshalReader.TryGetFast.Seek.t4" #>
+            //read val
+            isGet = true;
+            return reader.Read<#=name#>();
+
+        ReturnFalse:
+            isGet = false;
+            return default;
+        }
+ <#}#>
+
+        #endregion
+
+        #region TryGetValueSlow-Inline
+
+ <#
+    foreach(var name in types)
+    {
+        var fclName=GetFclName(name);    
+        #>
+       public static unsafe <#=fclName#> TryGet<#=name#>ValueSlow(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, out bool isGet)
+        {  
+<#@ include file="BssMapObjMarshalReader.TryGetSlow.t4" #>
+<#@ include file="BssMapObjMarshalReader.TryGetSlow.Seek.t4" #>
+            //read val
+            isGet = true;
+            return reader.Read<#=name#>();
+
+        ReturnFalse:
+            isGet = false;
+            return default;
+        }
+ <#}#>
+
+        #endregion
+
+
+        #region Seek
+<#    foreach(var argType in argTypes) 
+    {  
+ #>
+        public static unsafe bool TrySeek(<#=argType#> key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref byte ref1)
+        {
+<#@ include file="BssMapObjMarshalReader.TryGetFast.t4" #>
+<#@ include file="BssMapObjMarshalReader.TryGetFast.Seek.t4" #>
+            //return
+            return true;
+
+        ReturnFalse:
+            return false;
+        }
+        public static unsafe bool TrySeekSlow(<#=argType#> key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader)
+        {
+<#@ include file="BssMapObjMarshalReader.TryGetSlow.t4" #>
+<#@ include file="BssMapObjMarshalReader.TryGetSlow.Seek.t4" #>
+            //return
+            return true;
+
+        ReturnFalse:
+            return false;
+        }
+<#    }#>
+
+        #endregion
+
+        public static MethodInfo TryGetValueUlongsKeyMethodInfo = typeof(BssMapObjMarshalReader).GetMethods().Where(e => e.Name == nameof(TryGetValue) && e.IsGenericMethod && e.GetParameters()[0].ParameterType == typeof(ulong[])).First();
+        public static MethodInfo TryGetValueSlowUlongsKeyMethodInfo = typeof(BssMapObjMarshalReader).GetMethods().Where(e => e.Name == nameof(TryGetValueSlow) && e.GetParameters()[0].ParameterType == typeof(ulong[])).First();
+<#    foreach(var argType in argTypes) 
+      {  
+ #>
+        public static unsafe TValue TryGetValue<TValue>(<#=argType#> key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, ref byte ref1, out bool isGet, IBssomFormatter<TValue> formatter = null)
+        {
+            if (formatter == null)
+                formatter = context.Option.FormatterResolver.GetFormatterWithVerify<TValue>();
+
+<#@ include file="BssMapObjMarshalReader.TryGetFast.t4" #>
+<#@ include file="BssMapObjMarshalReader.TryGetFast.Seek.t4" #>
+            //read val
+            isGet = true;
+            return formatter.Deserialize(ref reader, ref context);
+
+        ReturnFalse:
+            isGet = false;
+            return default;
+        }
+        public static unsafe TValue TryGetValueSlow<TValue>(<#=argType#> key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, out bool isGet, IBssomFormatter<TValue> formatter = null)
+        {
+            if (formatter == null)
+                formatter = context.Option.FormatterResolver.GetFormatterWithVerify<TValue>();
+
+<#@ include file="BssMapObjMarshalReader.TryGetSlow.t4" #>
+<#@ include file="BssMapObjMarshalReader.TryGetSlow.Seek.t4" #>
+            //read val
+            isGet = true;
+            return formatter.Deserialize(ref reader, ref context);
+
+        ReturnFalse:
+            isGet = false;
+            return default;
+        }
+<#    } #>
+
+    }
+}

@@ -1,0 +1,278 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading.Tasks;
+using BssomSerializers.Binary;
+using BssomSerializers.BssMap.KeyResolvers;
+using BssomSerializers.Internal;
+using BssomSerializers.BssomBuffer;
+namespace BssomSerializers.Formatters
+{
+<# 
+    Func<string,string> GetFclName = (n) => {
+        if(n=="Int8")
+             return "SByte";
+         else if(n=="UInt8")
+             return "Byte";
+         else if(n=="Float32")
+             return "Single";
+         else if(n=="Float64")
+             return "Double";
+         else 
+             return n;
+    };
+
+  var buildInTypes = new string[]{"Int8","Int16","Int32","Int64","UInt8","UInt16","UInt32","UInt64","Float32","Float64","Boolean"};//datetime,string
+  var nativeTypes = new string[] {"Char","Decimal","Guid"};//nativeDatetime
+  foreach(var name in buildInTypes.Union(nativeTypes).Except(new string[] { "UInt8" })) {
+        var isNativeType=nativeTypes.Contains(name);
+        var fclName=GetFclName(name);
+        var typeCodeStr="BuildInTypeCodeSize";
+        if(nativeTypes.Contains(name))
+            typeCodeStr="NativeTypeCodeSize";
+        
+        var sizeWithOutTypeHeadStr="BssomBinaryPrimitives.Array1TypeSizeWithOutTypeHeadAndLength(BssomBinaryPrimitives."+name+"Size, value.Count)";        
+        //Size
+        var sizeStr="BssomBinaryPrimitives.Array1BuildInTypeSize(BssomBinaryPrimitives."+name+"Size, value.Count)";
+        if(isNativeType)
+            sizeStr="BssomBinaryPrimitives.Array1NativeTypeSize(BssomBinaryPrimitives."+name+"Size, value.Count)";
+        //Deserialize
+        var tryEnsureStr="TryReadNullWithEnsureArray1BuildInType(BssomType."+name+"Code)";
+        if(isNativeType)
+            tryEnsureStr="TryReadNullWithEnsureArray1NativeType(NativeBssomType."+name+"Code)";
+        //Serialize
+        var writeTypeStr="WriteArray1BuildInType(BssomType."+name+"Code)";
+        if(isNativeType)
+            writeTypeStr="WriteArray1NativeType(NativeBssomType."+name+"Code)";
+#>
+    /// <summary>
+    /// Format <see cref="ArraySegment{<#=fclName#>}"/> as BssomType.Array1
+    /// </summary>
+    public sealed class <#=name#>ArraySegmentFormatter : IBssomFormatter<ArraySegment<<#=fclName#>>>
+    {
+        public static readonly <#=name#>ArraySegmentFormatter Instance = new <#=name#>ArraySegmentFormatter();
+
+        private <#=name#>ArraySegmentFormatter()
+        {
+        }
+
+        public int Size(ref BssomSizeContext context, ArraySegment<<#=fclName#>> value)
+        {
+            if (value.Array == null)
+                return BssomBinaryPrimitives.NullSize;
+
+            return <#=sizeStr#>;
+        }
+
+        public ArraySegment<<#=fclName#>> Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
+        {
+            if (reader.<#=tryEnsureStr#>)
+                return default;
+            context.Option.Security.DepthStep(ref context);
+            reader.SkipVariableNumber();
+            int len = reader.ReadVariableNumber();
+            var val = new <#=fclName#>[len];
+            for (int i = 0; i < len; i++)
+            {
+                val[i] = reader.Read<#=name#>WithOutTypeHead();
+            }
+            context.Depth--;
+            return new ArraySegment<<#=fclName#>>(val);
+        }
+
+        public void Serialize(ref BssomWriter writer, ref BssomSerializeContext context, ArraySegment<<#=fclName#>> value)
+        {
+            if(value.Array == null)
+            {
+                writer.WriteNull();
+                return;
+            }
+            writer.<#=writeTypeStr#>;
+            writer.WriteVariableNumber(<#=sizeWithOutTypeHeadStr#>);
+            writer.WriteVariableNumber(value.Count);
+            for (int i = value.Offset; i < value.Offset + value.Count; i++)
+            {
+                writer.WriteWithOutTypeHead(value.Array[i]);
+            }
+        }
+    }
+<#}#>
+    /// <summary>
+    /// Format <see cref="ArraySegment{DateTime}"/> as BssomType.Array1
+    /// </summary>
+    public sealed class DateTimeArraySegmentFormatter : IBssomFormatter<ArraySegment<DateTime>>
+    {
+        public static readonly DateTimeArraySegmentFormatter Instance = new DateTimeArraySegmentFormatter();
+
+        private DateTimeArraySegmentFormatter()
+        {
+        }
+
+        public int Size(ref BssomSizeContext context, ArraySegment<DateTime> value)
+        {
+            if (value == null)
+                return BssomBinaryPrimitives.NullSize;
+
+            if (context.Option.IsUseStandardDateTime == false)
+                return BssomBinaryPrimitives.NativeDateTimeArraySize(value.Count);
+            else
+            {
+                long dataLen = 0;
+                for (int i = value.Offset; i < value.Offset + value.Count; i++)
+                {
+                    dataLen += BssomBinaryPrimitives.StandardDateTimeSize(value.Array[i]);
+                }
+                return BssomBinaryPrimitives.DateTimeArraySize(value.Count, dataLen);
+            }
+        }
+
+        public ArraySegment<DateTime> Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
+        {
+            if (reader.TryReadNullWithEnsureBuildInType(BssomType.Array1))
+                return default;
+            context.Option.Security.DepthStep(ref context);
+            DateTime[] val;
+            byte type = reader.ReadBssomType();
+            switch (type)
+            {
+                case BssomType.DateTimeCode:
+                    reader.SkipVariableNumber();
+                    int len = reader.ReadVariableNumber();
+                    val = new DateTime[len];
+                    for (int i = 0; i < len; i++)
+                    {
+                        val[i] = reader.ReadStandDateTimeWithOutTypeHead();
+                    }
+                    break;
+                case BssomType.NativeCode:
+                    reader.EnsureType(NativeBssomType.DateTimeCode);
+                    reader.SkipVariableNumber();
+                    len = reader.ReadVariableNumber();
+                    val = new DateTime[len];
+                    for (int i = 0; i < len; i++)
+                    {
+                        val[i] = reader.ReadNativeDateTimeWithOutTypeHead();
+                    }
+                    break;
+                default:
+                    throw BssomSerializationOperationException.UnexpectedCodeRead(type, reader.Position);
+            }
+
+            context.Depth--;
+            return new ArraySegment<DateTime>(val);
+        }
+
+        public void Serialize(ref BssomWriter writer, ref BssomSerializeContext context, ArraySegment<DateTime> value)
+        {
+            if (value == null)
+            {
+                writer.WriteNull();
+                return;
+            }
+
+            if (context.Option.IsUseStandardDateTime)
+                writer.WriteArray1BuildInType(BssomType.DateTimeCode);
+            else
+                writer.WriteArray1NativeType(NativeBssomType.DateTimeCode);
+            long posLen = writer.FillUInt32FixNumber();
+            writer.WriteVariableNumber(value.Count);
+            for (int i = value.Offset; i < value.Offset + value.Count; i++)
+            {
+                context.CancellationToken.ThrowIfCancellationRequested();
+                writer.Write(value.Array[i], context.Option.IsUseStandardDateTime, false);
+            }
+            writer.WriteBackFixNumber(posLen,checked((int)(writer.Position - posLen - BssomBinaryPrimitives.FixUInt32NumberSize)));
+        }
+    }
+    /// <summary>
+    /// Format <see cref="ArraySegment{Byte}"/> as BssomType.Array1
+    /// </summary>
+    public sealed class UInt8ArraySegmentFormatter : IBssomFormatter<ArraySegment<Byte>>
+    {
+        public static readonly UInt8ArraySegmentFormatter Instance = new UInt8ArraySegmentFormatter();
+
+        private UInt8ArraySegmentFormatter()
+        {
+        }
+
+        public int Size(ref BssomSizeContext context, ArraySegment<Byte> value)
+        {
+            if (value.Array == null)
+                return BssomBinaryPrimitives.NullSize;
+
+            return BssomBinaryPrimitives.Array1BuildInTypeSize(BssomBinaryPrimitives.UInt8Size, value.Count);
+        }
+
+        public ArraySegment<Byte> Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
+        {
+            return new ArraySegment<Byte>(reader.ReadBytes());
+        }
+
+        public void Serialize(ref BssomWriter writer, ref BssomSerializeContext context, ArraySegment<Byte> value)
+        {
+            writer.Write(value);
+        }
+    }
+
+    /// <summary>
+    /// Format <see cref="ArraySegment{T}"/> as BssomType.Array2
+    /// </summary>
+    public sealed class ArraySegmentFormatter<T> : IBssomFormatter<ArraySegment<T>>
+    {
+        public void Serialize(ref BssomWriter writer, ref BssomSerializeContext context, ArraySegment<T> value)
+        {
+            if (value.Array == null)
+            {
+                writer.WriteNull();
+                return;
+            }
+            
+            IBssomFormatter<T> formatter = context.Option.FormatterResolver.GetFormatterWithVerify<T>();
+
+            writer.WriteArray2Type();
+            long posLen = writer.FillUInt32FixNumber();
+            writer.WriteVariableNumber(value.Count);
+
+            for (int i = value.Offset; i < value.Offset + value.Count; i++)
+            {
+                context.CancellationToken.ThrowIfCancellationRequested();
+                formatter.Serialize(ref writer, ref context, value.Array[i]);
+            }
+
+            writer.WriteBackFixNumber(posLen,checked((int)(writer.Position - posLen - BssomBinaryPrimitives.FixUInt32NumberSize)));
+        }
+
+        public ArraySegment<T> Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
+        {           
+            T[] array = context.Option.FormatterResolver.GetFormatterWithVerify<T[]>().Deserialize(ref reader, ref context);
+            if(array == null)
+                return default;
+            return new ArraySegment<T>(array);
+        }
+
+        public int Size(ref BssomSizeContext context, ArraySegment<T> value)
+        {
+            if (value.Array == null)
+                return BssomBinaryPrimitives.NullSize;
+
+            var formatter = context.Option.FormatterResolver.GetFormatterWithVerify<T>();
+            long len = 0;
+            for (int i = value.Offset; i < value.Count + value.Offset; i++)
+            {
+                len += formatter.Size(ref context, value.Array[i]);
+            }
+            return BssomBinaryPrimitives.Array2TypeSize(value.Count, len);
+        }
+    }
+}
