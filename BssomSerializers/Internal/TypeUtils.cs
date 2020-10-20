@@ -35,14 +35,15 @@ namespace BssomSerializers.Internal
                 yield return new KeyValuePair<string, string>((string)item.Key, (string)item.Value);
             }
         }
+
         public static IEnumerable<KeyValuePair<string, object>> ToIEnumerable(this DataRow value)
         {
             foreach (DataColumn column in value.Table.Columns)
             {
                 yield return new KeyValuePair<string, object>(column.ColumnName, value[column]);
             }
-
         }
+
         public static int GetIDictionaryCount<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> value)
         {
             DEBUG.Assert(value is IDictionary<TKey, TValue> || value is IReadOnlyDictionary<TKey, TValue>);

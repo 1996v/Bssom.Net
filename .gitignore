@@ -3,3 +3,7 @@
 ################################################################################
 
 /.vs/BssomSerializers
+/BssomSerializers/bin/Debug
+/BssomSerializers/obj
+/BssomSerializers.Test/bin/Debug
+/BssomSerializers.Test/obj
