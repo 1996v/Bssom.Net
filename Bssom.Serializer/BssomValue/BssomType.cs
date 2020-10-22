@@ -17,7 +17,7 @@ namespace Bssom.Serializer
         public const int BlankInt32Code = sbyte.MaxValue + 2;//129
 
         public const int MinFixLenTypeCode = NullCode;
-        public const int MaxFixLenTypeCode = DateTimeCode;
+        public const int MaxFixLenTypeCode = TimestampCode;
 
         public const int NullCode = 130;
         public const int Int8Code = 131;
@@ -31,7 +31,7 @@ namespace Bssom.Serializer
         public const int Float32Code = 139;
         public const int Float64Code = 140;
         public const int BooleanCode = 141;
-        public const int DateTimeCode = 142;
+        public const int TimestampCode = 142;
         public const int StringCode = 143;
 
         public const int Map1 = 0xc1;
@@ -80,7 +80,7 @@ namespace Bssom.Serializer
                     case BssomType.Float32Code: return nameof(BssomType.Float32Code);
                     case BssomType.Float64Code: return nameof(BssomType.Float64Code);
                     case BssomType.BooleanCode: return nameof(BssomType.BooleanCode);
-                    case BssomType.DateTimeCode: return nameof(BssomType.DateTimeCode);
+                    case BssomType.TimestampCode: return nameof(BssomType.TimestampCode);
                     case BssomType.StringCode: return nameof(BssomType.StringCode);
                     case BssomType.Map1: return nameof(BssomType.Map1);
                     case BssomType.Map2: return nameof(BssomType.Map2);
@@ -132,7 +132,7 @@ namespace Bssom.Serializer
                         return BssomValueType.Float;
                     case BssomType.BooleanCode:
                         return BssomValueType.Boolean;
-                    case BssomType.DateTimeCode:
+                    case BssomType.TimestampCode:
                         return BssomValueType.DateTime;
                     case BssomType.StringCode:
                         return BssomValueType.String;

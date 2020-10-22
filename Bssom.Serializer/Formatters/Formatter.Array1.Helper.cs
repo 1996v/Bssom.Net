@@ -1150,7 +1150,7 @@ namespace Bssom.Serializer.Internal
             if (value.TryGetICollectionCount(out int count))
             {
                 if (context.Option.IsUseStandardDateTime)
-                    writer.WriteArray1BuildInType(BssomType.DateTimeCode);
+                    writer.WriteArray1BuildInType(BssomType.TimestampCode);
                 else
                     writer.WriteArray1NativeType(NativeBssomType.DateTimeCode);
 
@@ -1167,7 +1167,7 @@ namespace Bssom.Serializer.Internal
             else
             {
                 if (context.Option.IsUseStandardDateTime)
-                    writer.WriteArray1BuildInType(BssomType.DateTimeCode);
+                    writer.WriteArray1BuildInType(BssomType.TimestampCode);
                 else
                     writer.WriteArray1NativeType(NativeBssomType.DateTimeCode);
                 count = 0;
@@ -1226,7 +1226,7 @@ namespace Bssom.Serializer.Internal
             byte type = reader.ReadBssomType();
             switch (type)
             {
-                case BssomType.DateTimeCode:
+                case BssomType.TimestampCode:
                     reader.SkipVariableNumber();
                     count = reader.ReadVariableNumber();
                     hash = new HashSet<DateTime>();

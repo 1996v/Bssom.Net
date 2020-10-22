@@ -209,7 +209,7 @@ namespace Bssom.Serializer
             if (isUseStandardDateTime)
             {
                 if (isWriteTypeCode)
-                    WriteBuildInType(BssomType.DateTimeCode);
+                    WriteBuildInType(BssomType.TimestampCode);
                 BssomBinaryPrimitives.WriteDateTime(BufferWriter, value);
             }
             else

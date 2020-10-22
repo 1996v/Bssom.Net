@@ -576,7 +576,7 @@ namespace Bssom.Serializer.Formatters
                         return new BssomFloat(reader.ReadFloat64WithOutTypeHead());
                     return reader.ReadFloat64WithOutTypeHead();
 
-                case BssomType.DateTimeCode:
+                case BssomType.TimestampCode:
                     reader.BssomBuffer.SeekWithOutVerify(1, BssomSeekOrgin.Current);
                     if (isPriorityToDeserializeObjectAsBssomValue)
                         return new BssomDateTime(reader.ReadStandDateTimeWithOutTypeHead());
@@ -644,7 +644,7 @@ namespace Bssom.Serializer.Formatters
                                 return new BssomArray(Float32ListFormatter.Instance.Deserialize(ref reader, ref context), false);
                             case BssomType.Float64Code:
                                 return new BssomArray(Float64ListFormatter.Instance.Deserialize(ref reader, ref context), false);
-                            case BssomType.DateTimeCode:
+                            case BssomType.TimestampCode:
                                 return new BssomArray(DateTimeListFormatter.Instance.Deserialize(ref reader, ref context), false);
                             case BssomType.NativeCode:
                                 {

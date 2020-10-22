@@ -770,7 +770,7 @@ namespace Bssom.Serializer.Test
         [InlineData(BssomValueType.Char, NativeBssomType.CharCode, true, typeof(List<char>), true)]//Array1
         [InlineData(BssomValueType.Number, BssomType.UInt8Code, false, typeof(List<byte>), true)]//Array1
         [InlineData(BssomValueType.Number, BssomType.Int32Code, false, typeof(List<int>), true)]//Array1
-        [InlineData(BssomValueType.DateTime, BssomType.DateTimeCode, false, typeof(List<DateTime>), true)]//Array1
+        [InlineData(BssomValueType.DateTime, BssomType.TimestampCode, false, typeof(List<DateTime>), true)]//Array1
         [InlineData(BssomValueType.DateTime, NativeBssomType.DateTimeCode, true, typeof(List<DateTime>), false)]//Array1
         [InlineData(BssomValueType.String, BssomType.StringCode, false, typeof(List<string>), false)]//Array2
         [InlineData(BssomValueType.Array, BssomType.Array2, false, typeof(List<List<string>>), false)]//Array2

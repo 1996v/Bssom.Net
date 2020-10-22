@@ -23,7 +23,7 @@ namespace Bssom.Serializer.Internal
            { typeof(Single),new KeyValuePair<string,byte>( nameof(BssomType.Float32Code) ,BssomType.Float32Code)},
            { typeof(double),new KeyValuePair<string,byte>( nameof(BssomType.Float64Code),BssomType.Float64Code)},
            { typeof(Boolean),new KeyValuePair<string,byte>( nameof(BssomType.BooleanCode) ,BssomType.BooleanCode)},
-           { typeof(DateTime),new KeyValuePair<string,byte>( nameof(BssomType.DateTimeCode),BssomType.DateTimeCode) },
+           { typeof(DateTime),new KeyValuePair<string,byte>( nameof(BssomType.TimestampCode),BssomType.TimestampCode) },
 
            { typeof(Guid),new KeyValuePair<string,byte>(nameof(NativeBssomType.GuidCode),NativeBssomType.GuidCode) },
            { typeof(char),new KeyValuePair<string,byte>(nameof(NativeBssomType.CharCode),NativeBssomType.CharCode) },

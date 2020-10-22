@@ -384,7 +384,7 @@ namespace Bssom.Serializer.Internal
     
         public void WriteElement(ref BssomWriter writer, BssomSerializerOptions option, BssomFieldOffsetInfo offsetInfo, DateTime value)
         {
-            if (offsetInfo.Array1ElementTypeIsNativeType == false && offsetInfo.Array1ElementType == BssomType.DateTimeCode)
+            if (offsetInfo.Array1ElementTypeIsNativeType == false && offsetInfo.Array1ElementType == BssomType.TimestampCode)
                 writer.Write(value, true, false);
             else if (offsetInfo.Array1ElementTypeIsNativeType == true && offsetInfo.Array1ElementType == NativeBssomType.DateTimeCode)
                 writer.Write(value, false, false);
@@ -393,7 +393,7 @@ namespace Bssom.Serializer.Internal
         }
         public DateTime ReadElement(ref BssomReader reader, BssomSerializerOptions option, BssomFieldOffsetInfo offsetInfo)
         {
-            if (offsetInfo.Array1ElementTypeIsNativeType == false && offsetInfo.Array1ElementType == BssomType.DateTimeCode)
+            if (offsetInfo.Array1ElementTypeIsNativeType == false && offsetInfo.Array1ElementType == BssomType.TimestampCode)
                 return reader.ReadStandDateTimeWithOutTypeHead();
             else if (offsetInfo.Array1ElementTypeIsNativeType == true && offsetInfo.Array1ElementType == NativeBssomType.DateTimeCode)
                 return reader.ReadNativeDateTimeWithOutTypeHead();

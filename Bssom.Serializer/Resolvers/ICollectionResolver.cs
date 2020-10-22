@@ -536,7 +536,7 @@ namespace Bssom.Serializer.Internal
             var type = reader.ReadBssomType();
             switch (type)
             {
-                case BssomType.DateTimeCode:
+                case BssomType.TimestampCode:
                     {
                         reader.SkipVariableNumber();
                         int len = reader.ReadVariableNumber();

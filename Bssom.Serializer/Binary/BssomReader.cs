@@ -185,7 +185,7 @@ namespace Bssom.Serializer
             byte type = SkipBlankCharacterAndReadBssomType();
             switch (type)
             {
-                case BssomType.DateTimeCode:
+                case BssomType.TimestampCode:
                     return ReadStandDateTimeWithOutTypeHead();
 
                 case BssomType.NativeCode:

@@ -93,7 +93,7 @@ namespace Bssom.Serializer.Internal
         {
             if (!isNativeType)
             {
-                if (type > BssomType.MinFixLenTypeCode && type <= BssomType.DateTimeCode)
+                if (type > BssomType.MinFixLenTypeCode && type <= BssomType.TimestampCode)
                 {
                     return buildInTypeContainers[type - BssomType.MinFixLenTypeCode - 1];
                 }

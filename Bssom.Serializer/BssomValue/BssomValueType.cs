@@ -42,7 +42,7 @@
 
         /// <summary>
         /// This type has two representations in marshal
-        /// <para>1. Bssom PrimitiveType, is <see cref="BssomType.DateTimeCode"/> , Binary uses standard dynamic length format</para>
+        /// <para>1. Bssom PrimitiveType, is <see cref="BssomType.TimestampCode"/> , Binary uses standard dynamic length format</para>
         /// <para>2. Bssom NativeType <see cref="BssomType.NativeCode"/>, NativeExtensionType is <see cref="NativeBssomType.DateTimeCode"/> , using the fixed binary format of the .net platform </para>
         /// </summary>
         DateTime,

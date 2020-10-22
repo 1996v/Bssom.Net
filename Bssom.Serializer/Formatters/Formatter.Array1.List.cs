@@ -758,7 +758,7 @@ namespace Bssom.Serializer.Formatters
             byte type = reader.ReadBssomType();
             switch (type)
             {
-                case BssomType.DateTimeCode:
+                case BssomType.TimestampCode:
                     reader.SkipVariableNumber();
                     int len = reader.ReadVariableNumber();
                     val = new List<DateTime>(len);
@@ -794,7 +794,7 @@ namespace Bssom.Serializer.Formatters
             }
 
             if (context.Option.IsUseStandardDateTime)
-                writer.WriteArray1BuildInType(BssomType.DateTimeCode);
+                writer.WriteArray1BuildInType(BssomType.TimestampCode);
             else
                 writer.WriteArray1NativeType(NativeBssomType.DateTimeCode);
             long posLen = writer.FillUInt32FixNumber();
