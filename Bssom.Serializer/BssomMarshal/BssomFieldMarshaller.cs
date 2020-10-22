@@ -351,25 +351,7 @@ namespace Bssom.Serializer
                         int count = reader.ReadVariableNumber();//count
                         if (index < count)
                         {
-                            if (info.Array1ElementType == BssomType.DateTimeCode)
-                            {
-                                for (int i = 0; i < index; i++)
-                                {
-                                    reader.SkipStandDateTimeWithOutTypeHead();
-                                }
-
-                                if (!indexOfInputSource.MoveNext())
-                                {
-                                    info.Offset = reader.Position;
-                                    return info;
-                                }
-                                else
-                                {
-                                    goto Next;
-                                }
-                            }
-
-                            if (!BssomBinaryPrimitives.TryGetTypeSizeFromStaticTypeSizesWithOutDateTimeType(info.Array1ElementTypeIsNativeType, info.Array1ElementType, out int eleSize))
+                            if (!BssomBinaryPrimitives.TryGetTypeSizeFromStaticTypeSizes(info.Array1ElementTypeIsNativeType, info.Array1ElementType, out int eleSize))
                                 throw BssomSerializationOperationException.UnexpectedCodeRead(info.Array1ElementType, reader.Position);
 
                             if (!indexOfInputSource.MoveNext())
@@ -544,25 +526,7 @@ namespace Bssom.Serializer
                         int count = reader.ReadVariableNumber();//count
                         if (index < count)
                         {
-                            if (info.Array1ElementType == BssomType.DateTimeCode)
-                            {
-                                for (int i = 0; i < index; i++)
-                                {
-                                    reader.SkipStandDateTimeWithOutTypeHead();
-                                }
-
-                                if (!stringInputDataSource.MoveNext())
-                                {
-                                    info.Offset = reader.Position;
-                                    return info;
-                                }
-                                else
-                                {
-                                    goto Next;
-                                }
-                            }
-
-                            if (!BssomBinaryPrimitives.TryGetTypeSizeFromStaticTypeSizesWithOutDateTimeType(info.Array1ElementTypeIsNativeType, info.Array1ElementType, out int eleSize))
+                            if (!BssomBinaryPrimitives.TryGetTypeSizeFromStaticTypeSizes(info.Array1ElementTypeIsNativeType, info.Array1ElementType, out int eleSize))
                                 throw BssomSerializationOperationException.UnexpectedCodeRead(info.Array1ElementType, reader.Position);
 
                             if (!stringInputDataSource.MoveNext())
@@ -650,11 +614,7 @@ namespace Bssom.Serializer
 
             if (offsetInfo.IsArray1Type)
             {
-                if (offsetInfo.Array1ElementTypeIsNativeType == false && offsetInfo.Array1ElementType == BssomType.DateTimeCode)
-                {
-                    return BssomBinaryPrimitives.DateTimeSizeWithTypeHead(reader.BssomBuffer);
-                }
-                if (BssomBinaryPrimitives.TryGetTypeSizeFromStaticTypeSizesWithOutDateTimeType(offsetInfo.Array1ElementTypeIsNativeType, offsetInfo.Array1ElementType, out int size))
+                if (BssomBinaryPrimitives.TryGetTypeSizeFromStaticTypeSizes(offsetInfo.Array1ElementTypeIsNativeType, offsetInfo.Array1ElementType, out int size))
                     return size;
                 throw BssomSerializationOperationException.UnexpectedCodeRead(offsetInfo.Array1ElementType, reader.Position);
             }

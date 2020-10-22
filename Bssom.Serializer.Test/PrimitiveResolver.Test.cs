@@ -244,8 +244,7 @@ namespace Bssom.Serializer.Test
             for (int i = 0; i < 10; i++)
             {
                 var value = RandomHelper.RandomValue<DateTime>();
-                int size = BssomBinaryPrimitives.BuildInTypeCodeSize + BssomBinaryPrimitives.StandardDateTimeSize(value);
-                VerifyHelper.VerifySimpleType(value, size, BssomSerializerOptions.Default.WithIsUseStandardDateTime(true));
+                VerifyHelper.VerifySimpleType(value,BssomSerializerOptions.Default.WithIsUseStandardDateTime(true));
             }
         }
 

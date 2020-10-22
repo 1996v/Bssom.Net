@@ -311,7 +311,7 @@ namespace Bssom.Serializer
             }
             else if (keyType != BssomType.NullCode)
             {
-                if (BssomBinaryPrimitives.TryGetPrimitiveTypeSizeFromStaticTypeSizesWithOutDateTimeType(keyType, out int size))
+                if (BssomBinaryPrimitives.TryGetPrimitiveTypeSizeFromStaticTypeSizes(keyType, out int size))
                     return size;
             }
             return BssomSerializationOperationException.UnexpectedCodeRead<int>(keyType, Position);
@@ -386,13 +386,11 @@ namespace Bssom.Serializer
 
         internal int GetRemainingLengthOfObject(byte objType)
         {
-            if (BssomBinaryPrimitives.TryGetPrimitiveTypeSizeFromStaticTypeSizesWithOutDateTimeType(objType, out int size))
+            if (BssomBinaryPrimitives.TryGetPrimitiveTypeSizeFromStaticTypeSizes(objType, out int size))
                 return size;
 
             switch (objType)
             {
-                case BssomType.DateTimeCode:
-                    return ReadOne<byte>();
                 case BssomType.StringCode:
                     return (int)BssomBinaryPrimitives.ReadVariableNumber(BssomBuffer);
                 case BssomType.NativeCode:

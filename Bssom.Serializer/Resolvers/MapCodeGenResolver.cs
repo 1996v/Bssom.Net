@@ -816,7 +816,7 @@ namespace Bssom.Serializer.Internal
             if (InlineTypes.TryGetValue(type, out var entry))
             {
                 if (type == typeof(DateTime))
-                    sizeExpression = CommonExpressionMeta.Call_DateTimeSize(element);
+                    sizeExpression = CommonExpressionMeta.Call_DateTimeSize();
                 else
                     sizeExpression = Expression.Constant(entry.Size);
                 return true;

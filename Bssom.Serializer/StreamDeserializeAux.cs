@@ -41,15 +41,11 @@ namespace Bssom.Serializer
             buffer[0] = objType;
             position++;
 
-            if (!BssomBinaryPrimitives.TryGetPrimitiveTypeSizeFromStaticTypeSizesWithOutDateTimeType(objType,
+            if (!BssomBinaryPrimitives.TryGetPrimitiveTypeSizeFromStaticTypeSizes(objType,
                 out size))
             {
                 switch (objType)
                 {
-                    case BssomType.DateTimeCode:
-                        ReadStreamToBuffer(1);
-                        size = buffer[position - 1];
-                        break;
                     case BssomType.StringCode:
                         size = (int)ReadVariableNumberCore();
                         break;

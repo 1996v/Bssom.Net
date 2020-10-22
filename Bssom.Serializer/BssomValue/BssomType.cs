@@ -17,7 +17,7 @@ namespace Bssom.Serializer
         public const int BlankInt32Code = sbyte.MaxValue + 2;//129
 
         public const int MinFixLenTypeCode = NullCode;
-        public const int MaxFixLenTypeCode = BooleanCode;
+        public const int MaxFixLenTypeCode = DateTimeCode;
 
         public const int NullCode = 130;
         public const int Int8Code = 131;

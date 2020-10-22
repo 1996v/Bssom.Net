@@ -695,14 +695,7 @@ namespace Bssom.Serializer.Formatters
             if (context.Option.IsUseStandardDateTime == false)
                 return BssomBinaryPrimitives.NativeDateTimeArraySize(value.Count);
             else
-            {
-                long dataLen = 0;
-                for (int i = value.Offset; i < value.Offset + value.Count; i++)
-                {
-                    dataLen += BssomBinaryPrimitives.StandardDateTimeSize(value.Array[i]);
-                }
-                return BssomBinaryPrimitives.DateTimeArraySize(value.Count, dataLen);
-            }
+                return BssomBinaryPrimitives.StandardDateTimeArraySize(value.Count);
         }
 
         public ArraySegment<DateTime> Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)

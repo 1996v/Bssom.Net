@@ -17,13 +17,10 @@ namespace Bssom.Serializer.Formatters
         private DateTimeFormatter()
         {
         }
-        public void Deserialize1(ref BssomReader reader)
-        {
-            reader.BssomBuffer.TryReadFixedRef(3, out bool r);
-        }
+
         public int Size(ref BssomSizeContext context, DateTime value)
         {
-            return BssomBinaryPrimitives.DateTimeSize(value,context.Option.IsUseStandardDateTime);
+            return BssomBinaryPrimitives.DateTimeSize(context.Option.IsUseStandardDateTime);
         }
 
         public DateTime Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)

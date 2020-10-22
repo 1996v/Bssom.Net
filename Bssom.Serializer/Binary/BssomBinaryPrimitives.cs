@@ -187,39 +187,14 @@ namespace Bssom.Serializer.Binary
         {
             if (value.Kind == DateTimeKind.Local)
                 value = value.ToUniversalTime();
-            var secondsSinceBclEpoch = value.Ticks / TimeSpan.TicksPerSecond;
-            var seconds = secondsSinceBclEpoch - DateTimeConstants.BclSecondsAtUnixEpoch;
-            var nanoseconds = (value.Ticks % TimeSpan.TicksPerSecond) * DateTimeConstants.NanosecondsPerTick;
+            long utcTicks = value.Ticks - DateTimeConstants.UnixSeconds;
+            long utcSeconds = utcTicks / TimeSpan.TicksPerSecond;
+            long utcNanoseconds = utcTicks % TimeSpan.TicksPerSecond;
 
-            if ((seconds >> 34) == 0)
-            {
-                var data64 = unchecked((ulong)((nanoseconds << 34) | seconds));
-                if ((data64 & 0xffffffff00000000L) == 0)
-                {
-                    ref byte destination = ref writer.GetRef(5);
-                    // timestamp 32(seconds in 32-bit unsigned int)
-                    WriteUInt8(ref destination, (byte)4);
-                    WriteUInt32LittleEndian(ref Unsafe.Add(ref destination, 1), (uint)data64);
-                    writer.Advance(5);
-                }
-                else
-                {
-                    ref byte destination = ref writer.GetRef(9);
-                    // timestamp 64(nanoseconds in 30-bit unsigned int | seconds in 34-bit unsigned int)
-                    WriteUInt8(ref destination, (byte)8);
-                    WriteUInt64LittleEndian(ref Unsafe.Add(ref destination, 1), data64);
-                    writer.Advance(9);
-                }
-            }
-            else
-            {
-                ref byte destination = ref writer.GetRef(13);
-                // timestamp 96( nanoseconds in 32-bit unsigned int | seconds in 64-bit signed int )
-                WriteUInt8(ref destination, (byte)12);
-                WriteUInt32LittleEndian(ref Unsafe.Add(ref destination, 1), (uint)nanoseconds);
-                WriteInt64LittleEndian(ref Unsafe.Add(ref destination, 1 + 4), seconds);
-                writer.Advance(13);
-            }
+            ref byte destination = ref writer.GetRef(StandardDateTimeSize);
+            WriteInt64LittleEndian(ref destination, utcSeconds);
+            WriteUInt32LittleEndian(ref Unsafe.Add(ref destination, 8), (uint)utcNanoseconds);
+            writer.Advance(StandardDateTimeSize);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -392,88 +367,25 @@ namespace Bssom.Serializer.Binary
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime ReadDateTime(IBssomBuffer reader)
         {
-            byte code = reader.ReadRef(1);
-            reader.SeekWithOutVerify(1, BssomSeekOrgin.Current);
-            switch (code)
-            {
-                case 4:
-                    uint se = ReadUInt32LittleEndian(ref reader.ReadRef(4));
-                    reader.SeekWithOutVerify(4, BssomSeekOrgin.Current);
-                    return DateTimeConstants.UnixEpoch.AddSeconds(se);
-
-                case 8:
-                    ulong ulongValue = ReadUInt64LittleEndian(ref reader.ReadRef(8));
-                    reader.SeekWithOutVerify(8, BssomSeekOrgin.Current);
-                    long nanoseconds = (long)(ulongValue >> 34);
-                    ulong seconds = ulongValue & 0x00000003ffffffffL;
-                    return DateTimeConstants.UnixEpoch.AddSeconds(seconds).AddTicks(nanoseconds / DateTimeConstants.NanosecondsPerTick);
-
-                case 12:
-                    ref byte refb = ref reader.ReadRef(12);
-                    nanoseconds = ReadUInt32LittleEndian(ref refb);
-                    long longValue = ReadInt64LittleEndian(ref Unsafe.Add(ref refb, 4));
-                    reader.SeekWithOutVerify(12, BssomSeekOrgin.Current);
-                    return DateTimeConstants.UnixEpoch.AddSeconds(longValue).AddTicks(nanoseconds / DateTimeConstants.NanosecondsPerTick);
-
-                default:
-                    throw BssomSerializationOperationException.UnexpectedCodeRead(code, reader.Position);
-            }
+            ref byte refb = ref reader.ReadRef(StandardDateTimeSize);
+            long utcSeconds = ReadInt64LittleEndian(ref refb);
+            uint utcNanoseconds = ReadUInt32LittleEndian(ref Unsafe.Add(ref refb, 8));
+            reader.SeekWithOutVerify(StandardDateTimeSize, BssomSeekOrgin.Current);
+            return DateTimeConstants.UnixEpoch.AddSeconds(utcSeconds).AddTicks(utcNanoseconds);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int StandardDateTimeSize(DateTime value)
-        {
-            if (value.Kind == DateTimeKind.Local)
-                value = value.ToUniversalTime();
-            var secondsSinceBclEpoch = value.Ticks / TimeSpan.TicksPerSecond;
-            var seconds = secondsSinceBclEpoch - DateTimeConstants.BclSecondsAtUnixEpoch;
-            var nanoseconds = (value.Ticks % TimeSpan.TicksPerSecond) * DateTimeConstants.NanosecondsPerTick;
-
-            if ((seconds >> 34) == 0)
-            {
-                var data64 = unchecked((ulong)((nanoseconds << 34) | seconds));
-                if ((data64 & 0xffffffff00000000L) == 0)
-                {
-                    return 5;
-                }
-                else
-                {
-                    return 9;
-                }
-            }
-            else
-            {
-                return 13;
-            }
-        }
+       
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int DateTimeSize(DateTime value, bool isStandardDate)
+        public static int DateTimeSize(bool isStandardDate)
         {
             if (isStandardDate)
             {
-                return StandardDateTimeSize(value) + BuildInTypeCodeSize;
+                return StandardDateTimeSize + BuildInTypeCodeSize;
             }
             else
             {
                 return NativeDateTimeSize + NativeTypeCodeSize;
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int DateTimeSizeWithTypeHead(IBssomBuffer reader)
-        {
-            byte code = reader.ReadRef(1);
-            switch (code)
-            {
-                case 4:
-                    return 5;
-                case 8:
-                    return 9;
-                case 12:
-                    return 13;
-                default:
-                    throw BssomSerializationOperationException.UnexpectedCodeRead(code, reader.Position);
             }
         }
 
@@ -553,8 +465,7 @@ namespace Bssom.Serializer.Binary
     {
         internal static class DateTimeConstants
         {
-            internal const long BclSecondsAtUnixEpoch = 62135596800;
-            internal const int NanosecondsPerTick = 100;
+            internal const long UnixSeconds = 621355968000000000;
             internal static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         }
 
@@ -850,6 +761,7 @@ namespace Bssom.Serializer.Binary
         public const int UInt64Size = 8;
         public const int Float32Size = 4;
         public const int Float64Size = 8;
+        public const int StandardDateTimeSize = 12;
 
         public const int CharSize = 2;
         public const int GuidSize = GuidBinaryBits.Size;
@@ -904,15 +816,16 @@ namespace Bssom.Serializer.Binary
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int DateTimeArraySize(int count, long dataLen)
+        public static int StandardDateTimeArraySize(int count)
         {
-            return Array1BuildInTypeCodeSize + FixUInt32NumberSize + VariableNumberSize((ulong)count) + checked((int)dataLen);
+            return Array1BuildInTypeCodeSize + FixUInt32NumberSize + VariableNumberSize((ulong)count) + checked(count * StandardDateTimeSize);
         }
 
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int DateTimeArraySizeWithOutCount(long dataLen)
+        public static int StandardDateTimeArraySizeWithOutCount(int count)
         {
-            return Array1BuildInTypeCodeSize + FixUInt32NumberSize + FixUInt32NumberSize + checked((int)dataLen);
+            return Array1BuildInTypeCodeSize + FixUInt32NumberSize + FixUInt32NumberSize + checked(count * StandardDateTimeSize);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -994,10 +907,10 @@ namespace Bssom.Serializer.Binary
             return Array1NativeTypeCodeSize + Array1TypeSizeWithOutTypeHead(elementSize, count);
         }
 
-        private readonly static int[] StaticPrimitiveTypeSizes = new int[] { BssomBinaryPrimitives.NullSize, BssomBinaryPrimitives.Int8Size, BssomBinaryPrimitives.Int16Size, BssomBinaryPrimitives.Int32Size, BssomBinaryPrimitives.Int64Size, BssomBinaryPrimitives.UInt8Size, BssomBinaryPrimitives.UInt16Size, BssomBinaryPrimitives.UInt32Size, BssomBinaryPrimitives.UInt64Size, BssomBinaryPrimitives.Float32Size, BssomBinaryPrimitives.Float64Size, BssomBinaryPrimitives.BooleanSize };
+        private readonly static int[] StaticPrimitiveTypeSizes = new int[] { BssomBinaryPrimitives.NullSize, BssomBinaryPrimitives.Int8Size, BssomBinaryPrimitives.Int16Size, BssomBinaryPrimitives.Int32Size, BssomBinaryPrimitives.Int64Size, BssomBinaryPrimitives.UInt8Size, BssomBinaryPrimitives.UInt16Size, BssomBinaryPrimitives.UInt32Size, BssomBinaryPrimitives.UInt64Size, BssomBinaryPrimitives.Float32Size, BssomBinaryPrimitives.Float64Size, BssomBinaryPrimitives.BooleanSize, BssomBinaryPrimitives.StandardDateTimeSize, };
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryGetPrimitiveTypeSizeFromStaticTypeSizesWithOutDateTimeType(byte type, out int size)
+        public static bool TryGetPrimitiveTypeSizeFromStaticTypeSizes(byte type, out int size)
         {
             if (type >= BssomType.MinFixLenTypeCode && type <= BssomType.MaxFixLenTypeCode)
             {
@@ -1011,7 +924,7 @@ namespace Bssom.Serializer.Binary
         private readonly static int[] StaticNativeTypeSizes = new int[] { BssomBinaryPrimitives.CharSize, BssomBinaryPrimitives.GuidSize, BssomBinaryPrimitives.DecimalSize, BssomBinaryPrimitives.NativeDateTimeSize };
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryGetTypeSizeFromStaticTypeSizesWithOutDateTimeType(bool isNativeType, byte type, out int size)
+        public static bool TryGetTypeSizeFromStaticTypeSizes(bool isNativeType, byte type, out int size)
         {
             if (!isNativeType)
             {

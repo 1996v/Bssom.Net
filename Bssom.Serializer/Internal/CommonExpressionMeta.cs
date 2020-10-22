@@ -269,9 +269,9 @@ namespace Bssom.Serializer.Internal
         }
 
         //Call: BssomBinaryPrimitives.DateTimeSize(val);
-        public static Expression Call_DateTimeSize(Expression value)
+        public static Expression Call_DateTimeSize()
         {
-            return Expression.Call(null, typeof(BssomBinaryPrimitives).GetMethod(nameof(BssomBinaryPrimitives.DateTimeSize)), value, Field_SizeOption_IsUseStandardDateTime);
+            return Expression.Call(null, typeof(BssomBinaryPrimitives).GetMethod(nameof(BssomBinaryPrimitives.DateTimeSize)),  Field_SizeOption_IsUseStandardDateTime);
         }
 
         //Call: reader.Read{TypeName}(val);

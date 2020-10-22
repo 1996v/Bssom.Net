@@ -186,7 +186,14 @@ namespace Bssom.Serializer.Test
         public void DateTimeArraySegmentFormatter_FormatterTypeIsArray1TypeAndFormatterIsCorrectly()
         {
             var val = RandomHelper.RandomValue<ArraySegment<DateTime>>();
-            VerifyHelper.VerifyEntityWithArray1(val);
+            VerifyHelper.VerifyEntityWithArray1(val, BssomSerializerOptions.Default.WithIsUseStandardDateTime(true));
+        }
+
+        [Fact]
+        public void NativeDateTimeArraySegmentFormatter_FormatterTypeIsArray1TypeAndFormatterIsCorrectly()
+        {
+            var val = RandomHelper.RandomValue<ArraySegment<DateTime>>();
+            VerifyHelper.VerifyEntityWithArray1(val, BssomSerializerOptions.Default.WithIsUseStandardDateTime(false));
         }
 
         [Fact]

@@ -45,6 +45,13 @@ namespace Bssom.Serializer.Test
             var val3 = new _ICollectionCustomImpl_SameItemCollectionTypeCtor<string>("a", "b");
             VerifyHelper.VerifyEntityWithArray2(val3);
         }
+
+        [Fact]
+        public void CustomTypeImpl_StandardDateTime_FormatterIsCorrectly()
+        {
+            var val = new _ICollectionCustomImpl_SameItemCollectionTypeCtor<DateTime>(DateTime.Now, DateTime.MaxValue);
+            VerifyHelper.VerifyEntityWithArray1(val, BssomSerializerOptions.Default.WithIsUseStandardDateTime(false));
+        }
     }
 
    public class _ICollectionCustomImpl_EmptyParasCtor<T> : ICollection<T>

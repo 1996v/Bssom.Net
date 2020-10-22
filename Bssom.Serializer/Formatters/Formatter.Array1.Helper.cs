@@ -1196,12 +1196,7 @@ namespace Bssom.Serializer.Internal
             {
                 if (context.Option.IsUseStandardDateTime)
                 {
-                    long dataLen = 0;
-                    foreach (var item in value)
-                    {
-                        dataLen += BssomBinaryPrimitives.StandardDateTimeSize(item);
-                    }
-                    return BssomBinaryPrimitives.DateTimeArraySize(count, dataLen);
+                    return BssomBinaryPrimitives.StandardDateTimeArraySize(count);
                 }
                 else
                 {
@@ -1212,12 +1207,7 @@ namespace Bssom.Serializer.Internal
             {
                 if (context.Option.IsUseStandardDateTime)
                 {
-                    long dataLen = 0;
-                    foreach (var item in value)
-                    {
-                        dataLen += BssomBinaryPrimitives.StandardDateTimeSize(item);
-                    }
-                    return BssomBinaryPrimitives.DateTimeArraySizeWithOutCount(dataLen);
+                    return BssomBinaryPrimitives.StandardDateTimeArraySizeWithOutCount(value.Count());
                 }
                 else
                 {

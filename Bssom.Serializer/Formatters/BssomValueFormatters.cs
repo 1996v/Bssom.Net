@@ -80,7 +80,7 @@ namespace Bssom.Serializer.Formatters
                 return BssomBinaryPrimitives.NullSize;
 
             if (context.Option.IsUseStandardDateTime)
-                return BssomBinaryPrimitives.BuildInTypeCodeSize + BssomBinaryPrimitives.StandardDateTimeSize(value.GetDateTime());
+                return BssomBinaryPrimitives.BuildInTypeCodeSize + BssomBinaryPrimitives.StandardDateTimeSize;
             return BssomBinaryPrimitives.NativeTypeCodeSize + BssomBinaryPrimitives.NativeDateTimeSize;
         }
     }
