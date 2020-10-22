@@ -1,8 +1,8 @@
 ﻿
-using BssomSerializers.Binary;
-using BssomSerializers.BssMap.KeyResolvers;
-using BssomSerializers.Internal;
-using BssomSerializers.BssomBuffer;
+using Bssom.Serializer.Binary;
+using Bssom.Serializer.BssMap.KeyResolvers;
+using Bssom.Serializer.Internal;
+using Bssom.Serializer.BssomBuffer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BssomSerializers.Formatters
+namespace Bssom.Serializer.Formatters
 {
      /// <summary>
     /// Format <see cref="SByte"/>? as BssomType.Null or BssomType.Int8 

@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using BssomSerializers.Binary;
-using BssomSerializers.BssMap.KeyResolvers;
-using BssomSerializers.Internal;
-using BssomSerializers.BssomBuffer;
-using BssomSerializers.BssMap;
-using BssomSerializers.Resolver;
+using Bssom.Serializer.Binary;
+using Bssom.Serializer.BssMap.KeyResolvers;
+using Bssom.Serializer.Internal;
+using Bssom.Serializer.BssomBuffer;
+using Bssom.Serializer.BssMap;
+using Bssom.Serializer.Resolver;
 using System.Collections.Concurrent;
 using System.Runtime.ExceptionServices;
 
-namespace BssomSerializers
+namespace Bssom.Serializer
 {
     /// <summary>
     /// <para>对特定的类型查找一个格式化器用来序列化和反序列化</para>

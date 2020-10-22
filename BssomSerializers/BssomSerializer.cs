@@ -1,5 +1,4 @@
-﻿using BssomSerializers;
-using BssomSerializers.BssomBuffer;
+﻿using Bssom.Serializer;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,10 +7,11 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using BssomSerializers.Resolver;
+using Bssom.Serializer.BssomBuffer;
+using Bssom.Serializer.Resolver;
 
 
-namespace BssomSerializers
+namespace Bssom.Serializer
 {
     public static class BssomSerializer
     {

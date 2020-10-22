@@ -1,12 +1,12 @@
 ﻿//using System.Runtime.CompilerServices;
 
-using BssomSerializers.BssMap.KeyResolvers;
+using Bssom.Serializer.BssMap.KeyResolvers;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace BssomSerializers.BssMap
+namespace Bssom.Serializer.BssMap
 {
     internal class MapSchemaStringBuilder
     {

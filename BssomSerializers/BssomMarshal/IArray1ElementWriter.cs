@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using BssomSerializers.Binary;
-using BssomSerializers.BssMap.KeyResolvers;
-using BssomSerializers.Internal;
-using BssomSerializers.BssomBuffer;
-using BssomSerializers.BssMap;
-using BssomSerializers.Resolver;
-namespace BssomSerializers.Internal
+using Bssom.Serializer.Binary;
+using Bssom.Serializer.BssMap.KeyResolvers;
+using Bssom.Serializer.Internal;
+using Bssom.Serializer.BssomBuffer;
+using Bssom.Serializer.BssMap;
+using Bssom.Serializer.Resolver;
+namespace Bssom.Serializer.Internal
 {
     internal interface IArray1ElementWriter
     {

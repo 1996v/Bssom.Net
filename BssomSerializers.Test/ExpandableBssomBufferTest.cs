@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using BssomSerializers.BssomBuffer;
+using Bssom.Serializer.BssomBuffer;
 using Xunit;
 
-namespace BssomSerializers.Test
+namespace Bssom.Serializer.Test
 {
     public class BssomSimpleBufferTest
     {

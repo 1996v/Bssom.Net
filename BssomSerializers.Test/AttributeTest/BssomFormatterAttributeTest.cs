@@ -1,14 +1,14 @@
-﻿using BssomSerializers.Binary;
-using BssomSerializers.BssMap.KeyResolvers;
-using BssomSerializers.Resolver;
+﻿using Bssom.Serializer.Binary;
+using Bssom.Serializer.BssMap.KeyResolvers;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
-using BssomSerializers.BssomBuffer;
+using Bssom.Serializer.Resolver;
+using Bssom.Serializer.BssomBuffer;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace BssomSerializers.Test
+namespace Bssom.Serializer.Test
 {
     public class BssomFormatterAttributeTest
     {

@@ -1,8 +1,9 @@
 ﻿//using System.Runtime.CompilerServices;
-using BssomSerializers.Resolver;
-using System;
 
-namespace BssomSerializers
+using System;
+using Bssom.Serializer.Resolver;
+
+namespace Bssom.Serializer
 {
     /// <summary>
     /// <para>指示<see cref="AttributeFormatterResolver"/>和<see cref="MapCodeGenResolver"/>在序列化和反序列化时为所标记的对象设置一个特殊的格式化类型</para>

@@ -1,13 +1,13 @@
-﻿using BssomSerializers.BssomBuffer;
-using BssomSerializers.Formatters;
-using BssomSerializers.Resolver;
+﻿using Bssom.Serializer.BssomBuffer;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using Bssom.Serializer.Formatters;
+using Bssom.Serializer.Resolver;
 using Xunit;
 
-namespace BssomSerializers.Test
+namespace Bssom.Serializer.Test
 {
     public class ICollectionResolverTest_Array1_Array
     {

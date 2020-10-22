@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Xunit;
-namespace BssomSerializers.Test
+namespace Bssom.Serializer.Test
 {
     public class SerializationConstructorTest
     {
@@ -28,7 +28,7 @@ namespace BssomSerializers.Test
             public string Orgin;
             public int Code;
 
-            [SerializationConstructorAttribute]
+            [SerializationConstructor]
             private _Attribute_Class_1()
             {
             }

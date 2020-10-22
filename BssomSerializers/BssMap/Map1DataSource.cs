@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace BssomSerializers.BssMap
+namespace Bssom.Serializer.BssMap
 {
     internal class Map1DataSource<TKey, TValue> : IMapDataSource<TKey, TValue>
     {

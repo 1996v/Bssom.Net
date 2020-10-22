@@ -1,12 +1,12 @@
 ﻿//using System.Runtime.CompilerServices;
-using BssomSerializers.Binary;
-using BssomSerializers.BssMap.KeyResolvers;
-using BssomSerializers.Internal;
-using BssomSerializers.BssomBuffer;
+using Bssom.Serializer.Binary;
+using Bssom.Serializer.BssMap.KeyResolvers;
+using Bssom.Serializer.BssomBuffer;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Bssom.Serializer.Internal;
 
-namespace BssomSerializers.BssMap
+namespace Bssom.Serializer.BssMap
 {
     internal struct BssmapAnalysisStack :  IIteration<byte>
     {

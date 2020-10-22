@@ -7,7 +7,7 @@ using System.Reflection.Emit;
 using System.Text.RegularExpressions;
 using System.Threading;
 
-namespace BssomSerializers.Internal
+namespace Bssom.Serializer.Internal
 {
     internal class DynamicAssembly
     {

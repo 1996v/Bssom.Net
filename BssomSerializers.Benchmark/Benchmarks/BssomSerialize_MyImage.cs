@@ -1,7 +1,7 @@
 ﻿using BenchmarkDotNet.Attributes;
 using System;
 
-namespace BssomSerializers.Benchmark
+namespace Bssom.Serializer.Benchmark
 {
     [Config(typeof(BenchmarkConfig))]
     public class BssomSerialize_MyImage

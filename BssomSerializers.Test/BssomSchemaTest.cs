@@ -1,9 +1,9 @@
-﻿using BssomSerializers.BssMap;
-using BssomSerializers.BssomBuffer;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Bssom.Serializer.BssMap;
+using Bssom.Serializer.BssomBuffer;
 using Xunit;
-namespace BssomSerializers.Test
+namespace Bssom.Serializer.Test
 {
     public class BssomSchemaTest
     {

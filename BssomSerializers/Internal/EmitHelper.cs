@@ -3,7 +3,7 @@ using System;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace BssomSerializers.Internal
+namespace Bssom.Serializer.Internal
 {
     internal static class EmitHelper
     {

@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 
-namespace BssomSerializers
+namespace Bssom.Serializer
 {
     /// <summary>
     /// <para>用于在<see cref="BssomFieldMarshaller.IndexOf(IIndexOfInputSource, long)"/>中使用的自定义输入源,可以传递Object类型的MapKey</para>

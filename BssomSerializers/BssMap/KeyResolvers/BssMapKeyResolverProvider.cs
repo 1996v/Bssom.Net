@@ -8,7 +8,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace BssomSerializers.BssMap.KeyResolvers
+namespace Bssom.Serializer.BssMap.KeyResolvers
 {
     internal static class BssMapKeyResolverProvider
     {

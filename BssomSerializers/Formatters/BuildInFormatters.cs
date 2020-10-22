@@ -9,13 +9,13 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
-using BssomSerializers.Binary;
-using BssomSerializers.BssMap.KeyResolvers;
-using BssomSerializers.Internal;
-using BssomSerializers.BssomBuffer;
-using BssomSerializers.BssMap;
+using Bssom.Serializer.Binary;
+using Bssom.Serializer.BssMap;
+using Bssom.Serializer.Internal;
+using Bssom.Serializer.BssMap.KeyResolvers;
+using Bssom.Serializer.BssomBuffer;
 
-namespace BssomSerializers.Formatters
+namespace Bssom.Serializer.Formatters
 {
     /// <summary>
     /// Format <see cref="Version"/> as BssomType.String

@@ -1,4 +1,4 @@
-﻿namespace BssomSerializers
+﻿namespace Bssom.Serializer
 {
     /// <summary>
     /// <para>指定在缓冲区中用于查找的位置</para>

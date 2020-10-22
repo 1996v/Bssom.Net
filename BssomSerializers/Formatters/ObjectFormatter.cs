@@ -3,15 +3,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using BssomSerializers.Binary;
-using BssomSerializers.BssMap.KeyResolvers;
-using BssomSerializers.Internal;
-using BssomSerializers.BssomBuffer;
-using BssomSerializers.BssMap;
-using BssomSerializers.Formatters;
+using Bssom.Serializer.BssMap.KeyResolvers;
+using Bssom.Serializer.Internal;
+using Bssom.Serializer.BssomBuffer;
+using Bssom.Serializer.Formatters;
 using System.Collections.Concurrent;
+using Bssom.Serializer.Binary;
+using Bssom.Serializer.BssMap;
 
-namespace BssomSerializers.Formatters
+namespace Bssom.Serializer.Formatters
 {
     /// <summary>
     /// Format the real type of Object
@@ -119,7 +119,7 @@ namespace BssomSerializers.Formatters
 
 
 }
-namespace BssomSerializers
+namespace Bssom.Serializer
 {
     internal static class RawObjectDeserializer
     {

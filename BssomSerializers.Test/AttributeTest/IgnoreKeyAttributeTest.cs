@@ -1,5 +1,5 @@
 ﻿using Xunit;
-namespace BssomSerializers.Test
+namespace Bssom.Serializer.Test
 {
 
 

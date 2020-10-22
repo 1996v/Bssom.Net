@@ -1,12 +1,10 @@
 ﻿//using System.Runtime.CompilerServices;
 
-using BssomSerializers.Binary;
-using BssomSerializers.BssMap.KeyResolvers;
-using BssomSerializers.Internal;
-using BssomSerializers.BssomBuffer;
-using BssomSerializers.BssMap;
-using BssomSerializers.Resolver;
-using BssomSerializers.Formatters;
+using Bssom.Serializer.Binary;
+using Bssom.Serializer.BssMap.KeyResolvers;
+using Bssom.Serializer.BssomBuffer;
+using Bssom.Serializer.BssMap;
+using Bssom.Serializer.Resolver;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,8 +15,10 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
+using Bssom.Serializer.Formatters;
+using Bssom.Serializer.Internal;
 
-namespace BssomSerializers.Resolver
+namespace Bssom.Serializer.Resolver
 {
     /// <summary>
     /// Provides formatters for <see cref="StringDictionary"/>,<see cref="StringBuilder"/>,<see cref="BitArray"/>,<see cref="NameValueCollection"/>,<see cref="Version"/>,<see cref="Uri"/>,<see cref="TimeSpan"/>,<see cref="DBNull"/>,<see cref="DataTable"/> , Provides nullable inline formatters for types in the <see cref="PrimitiveResolver"/>
@@ -89,7 +89,7 @@ namespace BssomSerializers.Resolver
         }
     }
 }
-namespace BssomSerializers.Internal
+namespace Bssom.Serializer.Internal
 {
     internal static class BuildInResolverGetFormatterHelper
     {

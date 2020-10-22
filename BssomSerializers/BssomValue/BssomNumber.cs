@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BssomSerializers
+namespace Bssom.Serializer
 {
     /// <summary>
     /// Represents a BSSOM number

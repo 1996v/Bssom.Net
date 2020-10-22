@@ -1,11 +1,11 @@
 ﻿//using System.Runtime.CompilerServices;
 
 using System.Runtime.InteropServices;
-using BssomSerializers.BssMap.KeyResolvers;
-using BssomSerializers.BssomBuffer;
-using BssomSerializers.Internal;
+using Bssom.Serializer.Internal;
+using Bssom.Serializer.BssMap.KeyResolvers;
+using Bssom.Serializer.BssomBuffer;
 
-namespace BssomSerializers.BssMap
+namespace Bssom.Serializer.BssMap
 {
     internal class BssRow<TValue>
     {

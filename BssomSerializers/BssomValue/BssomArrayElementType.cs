@@ -1,4 +1,4 @@
-﻿namespace BssomSerializers
+﻿namespace Bssom.Serializer
 {
     /// <summary>
     /// BssomArray element type

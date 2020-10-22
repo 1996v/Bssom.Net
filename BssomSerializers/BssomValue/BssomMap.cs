@@ -1,10 +1,10 @@
-﻿using BssomSerializers.BssMap.KeyResolvers;
-using BssomSerializers.Internal;
+﻿using Bssom.Serializer.Internal;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Bssom.Serializer.BssMap.KeyResolvers;
 
-namespace BssomSerializers
+namespace Bssom.Serializer
 {
     /// <summary>
     /// Represents a BSSOM map.

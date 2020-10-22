@@ -1,11 +1,11 @@
-﻿using BssomSerializers.Formatters;
-using BssomSerializers.Resolver;
+﻿using Bssom.Serializer.Formatters;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Bssom.Serializer.Resolver;
 using Xunit;
 
-namespace BssomSerializers.Test
+namespace Bssom.Serializer.Test
 {
     public class ICollectionResolverTest_CustomTypeImpl
     {

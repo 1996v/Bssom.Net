@@ -1,6 +1,6 @@
-﻿using BssomSerializers;
-using BssomSerializers.BssomBuffer;
-using BssomSerializers.Internal;
+﻿using Bssom.Serializer;
+using Bssom.Serializer.BssomBuffer;
+using Bssom.Serializer.Internal;
 using System;
 using System.Collections;
 using System.Collections.Generic;

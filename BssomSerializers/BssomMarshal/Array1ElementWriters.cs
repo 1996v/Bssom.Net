@@ -1,9 +1,9 @@
-﻿using BssomSerializers.Binary;
-using BssomSerializers.BssMap.KeyResolvers;
-using BssomSerializers.Internal;
-using BssomSerializers.BssomBuffer;
-using BssomSerializers.BssMap;
-using BssomSerializers.Resolver;
+﻿using Bssom.Serializer.Binary;
+using Bssom.Serializer.BssMap.KeyResolvers;
+using Bssom.Serializer.Internal;
+using Bssom.Serializer.BssomBuffer;
+using Bssom.Serializer.BssMap;
+using Bssom.Serializer.Resolver;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,7 +12,7 @@ using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace BssomSerializers.Internal
+namespace Bssom.Serializer.Internal
 {
     internal sealed class Int8Array1ElementWriter : IArray1ElementWriter<SByte>
     {

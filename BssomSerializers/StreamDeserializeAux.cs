@@ -2,10 +2,10 @@
 using System.Buffers;
 using System.IO;
 using System.Threading.Tasks;
-using BssomSerializers.Binary;
-using BssomSerializers.BssomBuffer;
+using Bssom.Serializer.Binary;
+using Bssom.Serializer.BssomBuffer;
 
-namespace BssomSerializers
+namespace Bssom.Serializer
 {
     internal class StreamDeserializeAux : IDisposable
     {

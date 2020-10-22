@@ -2,7 +2,7 @@
 
 using System;
 
-namespace BssomSerializers
+namespace Bssom.Serializer
 {
     /// <summary>
     /// Bssom type 

@@ -1,8 +1,9 @@
 ﻿//using System.Runtime.CompilerServices;
-using BssomSerializers.Resolver;
-using System;
 
-namespace BssomSerializers
+using System;
+using Bssom.Serializer.Resolver;
+
+namespace Bssom.Serializer
 {
     /// <summary>
     /// <para>指示<see cref="MapCodeGenResolver"/>在序列化和反序列化期间对字段或属性使用指定的名称 </para>

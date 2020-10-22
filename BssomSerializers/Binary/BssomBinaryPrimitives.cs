@@ -2,10 +2,10 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Text;
-using BssomSerializers.Formatters;
-using BssomSerializers.Internal;
+using Bssom.Serializer.Internal;
+using Bssom.Serializer.Formatters;
 
-namespace BssomSerializers.Binary
+namespace Bssom.Serializer.Binary
 {
     /*
      * TODO: The next code refactoring will split BssomBinaryPrimitives into BssomValue type.

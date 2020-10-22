@@ -1,13 +1,13 @@
-﻿using BssomSerializers.BssMap;
-using BssomSerializers.BssMap.KeyResolvers;
-using BssomSerializers.Internal;
-using BssomSerializers.Binary;
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
 using System.Text;
+using Bssom.Serializer.Binary;
+using Bssom.Serializer.BssMap;
+using Bssom.Serializer.BssMap.KeyResolvers;
+using Bssom.Serializer.Internal;
 using Xunit;
 
-namespace BssomSerializers.Test
+namespace Bssom.Serializer.Test
 {
     public class IBssMapKeyResolverProviderTest
     {

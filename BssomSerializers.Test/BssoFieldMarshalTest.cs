@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Xunit;
-namespace BssomSerializers.Test
+namespace Bssom.Serializer.Test
 {
     public class BssomFieldMarshalTest
     {

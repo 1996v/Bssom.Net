@@ -1,13 +1,13 @@
 ﻿//using System.Runtime.CompilerServices;
 
-using BssomSerializers.Binary;
-using BssomSerializers.Internal;
+using Bssom.Serializer.Binary;
 using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using Bssom.Serializer.Internal;
 
-namespace BssomSerializers.BssMap.KeyResolvers
+namespace Bssom.Serializer.BssMap.KeyResolvers
 {
     internal class BssMapStringKeyResolver : IBssMapKeyResolver<string>
     {

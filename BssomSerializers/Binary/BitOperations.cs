@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 //using System.Runtime.CompilerServices;
 
-namespace BssomSerializers.Binary
+namespace Bssom.Serializer.Binary
 {
     internal static class BitOperations
     {

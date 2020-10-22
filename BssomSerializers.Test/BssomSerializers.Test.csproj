@@ -4,6 +4,10 @@
     <TargetFrameworks> net47;netcoreapp3.1</TargetFrameworks>
 
     <IsPackable>false</IsPackable>
+
+    <AssemblyName>Bssom.Serializer.Test</AssemblyName>
+
+    <RootNamespace>Bssom.Serializer.Test</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

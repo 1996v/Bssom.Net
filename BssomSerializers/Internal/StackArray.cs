@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace BssomSerializers.Internal
+namespace Bssom.Serializer.Internal
 {
     internal unsafe struct StackArray<T> : IIteration<T> where T : unmanaged
     {

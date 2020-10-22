@@ -1,9 +1,6 @@
-﻿using BssomSerializers.Binary;
-using BssomSerializers.BssMap.KeyResolvers;
-using BssomSerializers.Internal;
-using BssomSerializers.BssomBuffer;
-using BssomSerializers.BssMap;
-using BssomSerializers.Resolver;
+﻿using Bssom.Serializer.Binary;
+using Bssom.Serializer.BssomBuffer;
+using Bssom.Serializer.Resolver;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -12,10 +9,13 @@ using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Threading;
-using BssomSerializers.Formatters;
 using System.Linq.Expressions;
+using Bssom.Serializer.BssMap;
+using Bssom.Serializer.BssMap.KeyResolvers;
+using Bssom.Serializer.Formatters;
+using Bssom.Serializer.Internal;
 
-namespace BssomSerializers.Resolver
+namespace Bssom.Serializer.Resolver
 {
     /// <summary>
     /// <para>获取和生成具有IDictionary行为的类型的<see cref="IBssomFormatter"/></para>
@@ -218,7 +218,7 @@ namespace BssomSerializers.Resolver
 
 
 }
-namespace BssomSerializers.Internal
+namespace Bssom.Serializer.Internal
 {
     internal static class IDictionaryFormatterTypeBuilder
     {

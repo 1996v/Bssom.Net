@@ -1,6 +1,6 @@
 ﻿//using System.Runtime.CompilerServices;
 
-namespace BssomSerializers
+namespace Bssom.Serializer
 {
     /// <summary>
     /// <para>Bssom字段在缓冲区中的位置信息</para>

@@ -7,12 +7,12 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using BssomSerializers.Binary;
-using BssomSerializers.BssMap.KeyResolvers;
-using BssomSerializers.Internal;
-using BssomSerializers.BssomBuffer;
-using BssomSerializers.BssMap;
-namespace BssomSerializers.BssMap.KeyResolvers
+using Bssom.Serializer.Binary;
+using Bssom.Serializer.Internal;
+using Bssom.Serializer.BssMap.KeyResolvers;
+using Bssom.Serializer.BssomBuffer;
+using Bssom.Serializer.BssMap;
+namespace Bssom.Serializer.BssMap.KeyResolvers
 {
     internal class BssMapInt8KeyResolver : IBssMapKeyResolver<SByte>
     {

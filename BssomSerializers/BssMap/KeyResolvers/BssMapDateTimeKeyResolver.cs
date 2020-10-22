@@ -1,11 +1,11 @@
 ﻿//using System.Runtime.CompilerServices;
 
-using BssomSerializers.Binary;
-using BssomSerializers.Internal;
 using System;
 using System.Runtime.CompilerServices;
+using Bssom.Serializer.Binary;
+using Bssom.Serializer.Internal;
 
-namespace BssomSerializers.BssMap.KeyResolvers
+namespace Bssom.Serializer.BssMap.KeyResolvers
 {
     internal class BssMapDateTimeKeyResolver : IBssMapKeyResolver<DateTime>
     {

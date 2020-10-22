@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 
-namespace BssomSerializers.Internal
+namespace Bssom.Serializer.Internal
 {
     internal unsafe struct StackArrayPack<T> : IIteration<T> where T : unmanaged
     {

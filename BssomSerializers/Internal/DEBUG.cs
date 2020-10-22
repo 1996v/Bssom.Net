@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BssomSerializers.Internal
+namespace Bssom.Serializer.Internal
 {
     internal class DebugAssertException : Exception
     {

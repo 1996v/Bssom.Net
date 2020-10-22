@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 
-namespace BssomSerializers
+namespace Bssom.Serializer
 {
     /// <summary>
     /// <para>反序列化期间使用的上下文</para>

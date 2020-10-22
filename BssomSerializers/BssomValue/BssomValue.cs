@@ -1,14 +1,14 @@
-﻿using BssomSerializers.Internal;
+﻿using Bssom.Serializer.Internal;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using static BssomSerializers.BssomFloat;
-using static BssomSerializers.BssomNumber;
+using static Bssom.Serializer.BssomFloat;
+using static Bssom.Serializer.BssomNumber;
 
-namespace BssomSerializers
+namespace Bssom.Serializer
 {
     /// <summary>
     /// Represents a BSSOM array.
@@ -39,18 +39,18 @@ namespace BssomSerializers
         {
             if (value == null) return BssomNull.Value;
 
-            if (value is Int16) return new BssomNumber(value, BssomNumberType.Short);
-            else if (value is Int32) return new BssomNumber(value, BssomNumberType.Int);
-            else if (value is Int64) return new BssomNumber(value, BssomNumberType.Long);
-            else if (value is UInt16) return new BssomNumber(value, BssomNumberType.UShort);
-            else if (value is UInt32) return new BssomNumber(value, BssomNumberType.UInt);
-            else if (value is UInt64) return new BssomNumber(value, BssomNumberType.ULong);
-            else if (value is Byte) return new BssomNumber(value, BssomNumberType.Byte);
-            else if (value is SByte) return new BssomNumber(value, BssomNumberType.SByte);
+            if (value is Int16) return new BssomNumber(value, BssomNumber.BssomNumberType.Short);
+            else if (value is Int32) return new BssomNumber(value, BssomNumber.BssomNumberType.Int);
+            else if (value is Int64) return new BssomNumber(value, BssomNumber.BssomNumberType.Long);
+            else if (value is UInt16) return new BssomNumber(value, BssomNumber.BssomNumberType.UShort);
+            else if (value is UInt32) return new BssomNumber(value, BssomNumber.BssomNumberType.UInt);
+            else if (value is UInt64) return new BssomNumber(value, BssomNumber.BssomNumberType.ULong);
+            else if (value is Byte) return new BssomNumber(value, BssomNumber.BssomNumberType.Byte);
+            else if (value is SByte) return new BssomNumber(value, BssomNumber.BssomNumberType.SByte);
             else if (value is Boolean) return new BssomBoolean(value);
             else if (value is String) return new BssomString(value);
-            else if (value is Single) return new BssomFloat(value, BssomFloatType.Single);
-            else if (value is Double) return new BssomFloat(value, BssomFloatType.Double);
+            else if (value is Single) return new BssomFloat(value, BssomFloat.BssomFloatType.Single);
+            else if (value is Double) return new BssomFloat(value, BssomFloat.BssomFloatType.Double);
             else if (value is Decimal) return new BssomDecimal(value);
             else if (value is DateTime) return new BssomDateTime(value);
             else if (value is Char) return new BssomChar(value);

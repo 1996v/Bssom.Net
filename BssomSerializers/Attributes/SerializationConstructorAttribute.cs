@@ -1,8 +1,9 @@
 ﻿//using System.Runtime.CompilerServices;
-using BssomSerializers.Resolver;
-using System;
 
-namespace BssomSerializers
+using System;
+using Bssom.Serializer.Resolver;
+
+namespace Bssom.Serializer
 {
     /// <summary>
     /// <para>指示<see cref="MapCodeGenResolver"/>在反序列化该对象时使用指定的构造函数</para>

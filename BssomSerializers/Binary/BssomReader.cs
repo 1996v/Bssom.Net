@@ -1,13 +1,14 @@
-﻿using BssomSerializers.Binary;
-using BssomSerializers.BssMap;
-using BssomSerializers.BssMap.KeyResolvers;
-using BssomSerializers.Internal;
+﻿using Bssom.Serializer.BssMap.KeyResolvers;
 using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using Bssom.Serializer.Binary;
+using Bssom.Serializer.BssMap;
+using Bssom.Serializer.Internal;
+
 //using System.Runtime.CompilerServices;
 
-namespace BssomSerializers
+namespace Bssom.Serializer
 {
     /*
      * TODO: .net currently does not open ByReference<T>  type, so I cannot do partial de-virtualization optimization for IBssomBuffer. If bssom supports Span<T> in the future, then BssomReader has meaning, but at present, BssomReader is only IBssomBuffer A native call wrapper

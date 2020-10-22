@@ -1,5 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
-namespace BssomSerializers.Test
+namespace Bssom.Serializer.Test
 {
     public class SlowBssomBuffer : IBssomBuffer
     {

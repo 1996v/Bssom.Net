@@ -1,9 +1,8 @@
-﻿using BssomSerializers.Binary;
-using BssomSerializers.BssMap.KeyResolvers;
-using BssomSerializers.Internal;
-using BssomSerializers.BssomBuffer;
-using BssomSerializers.BssMap;
-using BssomSerializers.Resolver;
+﻿using Bssom.Serializer.Binary;
+using Bssom.Serializer.BssMap.KeyResolvers;
+using Bssom.Serializer.BssomBuffer;
+using Bssom.Serializer.BssMap;
+using Bssom.Serializer.Resolver;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,10 +10,12 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using static BssomSerializers.BssomFloat;
-using static BssomSerializers.BssomNumber;
-using BssomSerializers.Formatters;
-namespace BssomSerializers.Resolver
+using Bssom.Serializer.Formatters;
+using Bssom.Serializer.Internal;
+using static Bssom.Serializer.BssomFloat;
+using static Bssom.Serializer.BssomNumber;
+
+namespace Bssom.Serializer.Resolver
 {
     /// <summary>
     /// <para>获取<see cref ="BssomValue"/>的类型的<see cref="IBssomFormatter"/></para>
@@ -47,7 +48,7 @@ namespace BssomSerializers.Resolver
         }
     }
 }
-namespace BssomSerializers.Internal
+namespace Bssom.Serializer.Internal
 {
     internal static class BssomValueResolverGetFormatterHelper
     {

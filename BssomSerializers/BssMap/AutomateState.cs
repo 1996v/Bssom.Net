@@ -1,6 +1,6 @@
 ﻿//using System.Runtime.CompilerServices;
 
-namespace BssomSerializers.BssMap
+namespace Bssom.Serializer.BssMap
 {
     internal enum AutomateState
     {

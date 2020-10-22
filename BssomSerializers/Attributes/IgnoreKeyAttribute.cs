@@ -1,8 +1,8 @@
 ﻿//using System.Runtime.CompilerServices;
 using System;
-using BssomSerializers.Resolver;
+using Bssom.Serializer.Resolver;
 
-namespace BssomSerializers
+namespace Bssom.Serializer
 {
     /// <summary>
     ///<para>指示<see cref="MapCodeGenResolver"/>在序列化和反序列化时忽略被标记的元素</para>

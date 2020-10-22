@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BssomSerializers
+namespace Bssom.Serializer
 {
     /// <summary>
     /// An exception thrown during serializing an object graph or deserializing a bss object

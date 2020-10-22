@@ -1,9 +1,9 @@
 ﻿//using System.Runtime.CompilerServices;
-using BssomSerializers.Binary;
-using BssomSerializers.BssMap.KeyResolvers;
-using BssomSerializers.Internal;
-using BssomSerializers.BssomBuffer;
-namespace BssomSerializers.BssMap
+using Bssom.Serializer.Binary;
+using Bssom.Serializer.BssMap.KeyResolvers;
+using Bssom.Serializer.Internal;
+using Bssom.Serializer.BssomBuffer;
+namespace Bssom.Serializer.BssMap
 {
     internal struct BssMapHeadPackInfo
     {

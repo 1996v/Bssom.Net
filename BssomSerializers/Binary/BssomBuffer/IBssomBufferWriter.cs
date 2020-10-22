@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 //using System.Runtime.CompilerServices;
 
-namespace BssomSerializers
+namespace Bssom.Serializer
 {
     /// <summary>
     /// <para>IBssomBuffer的类型写入器</para>

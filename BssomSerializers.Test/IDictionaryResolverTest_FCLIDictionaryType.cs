@@ -1,10 +1,10 @@
-﻿using BssomSerializers.Resolver;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using Bssom.Serializer.Resolver;
 using Xunit;
 
-namespace BssomSerializers.Test
+namespace Bssom.Serializer.Test
 {
     public class IDictionaryResolverTest_FCLIDictionaryType
     {

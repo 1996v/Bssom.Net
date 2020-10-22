@@ -1,11 +1,11 @@
-using BssomSerializers.Binary;
-using BssomSerializers.Formatters;
-using BssomSerializers.Resolver;
 using System;
 using System.Text;
+using Bssom.Serializer.Binary;
+using Bssom.Serializer.Formatters;
+using Bssom.Serializer.Resolver;
 using Xunit;
 
-namespace BssomSerializers.Test
+namespace Bssom.Serializer.Test
 {
 
     public class PrimitiveResolverTest

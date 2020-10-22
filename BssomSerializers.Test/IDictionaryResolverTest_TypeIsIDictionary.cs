@@ -1,12 +1,12 @@
-﻿using BssomSerializers.Resolver;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using Bssom.Serializer.Resolver;
 using Xunit;
 
-namespace BssomSerializers.Test
+namespace Bssom.Serializer.Test
 {
 
     public class IDictionaryResolverTest_TypeIsIDictionary

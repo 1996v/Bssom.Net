@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace BssomSerializers.Benchmark
+namespace Bssom.Serializer.Benchmark
 {
     [ProtoContract]
     public class PrimitiveFieldComplexClass

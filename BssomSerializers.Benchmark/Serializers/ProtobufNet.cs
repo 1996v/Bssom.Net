@@ -1,7 +1,7 @@
 ﻿using ProtoBuf;
 using System.IO;
 
-namespace BssomSerializers.Benchmark
+namespace Bssom.Serializer.Benchmark
 {
     public class ProtobufNet : SerializerBase
     {
@@ -9,21 +9,21 @@ namespace BssomSerializers.Benchmark
         {
             using (var ms = new MemoryStream(input))
             {
-                return Serializer.Deserialize<T>(ms);
+                return ProtoBuf.Serializer.Deserialize<T>(ms);
             }
         }
 
         public override T DeserializeStream<T>(byte[] input)
         {
             using (MemoryStream stream = new MemoryStream(input))
-                return Serializer.Deserialize<T>(stream);
+                return ProtoBuf.Serializer.Deserialize<T>(stream);
         }
         
         public override byte[] Serialize<T>(T input)
         {
             using (var ms = new MemoryStream())
             {
-                Serializer.Serialize(ms, input);
+                ProtoBuf.Serializer.Serialize(ms, input);
                 return ms.ToArray();
             }
         }
@@ -31,7 +31,7 @@ namespace BssomSerializers.Benchmark
         public override void SerializeStream<T>(T input)
         {
             using (MemoryStream stream = new MemoryStream())
-                Serializer.Serialize<T>(stream, input);
+                ProtoBuf.Serializer.Serialize<T>(stream, input);
         }
     }
 }

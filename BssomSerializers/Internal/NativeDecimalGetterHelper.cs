@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace BssomSerializers.Internal
+namespace Bssom.Serializer.Internal
 {
     internal static class NativeDecimalGetterHelper
     {

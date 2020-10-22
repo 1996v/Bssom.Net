@@ -1,11 +1,9 @@
 ﻿//using System.Runtime.CompilerServices;
 
-using BssomSerializers.Binary;
-using BssomSerializers.BssMap.KeyResolvers;
-using BssomSerializers.Internal;
-using BssomSerializers.Formatters;
-using BssomSerializers.BssMap;
-using BssomSerializers.Resolver;
+using Bssom.Serializer.Binary;
+using Bssom.Serializer.BssMap.KeyResolvers;
+using Bssom.Serializer.BssMap;
+using Bssom.Serializer.Resolver;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,8 +14,10 @@ using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
+using Bssom.Serializer.Formatters;
+using Bssom.Serializer.Internal;
 
-namespace BssomSerializers.Resolver
+namespace Bssom.Serializer.Resolver
 {
     /// <summary>
     /// <para>获取和生成具有IColloction行为的类型的<see cref="IBssomFormatter"/></para>
@@ -307,7 +307,7 @@ namespace BssomSerializers.Resolver
     }
 }
 
-namespace BssomSerializers.Internal
+namespace Bssom.Serializer.Internal
 {
     internal static class Array1ResolverGetFormatterHelper
     {

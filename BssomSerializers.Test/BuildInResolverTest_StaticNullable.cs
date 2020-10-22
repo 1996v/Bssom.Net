@@ -1,7 +1,4 @@
-﻿using BssomSerializers.Binary;
-using BssomSerializers.BssMap;
-using BssomSerializers.Formatters;
-using BssomSerializers.Resolver;
+﻿using Bssom.Serializer.BssMap;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,9 +6,12 @@ using System.Collections.Specialized;
 using System.Data;
 using System.Linq;
 using System.Text;
+using Bssom.Serializer.Binary;
+using Bssom.Serializer.Formatters;
+using Bssom.Serializer.Resolver;
 using Xunit;
 
-namespace BssomSerializers.Test
+namespace Bssom.Serializer.Test
 {
     public class BuildInResolverTest_StaticNullable
     {

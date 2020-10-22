@@ -1,14 +1,14 @@
-﻿using BssomSerializers.BssMap;
-using BssomSerializers.BssomBuffer;
-using BssomSerializers.Internal;
-using BssomSerializers.Resolver;
+﻿using Bssom.Serializer.BssMap;
+using Bssom.Serializer.BssomBuffer;
+using Bssom.Serializer.Internal;
+using Bssom.Serializer.Resolver;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Xunit;
-namespace BssomSerializers.Test
+namespace Bssom.Serializer.Test
 {
     public class AliasAttributeTest
     {

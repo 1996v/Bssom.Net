@@ -1,6 +1,6 @@
 ﻿//using System.Runtime.CompilerServices;
 
-namespace BssomSerializers
+namespace Bssom.Serializer
 {
     /// <summary>
     /// Bssom native type , for .net platform

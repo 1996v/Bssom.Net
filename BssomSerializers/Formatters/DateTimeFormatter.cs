@@ -1,11 +1,11 @@
 ﻿using System;
-using BssomSerializers.Binary;
-using BssomSerializers.BssMap.KeyResolvers;
-using BssomSerializers.Internal;
-using BssomSerializers.BssomBuffer;
-using BssomSerializers.BssMap;
+using Bssom.Serializer.Binary;
+using Bssom.Serializer.BssMap.KeyResolvers;
+using Bssom.Serializer.Internal;
+using Bssom.Serializer.BssomBuffer;
+using Bssom.Serializer.BssMap;
 
-namespace BssomSerializers.Formatters
+namespace Bssom.Serializer.Formatters
 {
     /// <summary>
     /// Format <see cref="DateTime"/> as BssomType.DateTime or NativeBssomType.DateTime

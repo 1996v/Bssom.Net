@@ -1,9 +1,7 @@
 ﻿//using System.Runtime.CompilerServices;
 
-using BssomSerializers.Binary;
-using BssomSerializers.BssMap.KeyResolvers;
-using BssomSerializers.Internal;
-using BssomSerializers.BssomBuffer;
+using Bssom.Serializer.Internal;
+using Bssom.Serializer.BssomBuffer;
 
 using System;
 using System.Collections;
@@ -11,8 +9,10 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Linq;
+using Bssom.Serializer.Binary;
+using Bssom.Serializer.BssMap.KeyResolvers;
 
-namespace BssomSerializers.BssMap
+namespace Bssom.Serializer.BssMap
 {
     internal unsafe sealed class BssMapObjMarshalReader<TKey, TValue> : IMapDataSource<TKey, TValue>
     {

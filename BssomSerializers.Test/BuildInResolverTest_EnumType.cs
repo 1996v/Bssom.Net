@@ -1,8 +1,8 @@
-﻿using BssomSerializers.Formatters;
-using BssomSerializers.Resolver;
+﻿using Bssom.Serializer.Formatters;
+using Bssom.Serializer.Resolver;
 using Xunit;
 
-namespace BssomSerializers.Test
+namespace Bssom.Serializer.Test
 {
     public class BuildInResolverTest_EnumType
     {

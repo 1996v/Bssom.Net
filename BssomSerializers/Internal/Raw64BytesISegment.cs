@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace BssomSerializers.Internal
+namespace Bssom.Serializer.Internal
 {
     internal readonly struct Raw64BytesISegment : IMapKeySegment
     {

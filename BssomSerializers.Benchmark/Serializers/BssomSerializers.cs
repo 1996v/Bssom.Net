@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace BssomSerializers.Benchmark
+namespace Bssom.Serializer.Benchmark
 {
     public class BssomSerializers : SerializerBase
     {

@@ -3,9 +3,10 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using BssomSerializers.Binary;
-using BssomSerializers.Internal;
-namespace BssomSerializers.BssMap
+using Bssom.Serializer.Binary;
+using Bssom.Serializer.Internal;
+
+namespace Bssom.Serializer.BssMap
 {
     internal readonly struct UInt64BytesISegment : IMapKeySegment
     {

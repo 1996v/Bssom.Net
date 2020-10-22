@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data;
 
-namespace BssomSerializers
+namespace Bssom.Serializer
 {
     /// <summary>
     /// The exception that is thrown when an invalid operation occurs in a method.

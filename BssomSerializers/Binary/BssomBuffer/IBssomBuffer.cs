@@ -4,7 +4,7 @@ using System.IO;
 using System.IO.Pipes;
 using System.Runtime.CompilerServices;
 
-namespace BssomSerializers
+namespace Bssom.Serializer
 {
     /// <summary>
     /// <para>一个用于BssomSerializer的缓冲区</para>

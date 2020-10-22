@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using BssomSerializers.Internal;
+using Bssom.Serializer.Internal;
 
-namespace BssomSerializers.BssomBuffer
+namespace Bssom.Serializer.BssomBuffer
 {
     internal sealed class BssomComplexBuffer : IBssomBuffer
     {

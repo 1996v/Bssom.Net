@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
 
-namespace BssomSerializers.Benchmark
+namespace Bssom.Serializer.Benchmark
 {
     class Program
     {

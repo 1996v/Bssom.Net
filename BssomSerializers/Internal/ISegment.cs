@@ -1,6 +1,6 @@
 ﻿//using System.Runtime.CompilerServices;
 
-namespace BssomSerializers.Internal
+namespace Bssom.Serializer.Internal
 {
     internal interface ISegment<T>: IIteration<T>
     {

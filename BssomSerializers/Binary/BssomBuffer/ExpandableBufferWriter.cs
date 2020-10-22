@@ -1,4 +1,4 @@
-﻿using BssomSerializers.Internal;
+﻿using Bssom.Serializer.Internal;
 using System;
 using System.Buffers;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BssomSerializers.BssomBuffer
+namespace Bssom.Serializer.BssomBuffer
 {
     internal sealed class ExpandableBufferWriter : IBssomBufferWriter, IDisposable
     {

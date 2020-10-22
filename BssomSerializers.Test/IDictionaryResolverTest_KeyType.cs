@@ -1,11 +1,11 @@
-﻿using BssomSerializers.Resolver;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using BssomSerializers.BssMap;
-using BssomSerializers.Formatters;
+using Bssom.Serializer.Resolver;
+using Bssom.Serializer.BssMap;
+using Bssom.Serializer.Formatters;
 using Xunit;
 
-namespace BssomSerializers.Test
+namespace Bssom.Serializer.Test
 {
     public class IDictionaryResolverTest_KeyType
     {

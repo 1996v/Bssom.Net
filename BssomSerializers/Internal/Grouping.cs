@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BssomSerializers.Internal
+namespace Bssom.Serializer.Internal
 {
     internal class Grouping<TKey, TElement> : IGrouping<TKey, TElement>
     {

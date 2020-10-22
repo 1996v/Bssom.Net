@@ -3,6 +3,8 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFrameworks>netcoreapp3.1;netcoreapp2.1;net461</TargetFrameworks>
+    <AssemblyName>Bssom.Serializer.Benchmark</AssemblyName>
+    <RootNamespace>Bssom.Serializer.Benchmark</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

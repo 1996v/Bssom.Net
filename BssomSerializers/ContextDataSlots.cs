@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BssomSerializers
+namespace Bssom.Serializer
 {
     /// <summary>
     /// <para>用于在上下文中存储和读取自定义的数据</para>

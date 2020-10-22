@@ -1,6 +1,6 @@
 ﻿//using System.Runtime.CompilerServices;
 
-using BssomSerializers.Resolver;
+using Bssom.Serializer.Resolver;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Data;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace BssomSerializers.Internal
+namespace Bssom.Serializer.Internal
 {
     internal static class TypeUtils
     {

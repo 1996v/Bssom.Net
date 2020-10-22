@@ -1,7 +1,6 @@
-﻿using BssomSerializers.Binary;
-using BssomSerializers.BssMap.KeyResolvers;
-using BssomSerializers.Internal;
-using BssomSerializers.BssomBuffer;
+﻿using Bssom.Serializer.BssMap.KeyResolvers;
+using Bssom.Serializer.Internal;
+using Bssom.Serializer.BssomBuffer;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,11 +8,12 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using static BssomSerializers.BssomFloat;
-using static BssomSerializers.BssomNumber;
-using BssomSerializers.BssMap;
+using Bssom.Serializer.Binary;
+using Bssom.Serializer.BssMap;
+using static Bssom.Serializer.BssomFloat;
+using static Bssom.Serializer.BssomNumber;
 
-namespace BssomSerializers.Formatters
+namespace Bssom.Serializer.Formatters
 {
     /// <summary>
     /// Format <see cref="BssomChar"/> as BssomType.Char
@@ -177,7 +177,7 @@ namespace BssomSerializers.Formatters
             }
             switch (value.FloatType)
             {
-                case BssomFloatType.Single:
+                case BssomFloat.BssomFloatType.Single:
                     writer.Write(value.GetFloat32());
                     break;
                 default://case BssomFloatType.Double:
@@ -192,7 +192,7 @@ namespace BssomSerializers.Formatters
                 return BssomBinaryPrimitives.NullSize;
             switch (value.FloatType)
             {
-                case BssomFloatType.Single:
+                case BssomFloat.BssomFloatType.Single:
                     return BssomBinaryPrimitives.BuildInTypeCodeSize + BssomBinaryPrimitives.Float32Size;
                 default://case BssomFloatType.Double:
                     return BssomBinaryPrimitives.BuildInTypeCodeSize + BssomBinaryPrimitives.Float64Size;
@@ -223,25 +223,25 @@ namespace BssomSerializers.Formatters
             }
             switch (value.NumberType)
             {
-                case BssomNumberType.SByte:
+                case BssomNumber.BssomNumberType.SByte:
                     writer.Write(value.GetSByte());
                     break;
-                case BssomNumberType.Byte:
+                case BssomNumber.BssomNumberType.Byte:
                     writer.Write(value.GetByte());
                     break;
-                case BssomNumberType.Short:
+                case BssomNumber.BssomNumberType.Short:
                     writer.Write(value.GetShort());
                     break;
-                case BssomNumberType.Int:
+                case BssomNumber.BssomNumberType.Int:
                     writer.Write(value.GetInt());
                     break;
-                case BssomNumberType.Long:
+                case BssomNumber.BssomNumberType.Long:
                     writer.Write(value.GetLong());
                     break;
-                case BssomNumberType.UShort:
+                case BssomNumber.BssomNumberType.UShort:
                     writer.Write(value.GetUShort());
                     break;
-                case BssomNumberType.UInt:
+                case BssomNumber.BssomNumberType.UInt:
                     writer.Write(value.GetUInt());
                     break;
                 default://case BssomNumberType.ULong:
@@ -256,19 +256,19 @@ namespace BssomSerializers.Formatters
                 return BssomBinaryPrimitives.NullSize;
             switch (value.NumberType)
             {
-                case BssomNumberType.SByte:
+                case BssomNumber.BssomNumberType.SByte:
                     return BssomBinaryPrimitives.BuildInTypeCodeSize + BssomBinaryPrimitives.Int8Size;
-                case BssomNumberType.Byte:
+                case BssomNumber.BssomNumberType.Byte:
                     return BssomBinaryPrimitives.BuildInTypeCodeSize + BssomBinaryPrimitives.UInt8Size;
-                case BssomNumberType.Short:
+                case BssomNumber.BssomNumberType.Short:
                     return BssomBinaryPrimitives.BuildInTypeCodeSize + BssomBinaryPrimitives.Int16Size;
-                case BssomNumberType.Int:
+                case BssomNumber.BssomNumberType.Int:
                     return BssomBinaryPrimitives.BuildInTypeCodeSize + BssomBinaryPrimitives.Int32Size;
-                case BssomNumberType.Long:
+                case BssomNumber.BssomNumberType.Long:
                     return BssomBinaryPrimitives.BuildInTypeCodeSize + BssomBinaryPrimitives.Int64Size;
-                case BssomNumberType.UShort:
+                case BssomNumber.BssomNumberType.UShort:
                     return BssomBinaryPrimitives.BuildInTypeCodeSize + BssomBinaryPrimitives.UInt16Size;
-                case BssomNumberType.UInt:
+                case BssomNumber.BssomNumberType.UInt:
                     return BssomBinaryPrimitives.BuildInTypeCodeSize + BssomBinaryPrimitives.UInt32Size;
                 default://case BssomNumberType.ULong:
                     return BssomBinaryPrimitives.BuildInTypeCodeSize + BssomBinaryPrimitives.UInt64Size;

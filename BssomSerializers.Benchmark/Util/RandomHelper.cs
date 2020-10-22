@@ -4,7 +4,7 @@ using System.Data;
 using System.Reflection;
 using System.Text;
 
-namespace BssomSerializers.Benchmark
+namespace Bssom.Serializer.Benchmark
 {
     internal static class RandomHelper
     {

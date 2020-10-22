@@ -2,7 +2,7 @@
 using MessagePack.Resolvers;
 using System.IO;
 
-namespace BssomSerializers.Benchmark
+namespace Bssom.Serializer.Benchmark
 {
     public class MessagePack : SerializerBase
     {

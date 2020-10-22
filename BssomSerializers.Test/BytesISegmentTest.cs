@@ -1,7 +1,7 @@
-﻿using BssomSerializers.BssMap;
-using BssomSerializers.Internal;
+﻿using Bssom.Serializer.BssMap;
+using Bssom.Serializer.Internal;
 using Xunit;
-namespace BssomSerializers.Test
+namespace Bssom.Serializer.Test
 {
     public class BytesISegmentTest
     {

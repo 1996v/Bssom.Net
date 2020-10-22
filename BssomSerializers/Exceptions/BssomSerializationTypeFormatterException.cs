@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BssomSerializers
+namespace Bssom.Serializer
 {
     /// <summary>
     /// The exception thrown when formatting the type.

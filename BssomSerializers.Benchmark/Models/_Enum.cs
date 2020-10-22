@@ -1,4 +1,4 @@
-﻿namespace BssomSerializers.Benchmark
+﻿namespace Bssom.Serializer.Benchmark
 {
     public enum _Enum
     {

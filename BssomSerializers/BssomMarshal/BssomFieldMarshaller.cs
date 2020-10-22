@@ -1,19 +1,19 @@
 ﻿//using System.Runtime.CompilerServices;
 
-using BssomSerializers.Binary;
-using BssomSerializers.Internal;
-using BssomSerializers.BssMap;
 using System;
 using System.Runtime.CompilerServices;
 using System.Text;
-using BssomSerializers.BssomBuffer;
 using System.Collections.Generic;
-using BssomSerializers.BssMap.KeyResolvers;
 using System.Xml.Schema;
-using BssomSerializers.Formatters;
-using BssomSerializers.Resolver;
+using Bssom.Serializer.Binary;
+using Bssom.Serializer.BssMap;
+using Bssom.Serializer.BssMap.KeyResolvers;
+using Bssom.Serializer.BssomBuffer;
+using Bssom.Serializer.Internal;
+using Bssom.Serializer.Formatters;
+using Bssom.Serializer.Resolver;
 
-namespace BssomSerializers
+namespace Bssom.Serializer
 {
     /// <summary>
     /// <para>提供了对Bssom字段的直接访问和编组功能</para> 

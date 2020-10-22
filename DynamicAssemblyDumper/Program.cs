@@ -1,4 +1,4 @@
-using BssomSerializers.Resolver;
+using Bssom.Serializer.Resolver;
 using System;
 using Xunit;
 

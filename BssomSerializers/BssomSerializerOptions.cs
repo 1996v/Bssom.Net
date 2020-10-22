@@ -1,6 +1,7 @@
-﻿using BssomSerializers.Resolver;
-using System;
-namespace BssomSerializers
+﻿using System;
+using Bssom.Serializer.Resolver;
+
+namespace Bssom.Serializer
 {
     /// <summary>
     /// <para>运行<see cref="BssomSerializer"/>期间所使用的配置</para>

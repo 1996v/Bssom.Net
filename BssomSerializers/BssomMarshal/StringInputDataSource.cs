@@ -1,11 +1,11 @@
 ﻿//using System.Runtime.CompilerServices;
 
-using BssomSerializers.Internal;
-using BssomSerializers.BssMap;
 using System;
 using System.Text;
+using Bssom.Serializer.BssMap;
+using Bssom.Serializer.Internal;
 
-namespace BssomSerializers
+namespace Bssom.Serializer
 {
     internal struct StringInputDataSource
     {

@@ -1,5 +1,5 @@
-﻿using BssomSerializers.Internal;
-using BssomSerializers.Binary;
+﻿using Bssom.Serializer.Internal;
+using Bssom.Serializer.Binary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-namespace BssomSerializers
+namespace Bssom.Serializer
 {
     //BuildInTypeCode
     public partial struct BssomWriter

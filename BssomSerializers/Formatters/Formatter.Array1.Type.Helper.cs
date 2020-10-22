@@ -2,11 +2,11 @@
 
 using System;
 using System.Collections.Generic;
-using BssomSerializers.Binary;
-using BssomSerializers.BssMap.KeyResolvers;
-using BssomSerializers.Internal;
-using BssomSerializers.BssomBuffer;
-namespace BssomSerializers.Internal
+using Bssom.Serializer.Binary;
+using Bssom.Serializer.BssMap.KeyResolvers;
+using Bssom.Serializer.Internal;
+using Bssom.Serializer.BssomBuffer;
+namespace Bssom.Serializer.Internal
 {
     internal static partial class Array1FormatterHelper
     {

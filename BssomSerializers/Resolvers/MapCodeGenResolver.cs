@@ -13,15 +13,15 @@ using System.Runtime.InteropServices.ComTypes;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
-using BssomSerializers.Binary;
-using BssomSerializers.BssMap.KeyResolvers;
-using BssomSerializers.Internal;
-using BssomSerializers.BssomBuffer;
-using BssomSerializers.BssMap;
-using BssomSerializers.Resolver;
+using Bssom.Serializer.Resolver;
 using System.Buffers;
+using Bssom.Serializer.Binary;
+using Bssom.Serializer.BssMap;
+using Bssom.Serializer.BssMap.KeyResolvers;
+using Bssom.Serializer.BssomBuffer;
+using Bssom.Serializer.Internal;
 
-namespace BssomSerializers.Resolver
+namespace Bssom.Serializer.Resolver
 {
     /// <summary>
     /// <para>对实体(对象)进行动态代码生成BssomMap格式的<see cref="IBssomFormatter"/></para>
@@ -72,7 +72,7 @@ namespace BssomSerializers.Resolver
     }
 }
 
-namespace BssomSerializers.Internal
+namespace Bssom.Serializer.Internal
 {
     internal static class MapCodeGenResolverBuilder
     {

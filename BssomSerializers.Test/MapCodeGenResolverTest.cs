@@ -1,15 +1,15 @@
-﻿using BssomSerializers.BssMap;
-using BssomSerializers.BssomBuffer;
-using BssomSerializers.Internal;
-using BssomSerializers.Resolver;
+﻿using Bssom.Serializer.BssMap;
+using Bssom.Serializer.BssomBuffer;
+using Bssom.Serializer.Internal;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using BssomSerializers.Binary;
+using Bssom.Serializer.Resolver;
+using Bssom.Serializer.Binary;
 using Xunit;
-namespace BssomSerializers.Test
+namespace Bssom.Serializer.Test
 {
     public partial class MapCodeGenResolverTest
     {

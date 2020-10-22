@@ -1,6 +1,6 @@
 ﻿//using System.Runtime.CompilerServices;
 
-namespace BssomSerializers.BssMap.KeyResolvers
+namespace Bssom.Serializer.BssMap.KeyResolvers
 {
     internal static class IBssMapKeyStaticResolverCache<T>
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace BssomSerializers.BssomBuffer
+namespace Bssom.Serializer.BssomBuffer
 {
     /// <summary>
     /// <para>提供<see cref="BssomSerializer"/>默认的<see cref="IBssomBufferWriter"/>所使用的内部缓存,公开缓存是不安全的,仅限于上层程序在序列化期间外复用该静态缓存</para>

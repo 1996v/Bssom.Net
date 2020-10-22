@@ -1,8 +1,8 @@
 ﻿//using System.Runtime.CompilerServices;
 
-using BssomSerializers.Internal;
+using Bssom.Serializer.Internal;
 
-namespace BssomSerializers.BssMap.KeyResolvers
+namespace Bssom.Serializer.BssMap.KeyResolvers
 {
     internal interface IBssMapKeyResolver
     {

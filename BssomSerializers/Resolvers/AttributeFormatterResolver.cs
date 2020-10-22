@@ -3,7 +3,7 @@
 using System;
 using System.Reflection;
 
-namespace BssomSerializers.Resolver
+namespace Bssom.Serializer.Resolver
 {
     /// <summary>
     /// <para>获取<see cref ="BssomFormatterAttribute"/>的格式化程序</para>

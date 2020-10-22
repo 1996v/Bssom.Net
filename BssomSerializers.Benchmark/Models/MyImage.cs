@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BssomSerializers.Benchmark
+namespace Bssom.Serializer.Benchmark
 {
     public class MyImage
     {

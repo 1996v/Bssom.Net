@@ -1,11 +1,11 @@
 ﻿
 using System;
 using System.Runtime.CompilerServices;
-using BssomSerializers.Binary;
-using BssomSerializers.BssMap.KeyResolvers;
-using BssomSerializers.Internal;
-using BssomSerializers.BssomBuffer;
-namespace BssomSerializers.Formatters
+using Bssom.Serializer.Binary;
+using Bssom.Serializer.Internal;
+using Bssom.Serializer.BssMap.KeyResolvers;
+using Bssom.Serializer.BssomBuffer;
+namespace Bssom.Serializer.Formatters
 {
     /// <summary>
     /// Format Enum as BssomNumber

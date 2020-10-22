@@ -5,11 +5,11 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
-using BssomSerializers.Binary;
-using BssomSerializers.BssomBuffer;
-using BssomSerializers.Internal;
+using Bssom.Serializer.Binary;
+using Bssom.Serializer.BssomBuffer;
+using Bssom.Serializer.Internal;
 
-namespace BssomSerializers.BssMap
+namespace Bssom.Serializer.BssMap
 {
     /// <summary>
     /// Binary search algorithm structure model MapObject marshalling

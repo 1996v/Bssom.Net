@@ -1,6 +1,6 @@
 ﻿using ProtoBuf;
 
-namespace BssomSerializers.Benchmark
+namespace Bssom.Serializer.Benchmark
 {
     [ProtoContract]
     public class EmptyClass

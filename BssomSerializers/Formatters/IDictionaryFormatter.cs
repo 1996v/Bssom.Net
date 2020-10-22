@@ -5,13 +5,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using BssomSerializers.Binary;
-using BssomSerializers.BssMap.KeyResolvers;
-using BssomSerializers.Internal;
-using BssomSerializers.BssomBuffer;
-using BssomSerializers.BssMap;
+using Bssom.Serializer.BssMap;
+using Bssom.Serializer.Binary;
+using Bssom.Serializer.BssMap.KeyResolvers;
+using Bssom.Serializer.Internal;
+using Bssom.Serializer.BssomBuffer;
 
-namespace BssomSerializers.Formatters
+namespace Bssom.Serializer.Formatters
 {
     /// <summary>
     /// Format <see cref="IDictionary"/> as BssomType.Map1 or BssomType.Map2

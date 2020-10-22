@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BssomSerializers
+namespace Bssom.Serializer
 {
     /// <summary>
     /// The exception that is thrown when one of the arguments provided to a method is not valid.

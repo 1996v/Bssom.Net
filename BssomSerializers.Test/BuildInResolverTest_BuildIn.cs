@@ -1,14 +1,14 @@
-﻿using BssomSerializers.Formatters;
-using BssomSerializers.Resolver;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
 using System.Text;
+using Bssom.Serializer.Formatters;
+using Bssom.Serializer.Resolver;
 using Xunit;
 
-namespace BssomSerializers.Test
+namespace Bssom.Serializer.Test
 {
     //BuildIn
     public class BuildInResolverTest_BuildIn

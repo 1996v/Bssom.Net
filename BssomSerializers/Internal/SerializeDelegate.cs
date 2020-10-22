@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BssomSerializers.Internal
+namespace Bssom.Serializer.Internal
 {
     internal delegate void Serialize<T>(ref BssomWriter writer, ref BssomSerializeContext context, T t);
     internal delegate T Deserialize<T>(ref BssomReader reader, ref BssomDeserializeContext context);

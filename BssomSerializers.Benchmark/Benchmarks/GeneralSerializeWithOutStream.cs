@@ -1,7 +1,7 @@
 ﻿using BenchmarkDotNet.Attributes;
 using System.Collections.Generic;
 
-namespace BssomSerializers.Benchmark
+namespace Bssom.Serializer.Benchmark
 {
     [Config(typeof(BenchmarkConfig))]
     public class GeneralSerializeWithOutStream<T>
