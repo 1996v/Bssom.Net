@@ -25,7 +25,7 @@ namespace Bssom.Serializer.Resolver
     /// </summary>
     public sealed class ICollectionResolver : IFormatterResolver
     {
-        internal const string ModuleName = "Bssom.Resolvers.IColloctionResolver";
+        internal const string ModuleName = "Bssom.Serializer.Resolvers.IColloctionResolver";
         internal static readonly DynamicFormatterAssembly DynamicAssembly;
 
         /// <summary>

@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BssomSerializers\BssomSerializers.csproj" />
+    <ProjectReference Include="..\Bssom.Serializer\Bssom.Serializer.csproj" />
   </ItemGroup>
 
   <ItemGroup>

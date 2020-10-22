@@ -23,7 +23,7 @@ namespace Bssom.Serializer.Resolver
     /// </summary>
     public class IDictionaryResolver : IFormatterResolver
     {
-        internal const string ModuleName = "Bssom.Resolvers.IDictionaryResolver";
+        internal const string ModuleName = "Bssom.Serializer.Resolvers.IDictionaryResolver";
         internal static readonly DynamicFormatterAssembly DynamicAssembly;
 
         /// <summary>

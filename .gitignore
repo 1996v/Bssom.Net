@@ -3,13 +3,14 @@
 ################################################################################
 
 /.vs/BssomSerializers
-/BssomSerializers/bin/Debug
-/BssomSerializers/obj
-/BssomSerializers.Test/bin/Debug
-/BssomSerializers.Test/obj
-/BssomSerializers/bin/Release
-/BssomSerializers.Benchmark/bin
-/BssomSerializers.Benchmark/obj
-/BssomSerializers.Test/bin/Release
+/Bssom.Serializer/bin
+/Bssom.Serializer/obj
+/Bssom.Serializer.Test/bin
+/Bssom.Serializer.Test/obj
+/Bssom.Serializer.Benchmark/bin
+/Bssom.Serializer.Benchmark/obj
 /DynamicAssemblyDumper/bin
 /DynamicAssemblyDumper/obj
+/.vs/BssomSerializer/v16
+
+/.vs/BssomSerializer/DesignTimeBuild

@@ -33,7 +33,7 @@ namespace Bssom.Serializer.Resolver
     /// </remarks>
     public sealed class MapCodeGenResolver : IFormatterResolver
     {
-        internal const string ModuleName = "Bssom.Resolvers.MapCodeGenResolver";
+        internal const string ModuleName = "Bssom.Serializer.Resolvers.MapCodeGenResolver";
         internal static readonly DynamicFormatterAssembly DynamicAssembly;
 
         /// <summary>
