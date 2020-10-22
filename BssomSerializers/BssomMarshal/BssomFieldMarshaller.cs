@@ -10,6 +10,8 @@ using BssomSerializers.BssomBuffer;
 using System.Collections.Generic;
 using BssomSerializers.BssMap.KeyResolvers;
 using System.Xml.Schema;
+using BssomSerializers.Formatters;
+using BssomSerializers.Resolver;
 
 namespace BssomSerializers
 {
@@ -146,10 +148,10 @@ namespace BssomSerializers
         }
 
         /// <summary>
-        /// 通过指定缓冲区的位置信息来读取元素在缓冲区存储的大小. Read the size of the element stored in the buffer by specifying the location information of the buffer
+        /// 通过指定缓冲区的位置信息来读取元素在缓冲区存储的大小(包括从此位置开始的空白符). Read the size of the element stored in the buffer by specifying the location information of the buffer(includes white space from this position)
         /// </summary>
         /// <param name="offsetInfo">用于读取元素的位置信息. Location information for reading</param>
-        /// <returns>被读取的元素大小. Element typecode being read size</returns>
+        /// <returns>被读取的元素大小,包含空白符大小. Element typecode being read size,contains the blank size</returns>
         public int ReadValueSize(BssomFieldOffsetInfo offsetInfo)
         {
             return ReadValueSize(bufferWriter.GetBssomBuffer(), offsetInfo);

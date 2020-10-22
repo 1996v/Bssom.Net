@@ -331,6 +331,24 @@ namespace BssomSerializers.Test
             val.B1._1234567A.Is(val2.B1._1234567A);
         }
 
+        [Fact]
+        public void Map2_MultipleFieldClassTest()
+        {
+            var val = RandomHelper.RandomValueWithOutStringEmpty<MultipleFieldClass>();
+            var buf = VerifyHelper.VerifyEntityWithMap2(val);
+        }
+
+        [Fact]
+        public void Map1Deserialize_MultipleFieldClassTest()
+        {
+            var val = RandomHelper.RandomValueWithOutStringEmpty<MultipleFieldClass>();
+            var dict = val.GetPublicMembersWithDynamicObject().ToIDict();
+            var buf = BssomSerializer.Serialize(dict);
+            var val2 = BssomSerializer.Deserialize<MultipleFieldClass>(buf);
+
+            VerifyHelper.VerifyWithJson(val, val2);
+        }
+
         public class _Class_1
         {
             public int A1;
@@ -409,5 +427,51 @@ namespace BssomSerializers.Test
         public string _1234567A { get; set; }
         public Guid _2234567B { get; set; }
         public DateTime _3234567C { get; set; }
+    }
+
+    public class MultipleFieldClass
+    {
+        public int PrimitiveField_1;
+        public long PrimitiveField_2;
+        public short PrimitiveField_3;
+        public string PrimitiveField_4;
+        public short PrimitiveField_5;
+        public Guid PrimitiveField_6;
+        public DateTime PrimitiveField_7;
+        public Dictionary<string, object> PrimitiveField_8;
+        public List<object> PrimitiveField_9;
+        public byte[] PrimitiveField_10;
+        public float PrimitiveField_11;
+        public double PrimitiveField_12;
+        public decimal PrimitiveField_13;
+        public byte[] PrimitiveField_14;
+        public float PrimitiveField_15;
+        public double PrimitiveField_16;
+        public decimal PrimitiveField_17;
+        public int primitiveField_1;
+        public long primitiveField_2;
+        public short primitiveField_3;
+        public string primitiveField_4;
+        public short primitiveField_5;
+        public Guid primitiveField_6;
+        public DateTime primitiveField_7;
+        public Dictionary<string, object> primitiveField_8;
+        public List<object> primitiveField_9;
+        public byte[] primitiveField_10;
+        public float primitiveField_11;
+        public double primitiveField_12;
+        public decimal primitiveField_13;
+        public byte[] primitiveField_14;
+        public float primitiveField_15;
+        public double primitiveField_16;
+        public decimal primitiveField_17;
+    }
+
+
+    public class MultipleFieldClass2
+    {
+        public int eField_1;
+        public long eField_2;
+
     }
 }

@@ -63,7 +63,7 @@ namespace BssomSerializers.Resolver
             }
         }
 
-#if NETFRAMEWORK && NET45
+#if NETFRAMEWORK 
         public AssemblyBuilder Save()
         {
             return DynamicAssembly.Save();
@@ -989,8 +989,7 @@ namespace BssomSerializers.Internal
                 Expression.LessThan(forVariable, num),
                 Expression.Block(
                     Expression.Assign(len, CommonExpressionMeta.Call_ReaderGetMapStringKeyLength),
-                    BuildMap1FormatterDeserializeCore_ReadBranch(instance, len, key, seekLabel, serializationInfo,
-                        ap.Entries, 0, ap.Length),
+                    BuildMap1FormatterDeserializeCore_ReadBranch(instance, len, key, seekLabel, serializationInfo, ap.Entries, 0, ap.Length),
                     Expression.Label(increLabel),
                     Expression.PostIncrementAssign(forVariable),
                     Expression.Continue(continueLabel),
@@ -1019,14 +1018,32 @@ namespace BssomSerializers.Internal
             if (zeroGroup.Where(e => e.Key).Any())
             {
                 var up = zeroGroup.Where(e => e.Key).First().ToArray();
+                bool isMoveDown = up.Where(e => e.Chidlerns != null).Count() > 0;
+                /*
+                    (false) -  (true)  -  (true)
+                            -  (true)  -  (true)
+                            -  (false) -  (true)
+
+                    if(len == 0)
+                        switch 1/2 
+                    else
+                        read 1,  switch4
+                        read 2,  switch5
+                        read 3,  switch6
+                             
+                    (false) - 1(true)  -  4(true)
+                            - 2(true)  -  5(true)
+                            - 3(false) -  6(true)
+                 */
+
                 for (int i = 0; i < up.Length; i++)
                 {
                     up[i] = up[i].Clone().WithNotChildren();
                 }
-                var ifZero = BuildMap1FormatterDeserializeCore_SwtichCase(instance, len, key, skip, serializationInfo, up, 0,
-                    up.Length);
 
-                if (up.Length == entryLength)
+                var ifZero = BuildMap1FormatterDeserializeCore_SwtichCase(instance, len, key, skip, serializationInfo, up, 0, up.Length);
+
+                if (up.Length == entryLength && !isMoveDown)
                 {
                     //if(len == 0)
                     //   swtich...
@@ -1047,8 +1064,7 @@ namespace BssomSerializers.Internal
                         childrens[i] = childrens[i].Clone().WithNotKey();
                     }
 
-                    combin = Expression.IfThenElse(Expression.Equal(len, Expression.Constant(0)), ifZero, BuildMap1FormatterDeserializeCore_SwtichCase(instance, len, key, skip, serializationInfo, childrens, 0,
-                        childrens.Length));
+                    combin = Expression.IfThenElse(Expression.Equal(len, Expression.Constant(0)), ifZero, BuildMap1FormatterDeserializeCore_SwtichCase(instance, len, key, skip, serializationInfo, childrens, 0, childrens.Length));
                 }
             }
             else
@@ -1057,8 +1073,7 @@ namespace BssomSerializers.Internal
                 //  case ...
                 //  default...
                 var down = zeroGroup.Where(e => !e.Key).First().ToArray();
-                combin = BuildMap1FormatterDeserializeCore_SwtichCase(instance, len, key, skip, serializationInfo, down, 0,
-                    down.Length);
+                combin = BuildMap1FormatterDeserializeCore_SwtichCase(instance, len, key, skip, serializationInfo, down, 0, down.Length);
             }
 
             return Expression.Block(readRaw, combin);
@@ -1120,7 +1135,7 @@ namespace BssomSerializers.Internal
             }
             if (entry.Chidlerns != null)
             {
-                ary.Add(BuildMap1FormatterDeserializeCore_ReadBranch(instance, len, key, skip, serializationInfo, entry.Chidlerns, 0, entry.Chidlerns.Length));
+                ary.Add(BuildMap1FormatterDeserializeCore_ReadBranch(instance, len, key, skip, serializationInfo, entry.Chidlerns, 0, entry.ChidlernLength));
             }
             return Expression.Block(ary);
         }

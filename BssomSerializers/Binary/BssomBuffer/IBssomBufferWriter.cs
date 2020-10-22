@@ -45,6 +45,14 @@ namespace BssomSerializers
         ref byte GetRef(int sizeHint);
 
         /// <summary>
+        /// <para>在<see cref="BssomFieldMarshaller.TryWrite"/>中,当前位置是否能提供指定大小的字节序列引用以用来提供内部某些类型写入的性能</para>
+        /// <para>In <see cref="BssomFieldMarshaller.TryWrite"/>,Whether the current position can provide a byte sequence reference of specified size to be used to provide performance for some types of internal writes</para>
+        /// </summary>
+        /// <param name="size">需要写入字节的大小 The size of bytes to be written</param>
+        /// <returns>在<see cref="BssomFieldMarshaller.TryWrite"/>某些类型中,如果可以提供,则可以更快的写入元素,否则以默认逻辑来写入元素. In <see cref="BssomFieldMarshaller.TryWrite"/> some types, if you can provide, can quickly write elements, or otherwise default logic to write elements</returns>
+        bool CanGetSizeRefForProvidePerformanceInTryWrite(int size);
+
+        /// <summary>
         /// <para>在缓冲区中已写入字节的数目</para>
         /// <para>The number of bytes written in the buffer</para>
         /// </summary>

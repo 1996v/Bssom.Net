@@ -223,12 +223,13 @@ namespace BssomSerializers.Binary
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void WriteString(IBssomBufferWriter writer, string value)
+        private static unsafe void WriteStringWithNotPredictingLength(IBssomBufferWriter writer, string value, long writeBackExactStringCountQuantityPos)
         {
             DEBUG.Assert(value != null);
 
             int len = UTF8Encoding.UTF8.GetByteCount(value);
-            WriteVariableNumber(writer, (uint)len);
+            writer.Seek(writeBackExactStringCountQuantityPos, BssomSeekOrgin.Begin);//Simulate StringSize, consistent with WriteString behavior
+            WriteBackFixNumber(writer, (uint)len);
             ref byte refb = ref writer.GetRef(len);
             fixed (char* pValue = value)
             fixed (byte* pRefb = &refb)
@@ -236,6 +237,33 @@ namespace BssomSerializers.Binary
                 UTF8Encoding.UTF8.GetBytes(pValue, value.Length, pRefb, len);
             }
             writer.Advance(len);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void WriteString(IBssomBufferWriter writer, string value)
+        {
+            DEBUG.Assert(value != null);
+
+            int maxSize = UTF8Encoding.UTF8.GetMaxByteCount(value.Length);
+            long pos = writer.Position;
+            WriteFixNumber(writer, (uint)maxSize);
+
+            if (!writer.CanGetSizeRefForProvidePerformanceInTryWrite(maxSize))
+            {
+                WriteStringWithNotPredictingLength(writer, value, pos);
+                return;
+            }
+
+            int count = 0;
+            ref byte refb = ref writer.GetRef(maxSize);
+            fixed (char* pValue = value)
+            fixed (byte* pRefb = &refb)
+            {
+                count = UTF8Encoding.UTF8.GetBytes(pValue, value.Length, pRefb, maxSize);
+            }
+            writer.Seek(pos, BssomSeekOrgin.Begin);
+            WriteBackFixNumber(writer, (uint)count);
+            writer.Advance(count);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -351,7 +379,11 @@ namespace BssomSerializers.Binary
             ref byte refb = ref reader.ReadRef((int)len);
             fixed (byte* pRefb = &refb)
             {
+#if NET45
                 var str = new string((sbyte*)pRefb, 0, (int)len, UTF8Encoding.UTF8);
+#else
+                var str = UTF8Encoding.UTF8.GetString(pRefb, (int)len);
+#endif
                 reader.SeekWithOutVerify((int)len, BssomSeekOrgin.Current);
                 return str;
             }
@@ -416,7 +448,7 @@ namespace BssomSerializers.Binary
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int DateTimeSize(DateTime value,bool isStandardDate)
+        public static int DateTimeSize(DateTime value, bool isStandardDate)
         {
             if (isStandardDate)
             {
@@ -429,7 +461,8 @@ namespace BssomSerializers.Binary
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int DateTimeSizeWithTypeHead(IBssomBuffer reader) {
+        public static int DateTimeSizeWithTypeHead(IBssomBuffer reader)
+        {
             byte code = reader.ReadRef(1);
             switch (code)
             {
@@ -448,7 +481,7 @@ namespace BssomSerializers.Binary
         public static int StringSize(string value)
         {
             int size = UTF8Encoding.UTF8.GetByteCount(value);
-            return VariableNumberSize((ulong)size) + size;
+            return FixNumberSize((ulong)UTF8Encoding.UTF8.GetMaxByteCount(value.Length)) + size;
         }
     }
 
@@ -978,7 +1011,7 @@ namespace BssomSerializers.Binary
         private readonly static int[] StaticNativeTypeSizes = new int[] { BssomBinaryPrimitives.CharSize, BssomBinaryPrimitives.GuidSize, BssomBinaryPrimitives.DecimalSize, BssomBinaryPrimitives.NativeDateTimeSize };
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryGetTypeSizeFromStaticTypeSizesWithOutDateTimeType(bool isNativeType, byte type,out int size)
+        public static bool TryGetTypeSizeFromStaticTypeSizesWithOutDateTimeType(bool isNativeType, byte type, out int size)
         {
             if (!isNativeType)
             {

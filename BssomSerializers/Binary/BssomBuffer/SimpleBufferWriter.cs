@@ -4,8 +4,6 @@ using System.Runtime.CompilerServices;
 
 namespace BssomSerializers.BssomBuffer
 {
-    
-
     internal sealed class SimpleBufferWriter : IBssomBufferWriter, IBssomBuffer
     {
         private byte[] buffer;
@@ -61,6 +59,13 @@ namespace BssomSerializers.BssomBuffer
             return ref buffer[start + position];
         }
 
+        public bool CanGetSizeRefForProvidePerformanceInTryWrite(int size)
+        {
+            if (position + size > len)
+                return false;
+            return true;
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ref byte GetRef(int sizeHint)
         {
@@ -103,6 +108,7 @@ namespace BssomSerializers.BssomBuffer
         {
         }
 
+       
     }
 
 }

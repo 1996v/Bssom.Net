@@ -85,6 +85,32 @@ namespace BssomSerializers.Test
             VerifyHelper.VerifySize(obj, BssomSerializerOptions.Default.WithIDictionaryIsSerializeMap1Type(false));
         }
 
+        [Fact]
+        public void WriteStringWithNotPredictingLengthTest()
+        {
+            var str = RandomHelper.RandomValueWithOutStringEmpty<string>();
+            var buf = BssomSerializer.Serialize(str);
+            buf.Length.Is(BssomSerializer.Size(str));//Simulate StringSize
+
+            var bsfw = new BssomFieldMarshaller(buf);
+            bsfw.TryWrite(BssomFieldOffsetInfo.Zero, str).IsTrue();// is call WriteStringWithNotPredictingLength
+            bsfw.ReadValueSize(BssomFieldOffsetInfo.Zero).Is(buf.Length);
+            bsfw.ReadValue<string>(BssomFieldOffsetInfo.Zero).Is(str);
+        }
+
+        [Fact]
+        public void MultipleStringTryWrite_LastElementIsWriteStringWithNotPredictingLength()
+        {
+            var str = new string[] { "a", "b12345678" };
+            var buf = BssomSerializer.Serialize(str);
+            buf.Length.Is(BssomSerializer.Size(str));//Simulate StringSize
+
+            var bsfw = new BssomFieldMarshaller(buf);
+            bsfw.TryWrite(BssomFieldOffsetInfo.Zero, str).IsTrue();//first element is fast stringwrite, last element is notPredicting(slow) write
+            bsfw.ReadValueSize(BssomFieldOffsetInfo.Zero).Is(buf.Length);
+            bsfw.ReadValue<string[]>(BssomFieldOffsetInfo.Zero).Is(str);
+        }
+
         [Theory]
         [MemberData(nameof(ReadBlankTestData))]
         public void ReadByIgnoringBlankCharactersTest(object val, Func<object, bool> test)

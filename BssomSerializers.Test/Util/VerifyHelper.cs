@@ -180,10 +180,11 @@ namespace Xunit
             return new BssomFieldMarshaller(buf).ReadValueType(BssomFieldOffsetInfo.Zero);
         }
 
-        public static void VerifyEntityWithMap2<T>(T value, BssomSerializerOptions option = null)
+        public static byte[] VerifyEntityWithMap2<T>(T value, BssomSerializerOptions option = null)
         {
-            var buf = UseJsonToolForValidation(value,option);
+            var buf = UseJsonToolForValidation(value, option);
             buf.IsMap2();
+            return buf;
         }
 
         public static void ConvertObjectAndVerifyEntity(object value, BssomSerializerOptions option = null)
@@ -300,7 +301,12 @@ namespace Xunit
 
         public static void VerifySpecific(DataTable value, BssomSerializerOptions option = null)
         {
-            UseJsonToolForValidation(value,option);
+            UseJsonToolForValidation(value, option);
+        }
+
+        public static void VerifyWithJson<T>(T value,T value2)
+        {
+            Kooboo.Json.JsonSerializer.ToJson(value).Is(Kooboo.Json.JsonSerializer.ToJson(value2));
         }
 
         private static byte[] UseJsonToolForValidation<T>(T value, BssomSerializerOptions option = null)
@@ -378,12 +384,12 @@ namespace Xunit
             Assert.IsType(t, value);
         }
 
-//#if NETFRAMEWORK
+        //#if NETFRAMEWORK
         public static void IsNull<T>(this T value)
         {
             Assert.Null(value);
         }
-//#endif
+        //#endif
         public static void Is(this byte actual, int expected)
         {
             Assert.Equal(actual, expected);

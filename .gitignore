@@ -7,3 +7,9 @@
 /BssomSerializers/obj
 /BssomSerializers.Test/bin/Debug
 /BssomSerializers.Test/obj
+/BssomSerializers/bin/Release
+/BssomSerializers.Benchmark/bin
+/BssomSerializers.Benchmark/obj
+/BssomSerializers.Test/bin/Release
+/DynamicAssemblyDumper/bin
+/DynamicAssemblyDumper/obj

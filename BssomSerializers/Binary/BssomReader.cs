@@ -17,18 +17,19 @@ namespace BssomSerializers
     /// <para>用于Bssom格式的读取器</para>
     /// <para>A bss types reader for the Bssom format</para>
     /// </summary>
-    public partial struct BssomReader
+    public readonly partial struct BssomReader
     {
         /// <summary>
         /// Bssombuffer
         /// </summary>
-        public IBssomBuffer BssomBuffer { get; }
+        public readonly IBssomBuffer BssomBuffer { get; }
 
         /// <summary>
         /// <para>初始化一个<see cref="BssomReader"/>结构</para>
         /// <para>Initializes a new instance of the <see cref="BssomReader"/> struct</para>
         /// </summary>
         /// <param name="bssomBuffer">要从中读取的缓冲区 The buffer to read from. </param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BssomReader(IBssomBuffer bssomBuffer)
         {
             BssomBuffer = bssomBuffer;

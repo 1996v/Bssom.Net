@@ -5,7 +5,11 @@ VisualStudioVersion = 16.0.30503.244
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BssomSerializers", "BssomSerializers\BssomSerializers.csproj", "{99FAC87C-53B2-4BCA-80FC-000D0673B4AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BssomSerializers.Test", "BssomSerializers.Test\BssomSerializers.Test.csproj", "{507FD084-4078-45CD-BDDC-890EA111DA5A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BssomSerializers.Test", "BssomSerializers.Test\BssomSerializers.Test.csproj", "{507FD084-4078-45CD-BDDC-890EA111DA5A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BssomSerializers.Benchmark", "BssomSerializers.Benchmark\BssomSerializers.Benchmark.csproj", "{197BA05A-00A8-49A2-B4E2-1782EB1BD03D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicAssemblyDumper", "DynamicAssemblyDumper\DynamicAssemblyDumper.csproj", "{65C64C06-809B-403A-86E2-EBD34E7E580F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{507FD084-4078-45CD-BDDC-890EA111DA5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{507FD084-4078-45CD-BDDC-890EA111DA5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{507FD084-4078-45CD-BDDC-890EA111DA5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{197BA05A-00A8-49A2-B4E2-1782EB1BD03D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{197BA05A-00A8-49A2-B4E2-1782EB1BD03D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{197BA05A-00A8-49A2-B4E2-1782EB1BD03D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{197BA05A-00A8-49A2-B4E2-1782EB1BD03D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65C64C06-809B-403A-86E2-EBD34E7E580F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65C64C06-809B-403A-86E2-EBD34E7E580F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65C64C06-809B-403A-86E2-EBD34E7E580F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65C64C06-809B-403A-86E2-EBD34E7E580F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -96,8 +96,19 @@ namespace BssomSerializers.BssomBuffer
         }
 
         /// <summary>
+        /// If <paramref name="size"/> exceeds the writer boundary, false is returned; otherwise, true forever
+        /// </summary>
+        public bool CanGetSizeRefForProvidePerformanceInTryWrite(int size)
+        {
+            if (complexBuffer.CurrentSpanPosition + size > complexBuffer.CurrentSpan.Boundary)
+                return false;
+            return true;
+        }
+
+        /// <summary>
         /// Traverse each span in <see cref="complexBuffer"/>, combine the Buffered parts of each span and return
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public byte[] GetBufferedArray()
         {
             byte[] array;
@@ -109,21 +120,26 @@ namespace BssomSerializers.BssomBuffer
             }
             else
             {
-                FlushLastSpanBoundary();
-                array = new byte[Buffered];
-                int start = 0;
-                for (int i = 0; i < complexBuffer.Spans.Length; i++)
-                {
-                    if (bufferedsRelativeSpan[i] != 0)
-                    {
-                        Unsafe.CopyBlock(ref array[start], ref complexBuffer.Spans[i].Buffer[0], (uint)bufferedsRelativeSpan[i]);
-                        start += bufferedsRelativeSpan[i];
-                    }
-                }
+                array = GetBufferedArrayCore();
             }
             return array;
         }
 
+        private byte[] GetBufferedArrayCore()
+        {
+            FlushLastSpanBoundary();
+            byte[] array = new byte[Buffered];
+            int start = 0;
+            for (int i = 0; i < complexBuffer.Spans.Length; i++)
+            {
+                if (bufferedsRelativeSpan[i] != 0)
+                {
+                    Unsafe.CopyBlock(ref array[start], ref complexBuffer.Spans[i].Buffer[0], (uint)bufferedsRelativeSpan[i]);
+                    start += bufferedsRelativeSpan[i];
+                }
+            }
+            return array;
+        }
 
         public void CopyTo(Stream stream, CancellationToken CancellationToken)
         {
@@ -225,5 +241,7 @@ namespace BssomSerializers.BssomBuffer
                 }
             }
         }
+
+      
     }
 }

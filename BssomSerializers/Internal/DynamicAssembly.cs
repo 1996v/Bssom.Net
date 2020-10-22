@@ -19,7 +19,7 @@ namespace BssomSerializers.Internal
 
         public DynamicAssembly(string moduleName)
         {
-#if NETFRAMEWORK && NET45
+#if NETFRAMEWORK 
             AssemblyBuilderAccess builderAccess = AssemblyBuilderAccess.RunAndSave;
 #else
             AssemblyBuilderAccess builderAccess = AssemblyBuilderAccess.Run;
@@ -45,7 +45,7 @@ namespace BssomSerializers.Internal
             }
         }
 
-#if NETFRAMEWORK && NET45
+#if NETFRAMEWORK 
 
         public AssemblyBuilder Save()
         {

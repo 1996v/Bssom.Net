@@ -199,6 +199,10 @@ namespace BssomSerializers.BssMap
 
     internal struct BssMapObjMarshal<TValue>
     {
+        //TODO: This structure will be changed the next time the code is refactored
+        //Entry {
+        //      IsKey, KeyInfo , CurrentUInt64, ChidlernInfo
+        //  }
         public class Entry
         {
             public byte KeyType;
@@ -208,6 +212,7 @@ namespace BssomSerializers.BssMap
             public byte LastValueByteCount;
             public ulong CurrentUInt64Value;
             public Entry[] Chidlerns;
+            public int ChidlernLength;
 
             public Entry()
             {
@@ -218,6 +223,7 @@ namespace BssomSerializers.BssMap
                 LastValueByteCount = 8;
                 CurrentUInt64Value = default;
                 Chidlerns = default;
+                ChidlernLength = default;
             }
 
             public Entry Clone()
@@ -230,7 +236,8 @@ namespace BssomSerializers.BssMap
                     IsKey = this.IsKey,
                     LastValueByteCount = this.LastValueByteCount,
                     CurrentUInt64Value = this.CurrentUInt64Value,
-                    Chidlerns = this.Chidlerns
+                    Chidlerns = this.Chidlerns,
+                    ChidlernLength = this.ChidlernLength
                 };
             }
 
@@ -247,6 +254,7 @@ namespace BssomSerializers.BssMap
             public Entry WithNotChildren()
             {
                 Chidlerns = null;
+                ChidlernLength = 0;
                 return this;
             }
 
@@ -280,7 +288,8 @@ namespace BssomSerializers.BssMap
             this.MaxDepth = Depth(rows);
             this.Entries = Generate(rows);
             Optimization(Entries);
-            this.Length = Lower(Entries);
+            this.Length = LengthCounter(Entries);
+            RecursiveLengthCounter(Entries, Length);
         }
 
         private static Entry[] Generate(BssRow<TValue>[] rows)
@@ -343,6 +352,11 @@ namespace BssomSerializers.BssMap
                             entries[i - 1].Chidlerns = entries[i].Chidlerns;
                         }
                     }
+
+                    if (entries[i].IsKey)
+                    {
+                        entries[i - 1].SetKey(entries[i].LastValueByteCount, entries[i].Value, entries[i].KeyType, entries[i].KeyIsNativeType);
+                    }
                     entries[i] = null;
                 }
             }
@@ -386,7 +400,7 @@ namespace BssomSerializers.BssMap
 
         }
 
-        private static int Lower(Entry[] entries)
+        private static int LengthCounter(Entry[] entries)
         {
             for (int i = entries.Length - 1; i >= 0; i--)
             {
@@ -396,6 +410,19 @@ namespace BssomSerializers.BssMap
                 }
             }
             return 0;
+        }
+
+        private static void RecursiveLengthCounter(Entry[] entries, int len)
+        {
+            for (int i = 0; i < len; i++)
+            {
+                if (entries[i].Chidlerns != null)
+                {
+                    entries[i].ChidlernLength = LengthCounter(entries[i].Chidlerns);
+                    RecursiveLengthCounter(entries[i].Chidlerns, entries[i].ChidlernLength);
+                }
+
+            }
         }
 
         private static ushort Depth(BssRow<TValue>[] rows)

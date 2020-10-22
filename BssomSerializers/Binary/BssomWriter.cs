@@ -14,19 +14,20 @@ namespace BssomSerializers
     /// <para>用于Bssom格式的写入器</para>
     /// <para>A bss types writer for the Bssom format</para>
     /// </summary>
-    public partial struct BssomWriter
+    public readonly partial struct BssomWriter
     {
         /// <summary>
         /// Bssombuffer writer
         /// </summary>
-        public IBssomBufferWriter BufferWriter { get; }
+        public readonly IBssomBufferWriter BufferWriter { get; }
 
         /// <summary>
         /// <para>初始化一个<see cref="BssomWriter"/>结构</para>
         /// <para>Initializes a new instance of the <see cref="BssomWriter"/> struct</para>
         /// </summary>
         /// <param name="bssomBufferWriter">用于bssom缓冲区的写入器实现. A writer implementation for the bssom buffer</param>
-        public BssomWriter(IBssomBufferWriter bssomBufferWriter) 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public BssomWriter(IBssomBufferWriter bssomBufferWriter)
         {
             BufferWriter = bssomBufferWriter;
         }

@@ -73,7 +73,7 @@ namespace BssomSerializers.BssMap
                     {
                         this.WriteHasChidlerns(true);
                         //writeReleation
-                        this.WriteRouteData(entries[i].Chidlerns, 0, entries[i].Chidlerns.Length, valueMapOffsets);
+                        this.WriteRouteData(entries[i].Chidlerns, 0, entries[i].ChidlernLength, valueMapOffsets);
                     }
                     else
                     {
@@ -258,7 +258,7 @@ namespace BssomSerializers.BssMap
                     {
                         this.WriteHasChidlerns(true);
                         //writeReleation
-                        this.SizeRouteData(entries[i].Chidlerns, 0, entries[i].Chidlerns.Length, valueMapOffsets);
+                        this.SizeRouteData(entries[i].Chidlerns, 0, entries[i].ChidlernLength, valueMapOffsets);
                     }
                     else
                     {
