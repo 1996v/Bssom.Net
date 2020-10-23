@@ -131,10 +131,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            ref1 = ref Unsafe.Add(ref ref1, 1);//skip FixUInt16Code
-                            ushort nextOff = BssomBinaryPrimitives.ReadUInt16LittleEndian(ref ref1);
-                            ref1 = ref Unsafe.Add(ref ref1, 2);
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -333,10 +329,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            ref1 = ref Unsafe.Add(ref ref1, 1);//skip FixUInt16Code
-                            ushort nextOff = BssomBinaryPrimitives.ReadUInt16LittleEndian(ref ref1);
-                            ref1 = ref Unsafe.Add(ref ref1, 2);
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -535,10 +527,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            ref1 = ref Unsafe.Add(ref ref1, 1);//skip FixUInt16Code
-                            ushort nextOff = BssomBinaryPrimitives.ReadUInt16LittleEndian(ref ref1);
-                            ref1 = ref Unsafe.Add(ref ref1, 2);
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -737,10 +725,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            ref1 = ref Unsafe.Add(ref ref1, 1);//skip FixUInt16Code
-                            ushort nextOff = BssomBinaryPrimitives.ReadUInt16LittleEndian(ref ref1);
-                            ref1 = ref Unsafe.Add(ref ref1, 2);
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -939,10 +923,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            ref1 = ref Unsafe.Add(ref ref1, 1);//skip FixUInt16Code
-                            ushort nextOff = BssomBinaryPrimitives.ReadUInt16LittleEndian(ref ref1);
-                            ref1 = ref Unsafe.Add(ref ref1, 2);
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -1141,10 +1121,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            ref1 = ref Unsafe.Add(ref ref1, 1);//skip FixUInt16Code
-                            ushort nextOff = BssomBinaryPrimitives.ReadUInt16LittleEndian(ref ref1);
-                            ref1 = ref Unsafe.Add(ref ref1, 2);
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -1343,10 +1319,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            ref1 = ref Unsafe.Add(ref ref1, 1);//skip FixUInt16Code
-                            ushort nextOff = BssomBinaryPrimitives.ReadUInt16LittleEndian(ref ref1);
-                            ref1 = ref Unsafe.Add(ref ref1, 2);
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -1545,10 +1517,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            ref1 = ref Unsafe.Add(ref ref1, 1);//skip FixUInt16Code
-                            ushort nextOff = BssomBinaryPrimitives.ReadUInt16LittleEndian(ref ref1);
-                            ref1 = ref Unsafe.Add(ref ref1, 2);
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -1747,10 +1715,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            ref1 = ref Unsafe.Add(ref ref1, 1);//skip FixUInt16Code
-                            ushort nextOff = BssomBinaryPrimitives.ReadUInt16LittleEndian(ref ref1);
-                            ref1 = ref Unsafe.Add(ref ref1, 2);
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -1949,10 +1913,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            ref1 = ref Unsafe.Add(ref ref1, 1);//skip FixUInt16Code
-                            ushort nextOff = BssomBinaryPrimitives.ReadUInt16LittleEndian(ref ref1);
-                            ref1 = ref Unsafe.Add(ref ref1, 2);
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -2151,10 +2111,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            ref1 = ref Unsafe.Add(ref ref1, 1);//skip FixUInt16Code
-                            ushort nextOff = BssomBinaryPrimitives.ReadUInt16LittleEndian(ref ref1);
-                            ref1 = ref Unsafe.Add(ref ref1, 2);
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -2353,10 +2309,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            ref1 = ref Unsafe.Add(ref ref1, 1);//skip FixUInt16Code
-                            ushort nextOff = BssomBinaryPrimitives.ReadUInt16LittleEndian(ref ref1);
-                            ref1 = ref Unsafe.Add(ref ref1, 2);
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -2555,10 +2507,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            ref1 = ref Unsafe.Add(ref ref1, 1);//skip FixUInt16Code
-                            ushort nextOff = BssomBinaryPrimitives.ReadUInt16LittleEndian(ref ref1);
-                            ref1 = ref Unsafe.Add(ref ref1, 2);
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -2757,10 +2705,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            ref1 = ref Unsafe.Add(ref ref1, 1);//skip FixUInt16Code
-                            ushort nextOff = BssomBinaryPrimitives.ReadUInt16LittleEndian(ref ref1);
-                            ref1 = ref Unsafe.Add(ref ref1, 2);
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -2959,10 +2903,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            ref1 = ref Unsafe.Add(ref ref1, 1);//skip FixUInt16Code
-                            ushort nextOff = BssomBinaryPrimitives.ReadUInt16LittleEndian(ref ref1);
-                            ref1 = ref Unsafe.Add(ref ref1, 2);
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -3145,9 +3085,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);//skip FixUInt16Code
-                            ushort nextOff = reader.ReadUInt16WithOutTypeHead();
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -3312,9 +3249,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);//skip FixUInt16Code
-                            ushort nextOff = reader.ReadUInt16WithOutTypeHead();
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -3479,9 +3413,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);//skip FixUInt16Code
-                            ushort nextOff = reader.ReadUInt16WithOutTypeHead();
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -3646,9 +3577,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);//skip FixUInt16Code
-                            ushort nextOff = reader.ReadUInt16WithOutTypeHead();
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -3813,9 +3741,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);//skip FixUInt16Code
-                            ushort nextOff = reader.ReadUInt16WithOutTypeHead();
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -3980,9 +3905,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);//skip FixUInt16Code
-                            ushort nextOff = reader.ReadUInt16WithOutTypeHead();
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -4147,9 +4069,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);//skip FixUInt16Code
-                            ushort nextOff = reader.ReadUInt16WithOutTypeHead();
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -4314,9 +4233,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);//skip FixUInt16Code
-                            ushort nextOff = reader.ReadUInt16WithOutTypeHead();
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -4481,9 +4397,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);//skip FixUInt16Code
-                            ushort nextOff = reader.ReadUInt16WithOutTypeHead();
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -4648,9 +4561,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);//skip FixUInt16Code
-                            ushort nextOff = reader.ReadUInt16WithOutTypeHead();
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -4815,9 +4725,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);//skip FixUInt16Code
-                            ushort nextOff = reader.ReadUInt16WithOutTypeHead();
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -4982,9 +4889,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);//skip FixUInt16Code
-                            ushort nextOff = reader.ReadUInt16WithOutTypeHead();
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -5149,9 +5053,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);//skip FixUInt16Code
-                            ushort nextOff = reader.ReadUInt16WithOutTypeHead();
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -5316,9 +5217,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);//skip FixUInt16Code
-                            ushort nextOff = reader.ReadUInt16WithOutTypeHead();
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -5483,9 +5381,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);//skip FixUInt16Code
-                            ushort nextOff = reader.ReadUInt16WithOutTypeHead();
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -5676,10 +5571,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            ref1 = ref Unsafe.Add(ref ref1, 1);//skip FixUInt16Code
-                            ushort nextOff = BssomBinaryPrimitives.ReadUInt16LittleEndian(ref ref1);
-                            ref1 = ref Unsafe.Add(ref ref1, 2);
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -5855,9 +5746,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);//skip FixUInt16Code
-                            ushort nextOff = reader.ReadUInt16WithOutTypeHead();
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -6041,10 +5929,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            ref1 = ref Unsafe.Add(ref ref1, 1);//skip FixUInt16Code
-                            ushort nextOff = BssomBinaryPrimitives.ReadUInt16LittleEndian(ref ref1);
-                            ref1 = ref Unsafe.Add(ref ref1, 2);
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -6220,9 +6104,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);//skip FixUInt16Code
-                            ushort nextOff = reader.ReadUInt16WithOutTypeHead();
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -6414,10 +6295,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            ref1 = ref Unsafe.Add(ref ref1, 1);//skip FixUInt16Code
-                            ushort nextOff = BssomBinaryPrimitives.ReadUInt16LittleEndian(ref ref1);
-                            ref1 = ref Unsafe.Add(ref ref1, 2);
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -6598,9 +6475,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);//skip FixUInt16Code
-                            ushort nextOff = reader.ReadUInt16WithOutTypeHead();
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -6789,10 +6663,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            ref1 = ref Unsafe.Add(ref ref1, 1);//skip FixUInt16Code
-                            ushort nextOff = BssomBinaryPrimitives.ReadUInt16LittleEndian(ref ref1);
-                            ref1 = ref Unsafe.Add(ref ref1, 2);
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {
@@ -6973,9 +6843,6 @@ namespace Bssom.Serializer.BssMap
 
                         if (t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLastN)
                         {
-                            reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);//skip FixUInt16Code
-                            ushort nextOff = reader.ReadUInt16WithOutTypeHead();
-
                             //read keyByte
                             if (t == BssMapRouteToken.EqualLastN || t == BssMapRouteToken.EqualLast8)
                             {

@@ -44,15 +44,14 @@ namespace Bssom.Serializer.BssMap
                     {
                         //equalNext
                         this.WriteEqualNext(entries[i].IsKey, entries[i].LastValueByteCount);
+                        // fillNextBranchOff 
+                        nextNextBranchPos = this.FillNextBranchOff();
                     }
                     else
                     {
                         //equalLast
                         this.WriteEqualLast(entries[i].IsKey, entries[i].LastValueByteCount);
                     }
-
-                    // fillNextBranchOff 
-                    nextNextBranchPos = this.FillNextBranchOff();
 
                     // determine if it is key
                     if (entries[i].IsKey)
@@ -80,11 +79,6 @@ namespace Bssom.Serializer.BssMap
                         this.WriteHasChidlerns(false);
                     }
 
-                    // writeback equalLast nextBranchOff
-                    if (i == len - 1)
-                    {
-                        this.WriteBackNextBranchOff(nextNextBranchPos);
-                    }
                 }
             }
             else
@@ -229,15 +223,15 @@ namespace Bssom.Serializer.BssMap
                     {
                         //equalNext
                         this.WriteEqualNext(entries[i].IsKey, entries[i].LastValueByteCount);
+                        // fillNextBranchOff 
+                        nextNextBranchPos = this.FillNextBranchOff();
                     }
                     else
                     {
                         //equalLast
                         this.WriteEqualLast(entries[i].IsKey, entries[i].LastValueByteCount);
                     }
-
-                    // fillNextBranchOff 
-                    nextNextBranchPos = this.FillNextBranchOff();
+                   
 
                     // determine if it is key
                     if (entries[i].IsKey)
@@ -265,11 +259,6 @@ namespace Bssom.Serializer.BssMap
                         this.WriteHasChidlerns(false);
                     }
 
-                    // writeback equalLast nextBranchOff
-                    if (i == len - 1)
-                    {
-                        this.WriteBackNextBranchOff(nextNextBranchPos);
-                    }
                 }
             }
             else

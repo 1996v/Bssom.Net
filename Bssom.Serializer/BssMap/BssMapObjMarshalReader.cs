@@ -45,7 +45,7 @@ namespace Bssom.Serializer.BssMap
         public long EndPosition => Paras.DataEndPosition;
         public bool IsOnlyReadFieldOffset => ValueFormatter == null;
 
-        public static BssMapObjMarshalReader<TKey, TValue> Create(ref BssomReader reader,ref BssomDeserializeContext context, bool isOnlyReadFieldOffset = false)
+        public static BssMapObjMarshalReader<TKey, TValue> Create(ref BssomReader reader, ref BssomDeserializeContext context, bool isOnlyReadFieldOffset = false)
         {
             BssMapObjMarshalReader<TKey, TValue> apr = new BssMapObjMarshalReader<TKey, TValue>();
             apr._reader = reader;
@@ -131,17 +131,30 @@ namespace Bssom.Serializer.BssMap
                             token = Unsafe.ReadUnaligned<BssMapRouteToken>(ref ref1);
                             bssaStack.PushToken(token);
 
-                            if (token >= BssMapRouteToken.EqualNext1 && token <= BssMapRouteToken.EqualNext8 ||
-                                token >= BssMapRouteToken.EqualLast1 && token <= BssMapRouteToken.EqualLast8)
+                            if (token >= BssMapRouteToken.EqualNext1 && token <= BssMapRouteToken.EqualNext8)
                             {
                                 nextKeyByteCount = BssMapRouteTokenHelper.GetEqualNextOrLastByteCount(token);
 
                                 ref1 = ref Unsafe.Add(ref ref1, 1 + 3);//ignore nextOff
                                 goto case AutomateState.ReadKey;
                             }
-                            else if (token == BssMapRouteToken.EqualNextN || token == BssMapRouteToken.EqualLastN)
+                            else if (token >= BssMapRouteToken.EqualLast1 && token <= BssMapRouteToken.EqualLast8)
+                            {
+                                nextKeyByteCount = BssMapRouteTokenHelper.GetEqualNextOrLastByteCount(token);
+
+                                ref1 = ref Unsafe.Add(ref ref1, 1);
+                                goto case AutomateState.ReadKey;
+                            }
+                            else if (token == BssMapRouteToken.EqualNextN)
                             {
                                 ref1 = ref Unsafe.Add(ref ref1, 1 + 3);//ignore nextOff
+                                bssaStack.PushValue(BssomBinaryPrimitives.ReadUInt64LittleEndian(ref ref1));
+                                ref1 = ref Unsafe.Add(ref ref1, 8);
+                                goto case AutomateState.ReadChildren;
+                            }
+                            else if (token == BssMapRouteToken.EqualLastN)
+                            {
+                                ref1 = ref Unsafe.Add(ref ref1, 1);
                                 bssaStack.PushValue(BssomBinaryPrimitives.ReadUInt64LittleEndian(ref ref1));
                                 ref1 = ref Unsafe.Add(ref ref1, 8);
                                 goto case AutomateState.ReadChildren;
@@ -318,17 +331,27 @@ namespace Bssom.Serializer.BssMap
                             token = bssmapReader.Reader.ReadMapToken();
                             bssaStack.PushToken(token);
 
-                            if (token >= BssMapRouteToken.EqualNext1 && token <= BssMapRouteToken.EqualNext8 ||
-                                  token >= BssMapRouteToken.EqualLast1 && token <= BssMapRouteToken.EqualLast8)
+                            if (token >= BssMapRouteToken.EqualNext1 && token <= BssMapRouteToken.EqualNext8 )
                             {
                                 nextKeyByteCount = BssMapRouteTokenHelper.GetEqualNextOrLastByteCount(token);
 
                                 bssmapReader.Reader.BssomBuffer.SeekWithOutVerify(3, BssomSeekOrgin.Current);//ignore nextOff
                                 goto case AutomateState.ReadKey;
                             }
-                            else if (token == BssMapRouteToken.EqualNextN || token == BssMapRouteToken.EqualLastN)
+                            else if (token >= BssMapRouteToken.EqualLast1 && token <= BssMapRouteToken.EqualLast8)
+                            {
+                                nextKeyByteCount = BssMapRouteTokenHelper.GetEqualNextOrLastByteCount(token);
+
+                                goto case AutomateState.ReadKey;
+                            }
+                            else if (token == BssMapRouteToken.EqualNextN )
                             {
                                 bssmapReader.Reader.BssomBuffer.SeekWithOutVerify(3, BssomSeekOrgin.Current);//ignore nextOff
+                                bssaStack.PushValue(bssmapReader.Reader.ReadUInt64WithOutTypeHead());
+                                goto case AutomateState.ReadChildren;
+                            }
+                            else if (token == BssMapRouteToken.EqualLastN)
+                            {
                                 bssaStack.PushValue(bssmapReader.Reader.ReadUInt64WithOutTypeHead());
                                 goto case AutomateState.ReadChildren;
                             }
@@ -372,7 +395,7 @@ namespace Bssom.Serializer.BssMap
                             {
                                 long curPos = bssmapReader.Reader.Position;
                                 bssmapReader.Reader.BssomBuffer.Seek(bssmapReader.Paras.ReadPosition + valOffset);
-                                var value = bssmapReader.ValueFormatter.Deserialize(ref bssmapReader._reader, ref  bssmapReader._context);
+                                var value = bssmapReader.ValueFormatter.Deserialize(ref bssmapReader._reader, ref bssmapReader._context);
                                 Current = new KeyValuePair<TKey, TValue>(key, value);
                                 bssmapReader.Reader.BssomBuffer.Seek(curPos);
                             }

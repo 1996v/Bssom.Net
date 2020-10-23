@@ -75,18 +75,24 @@ namespace Bssom.Serializer.BssMap
                         if (t >= BssMapRouteToken.EqualNext1 && t <= BssMapRouteToken.EqualNext8 ||
                               t >= BssMapRouteToken.EqualLast1 && t <= BssMapRouteToken.EqualLast8)
                         {
-                            long position = positionWithOutTypeHead(ref reader);
-                            reader.EnsureType(BssomBinaryPrimitives.FixUInt16);
-                            msb.AppendNextOff(position, reader.ReadUInt16WithOutTypeHead());
+                            if (t >= BssMapRouteToken.EqualNext1 && t <= BssMapRouteToken.EqualNext8)
+                            {
+                                long position = positionWithOutTypeHead(ref reader);
+                                reader.EnsureType(BssomBinaryPrimitives.FixUInt16);
+                                msb.AppendNextOff(position, reader.ReadUInt16WithOutTypeHead());
+                            }
 
                             nextKeyByteCount = BssMapRouteTokenHelper.GetEqualNextOrLastByteCount(t);
                             goto case AutomateState.ReadKey;
                         }
                         else if (t == BssMapRouteToken.EqualNextN || t == BssMapRouteToken.EqualLastN)
                         {
-                            long position = positionWithOutTypeHead(ref reader);
-                            reader.EnsureType(BssomBinaryPrimitives.FixUInt16);
-                            msb.AppendNextOff(position, reader.ReadUInt16WithOutTypeHead());
+                            if (t == BssMapRouteToken.EqualNextN)
+                            {
+                                long position = positionWithOutTypeHead(ref reader);
+                                reader.EnsureType(BssomBinaryPrimitives.FixUInt16);
+                                msb.AppendNextOff(position, reader.ReadUInt16WithOutTypeHead());
+                            }
 
                             ulong uint64Val = reader.ReadUInt64WithOutTypeHead();
                             msb.AppendUInt64Val(positionWithOutTypeHead(ref reader) - 8, uint64Val);
