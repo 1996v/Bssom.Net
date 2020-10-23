@@ -150,14 +150,14 @@ namespace Bssom.Serializer.BssMap
                                 ref1 = ref Unsafe.Add(ref ref1, 1 + 3);//ignore nextOff
                                 bssaStack.PushValue(BssomBinaryPrimitives.ReadUInt64LittleEndian(ref ref1));
                                 ref1 = ref Unsafe.Add(ref ref1, 8);
-                                goto case AutomateState.ReadChildren;
+                                goto case AutomateState.ReadBranch;
                             }
                             else if (token == BssMapRouteToken.EqualLastN)
                             {
                                 ref1 = ref Unsafe.Add(ref ref1, 1);
                                 bssaStack.PushValue(BssomBinaryPrimitives.ReadUInt64LittleEndian(ref ref1));
                                 ref1 = ref Unsafe.Add(ref ref1, 8);
-                                goto case AutomateState.ReadChildren;
+                                goto case AutomateState.ReadBranch;
                             }
                             else if (token >= BssMapRouteToken.LessThen1 && token <= BssMapRouteToken.LessThen8)
                             {
@@ -348,12 +348,12 @@ namespace Bssom.Serializer.BssMap
                             {
                                 bssmapReader.Reader.BssomBuffer.SeekWithOutVerify(3, BssomSeekOrgin.Current);//ignore nextOff
                                 bssaStack.PushValue(bssmapReader.Reader.ReadUInt64WithOutTypeHead());
-                                goto case AutomateState.ReadChildren;
+                                goto case AutomateState.ReadBranch;
                             }
                             else if (token == BssMapRouteToken.EqualLastN)
                             {
                                 bssaStack.PushValue(bssmapReader.Reader.ReadUInt64WithOutTypeHead());
-                                goto case AutomateState.ReadChildren;
+                                goto case AutomateState.ReadBranch;
                             }
                             else if (token >= BssMapRouteToken.LessThen1 && token <= BssMapRouteToken.LessThen8)
                             {

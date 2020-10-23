@@ -107,13 +107,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -153,13 +154,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -305,13 +307,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -351,13 +354,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -503,13 +507,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -549,13 +554,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -701,13 +707,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -747,13 +754,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -899,13 +907,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -945,13 +954,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -1097,13 +1107,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -1143,13 +1154,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -1295,13 +1307,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -1341,13 +1354,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -1493,13 +1507,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -1539,13 +1554,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -1691,13 +1707,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -1737,13 +1754,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -1889,13 +1907,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -1935,13 +1954,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -2087,13 +2107,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -2133,13 +2154,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -2285,13 +2307,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -2331,13 +2354,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -2483,13 +2507,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -2529,13 +2554,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -2681,13 +2707,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -2727,13 +2754,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -2879,13 +2907,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -2925,13 +2954,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -3061,13 +3091,15 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -3103,13 +3135,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -3225,13 +3258,15 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -3267,13 +3302,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -3389,13 +3425,15 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -3431,13 +3469,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -3553,13 +3592,15 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -3595,13 +3636,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -3717,13 +3759,15 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -3759,13 +3803,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -3881,13 +3926,15 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -3923,13 +3970,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -4045,13 +4093,15 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -4087,13 +4137,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -4209,13 +4260,15 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -4251,13 +4304,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -4373,13 +4427,15 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -4415,13 +4471,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -4537,13 +4594,15 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -4579,13 +4638,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -4701,13 +4761,15 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -4743,13 +4805,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -4865,13 +4928,15 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -4907,13 +4972,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -5029,13 +5095,15 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -5071,13 +5139,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -5193,13 +5262,15 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -5235,13 +5306,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -5357,13 +5429,15 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -5399,13 +5473,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -5547,13 +5622,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -5593,13 +5669,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -5722,13 +5799,15 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -5764,13 +5843,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -5905,13 +5985,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -5951,13 +6032,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -6080,13 +6162,15 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -6122,13 +6206,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -6271,13 +6356,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -6317,13 +6403,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -6451,13 +6538,15 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -6493,13 +6582,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -6639,13 +6729,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -6685,13 +6776,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         ref1 = ref Unsafe.Add(ref ref1, 1 + 1 + 4);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -6819,13 +6911,15 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualNextN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {
@@ -6861,13 +6955,14 @@ namespace Bssom.Serializer.BssMap
                             {
                                 if (keyPos != keyLength - 1)
                                 {
+                                    keyPos++;
                                     if (t != BssMapRouteToken.EqualLastN)
                                     {
                                         //skip keyType and valoffset
                                         reader.BssomBuffer.SeekWithOutVerify(1 + 1 + 4, BssomSeekOrgin.Current);
+                                        goto case AutomateReadOneKeyState.ReadChildren;
                                     }
-                                    keyPos++;
-                                    goto case AutomateReadOneKeyState.ReadChildren;
+                                    goto case AutomateReadOneKeyState.ReadNextBranch;
                                 }
                                 else
                                 {

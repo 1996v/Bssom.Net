@@ -97,7 +97,7 @@ namespace Bssom.Serializer.BssMap
                             ulong uint64Val = reader.ReadUInt64WithOutTypeHead();
                             msb.AppendUInt64Val(positionWithOutTypeHead(ref reader) - 8, uint64Val);
 
-                            goto case AutomateState.ReadChildren;
+                            goto case AutomateState.ReadBranch;
                         }
                         else if (t >= BssMapRouteToken.LessThen1 && t <= BssMapRouteToken.LessThen8)
                         {

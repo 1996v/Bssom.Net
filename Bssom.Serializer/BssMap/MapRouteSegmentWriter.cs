@@ -70,7 +70,11 @@ namespace Bssom.Serializer.BssMap
                     // determine if there are childrens
                     if (entries[i].Chidlerns != null)
                     {
-                        this.WriteHasChidlerns(true);
+                        if (entries[i].IsKey)
+                        {
+                            this.WriteHasChidlerns(true);
+                        }
+
                         //writeReleation
                         this.WriteRouteData(entries[i].Chidlerns, 0, entries[i].ChidlernLength, valueMapOffsets);
                     }
@@ -250,7 +254,11 @@ namespace Bssom.Serializer.BssMap
                     // determine if there are childrens
                     if (entries[i].Chidlerns != null)
                     {
-                        this.WriteHasChidlerns(true);
+                        if (entries[i].IsKey)
+                        {
+                            this.WriteHasChidlerns(true);
+                        }
+
                         //writeReleation
                         this.SizeRouteData(entries[i].Chidlerns, 0, entries[i].ChidlernLength, valueMapOffsets);
                     }
