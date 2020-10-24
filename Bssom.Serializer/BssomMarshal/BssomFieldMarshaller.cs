@@ -747,16 +747,16 @@ namespace Bssom.Serializer
                         writer.WriteWithOutTypeHead((byte)(len - 1));
                         writer.BufferWriter.Advance(len - 1);
                     }
-                    else if (len <= short.MaxValue)
+                    else if (len <= ushort.MaxValue)
                     {
-                        writer.WriteBuildInType(BssomType.BlankInt16Code);
-                        writer.WriteWithOutTypeHead((short)(len - 1 - 2));
+                        writer.WriteBuildInType(BssomType.BlankUInt16Code);
+                        writer.WriteWithOutTypeHead((ushort)(len - 1 - 2));
                         writer.BufferWriter.Advance(len - 1 - 2);
                     }
                     else
                     {
-                        writer.WriteBuildInType(BssomType.BlankInt32Code);
-                        writer.WriteWithOutTypeHead(len - 1 - 4);
+                        writer.WriteBuildInType(BssomType.BlankUInt32Code);
+                        writer.WriteWithOutTypeHead((uint)(len - 1 - 4));
                         writer.BufferWriter.Advance(len - 1 - 4);
                     }
                 }

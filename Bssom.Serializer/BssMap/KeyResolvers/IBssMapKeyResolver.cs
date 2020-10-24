@@ -8,7 +8,7 @@ namespace Bssom.Serializer.BssMap.KeyResolvers
     {
         Raw64BytesISegment GetMap1KeySegment(object key);
         UInt64BytesISegment GetMap2KeySegment(object key);
-        object ReadMap2Key(IIteration<byte> keyBytes);
+        object ReadMap2Key(Iterable<byte> keyBytes);
         byte KeyType { get; }
         bool KeyIsNativeType { get; }
     }
@@ -17,6 +17,6 @@ namespace Bssom.Serializer.BssMap.KeyResolvers
     {
         Raw64BytesISegment GetMap1KeySegment(TKey key);
         UInt64BytesISegment GetMap2KeySegment(TKey key);
-        new TKey ReadMap2Key(IIteration<byte> key);
+        new TKey ReadMap2Key(Iterable<byte> key);
     }
 }

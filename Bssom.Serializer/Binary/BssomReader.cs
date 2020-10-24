@@ -274,12 +274,12 @@ namespace Bssom.Serializer
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void SkipBlankCharacterFromBcCode(byte bcCode)
         {
-            if (bcCode < BssomType.BlankInt16Code)
+            if (bcCode < BssomType.BlankUInt16Code)
                 BssomBuffer.Seek(bcCode, BssomSeekOrgin.Current);
-            else if (bcCode == BssomType.BlankInt16Code)
-                BssomBuffer.Seek(ReadInt16WithOutTypeHead(), BssomSeekOrgin.Current);
-            else//(bcCode == BssomType.EmptyInt32Code)
-                BssomBuffer.Seek(ReadInt32WithOutTypeHead(), BssomSeekOrgin.Current);
+            else if (bcCode == BssomType.BlankUInt16Code)
+                BssomBuffer.Seek(ReadUInt16WithOutTypeHead(), BssomSeekOrgin.Current);
+            else//(bcCode == BssomType.EmptyUInt32Code)
+                BssomBuffer.Seek(ReadUInt32WithOutTypeHead(), BssomSeekOrgin.Current);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -335,10 +335,10 @@ namespace Bssom.Serializer
                     BssomBuffer.Seek(typeCode, BssomSeekOrgin.Current);
                 else
                 {
-                    if (typeCode == BssomType.BlankInt16Code)
-                        BssomBuffer.Seek(ReadInt16WithOutTypeHead(), BssomSeekOrgin.Current);
+                    if (typeCode == BssomType.BlankUInt16Code)
+                        BssomBuffer.Seek(ReadUInt16WithOutTypeHead(), BssomSeekOrgin.Current);
                     else //if (type == BssomType.EmptyInt32Code)
-                        BssomBuffer.Seek(ReadInt32WithOutTypeHead(), BssomSeekOrgin.Current);
+                        BssomBuffer.Seek(ReadUInt32WithOutTypeHead(), BssomSeekOrgin.Current);
                 }
                 typeCode = ReadBssomType();
             }
@@ -361,15 +361,15 @@ namespace Bssom.Serializer
                 }
                 else
                 {
-                    if (type == BssomType.BlankInt16Code)
+                    if (type == BssomType.BlankUInt16Code)
                     {
-                        empty = ReadInt16WithOutTypeHead();
+                        empty = ReadUInt16WithOutTypeHead();
                         BssomBuffer.Seek(empty, BssomSeekOrgin.Current);
                         empty += 2;
                     }
                     else /*if (type == BssomType.EmptyInt32Code)*/
                     {
-                        empty = ReadInt32WithOutTypeHead();
+                        empty = checked((int)ReadUInt32WithOutTypeHead());
                         BssomBuffer.Seek(empty, BssomSeekOrgin.Current);
                         empty += 4;
                     }

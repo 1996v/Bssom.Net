@@ -44,7 +44,7 @@ namespace Bssom.Serializer.BssMap.KeyResolvers
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public unsafe string ReadMap2Key(IIteration<byte> key)
+        public unsafe string ReadMap2Key(Iterable<byte> key)
         {
             ref byte refl = ref key.GetFirstElementReference(out bool isContiguousMemoryArea);
             fixed (byte* ptr = &refl)
@@ -54,7 +54,7 @@ namespace Bssom.Serializer.BssMap.KeyResolvers
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        object IBssMapKeyResolver.ReadMap2Key(IIteration<byte> key)
+        object IBssMapKeyResolver.ReadMap2Key(Iterable<byte> key)
         {
             return ReadMap2Key(key);
         }

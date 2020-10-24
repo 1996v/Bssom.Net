@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace Bssom.Serializer.Internal
 {
-    internal unsafe struct StackArray<T> : IIteration<T> where T : unmanaged
+    internal unsafe struct StackArray<T> : Iterable<T> where T : unmanaged
     {
         private T* _ptr;
         private int _len;
@@ -16,7 +16,7 @@ namespace Bssom.Serializer.Internal
             _len = len;
         }
 
-        public IIteration<T> ToISegment()
+        public Iterable<T> ToISegment()
         {
             return this;
         }

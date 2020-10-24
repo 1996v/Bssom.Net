@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Bssom.Serializer.Internal
 {
-    internal unsafe struct StackArrayPack<T> : IIteration<T> where T : unmanaged
+    internal unsafe struct StackArrayPack<T> : Iterable<T> where T : unmanaged
     {
         private StackArray<T> _stackArray;
         private int _nextPos;
@@ -15,7 +15,7 @@ namespace Bssom.Serializer.Internal
             _nextPos = 0;
         }
 
-        public IIteration<T> ToUlongs()
+        public Iterable<T> ToUlongs()
         {
             return this;
         }

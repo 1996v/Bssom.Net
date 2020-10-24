@@ -11,28 +11,28 @@ namespace Bssom.Serializer
     {
         //Empty : 0~127,  128:uint16  129:uint32
         public const int MinBlankCodeValue = 0;
-        public const int MaxVarBlankCodeValue = BlankInt16Code - 1;
-        public const int MaxBlankCodeValue = BlankInt32Code;//129
-        public const int BlankInt16Code = sbyte.MaxValue + 1;//128
-        public const int BlankInt32Code = sbyte.MaxValue + 2;//129
+        public const int MaxVarBlankCodeValue = BlankUInt16Code - 1;
+        public const int MaxBlankCodeValue = BlankUInt32Code;//129
+        public const int BlankUInt16Code = 0x80;//128
+        public const int BlankUInt32Code = 0x81;//129
 
         public const int MinFixLenTypeCode = NullCode;
         public const int MaxFixLenTypeCode = TimestampCode;
 
-        public const int NullCode = 130;
-        public const int Int8Code = 131;
-        public const int Int16Code = 132;
-        public const int Int32Code = 133;
-        public const int Int64Code = 134;
-        public const int UInt8Code = 135;
-        public const int UInt16Code = 136;
-        public const int UInt32Code = 137;
-        public const int UInt64Code = 138;
-        public const int Float32Code = 139;
-        public const int Float64Code = 140;
-        public const int BooleanCode = 141;
-        public const int TimestampCode = 142;
-        public const int StringCode = 143;
+        public const int NullCode = 0x82;
+        public const int Int8Code = 0x83;
+        public const int Int16Code = 0x84;
+        public const int Int32Code = 0x85;
+        public const int Int64Code = 0x86;
+        public const int UInt8Code = 0x87;
+        public const int UInt16Code = 0x88;
+        public const int UInt32Code = 0x89;
+        public const int UInt64Code = 0x8a;
+        public const int Float32Code = 0x8b;
+        public const int Float64Code = 0x8c;
+        public const int BooleanCode = 0x8d;
+        public const int TimestampCode = 0x8e;
+        public const int StringCode = 0x8f;
 
         public const int Map1 = 0xc1;
         public const int Map2 = 0xc2;

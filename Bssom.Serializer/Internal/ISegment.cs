@@ -2,7 +2,7 @@
 
 namespace Bssom.Serializer.Internal
 {
-    internal interface ISegment<T>: IIteration<T>
+    internal interface ISegment<T>: Iterable<T>
     {
         T this[int i] { get; }
     }

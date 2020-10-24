@@ -46,12 +46,12 @@ namespace Bssom.Serializer.BssMap.KeyResolvers
             return GetMap2KeySegment((SByte)key);
         }
 
-        public unsafe SByte ReadMap2Key(IIteration<byte> key)
+        public unsafe SByte ReadMap2Key(Iterable<byte> key)
         {
             return BssomBinaryPrimitives.ReadInt8(ref key.GetFirstElementReference(out bool isContiguousMemoryArea));
         }
 
-        object IBssMapKeyResolver.ReadMap2Key(IIteration<byte> key)
+        object IBssMapKeyResolver.ReadMap2Key(Iterable<byte> key)
         {
             return ReadMap2Key(key);
         }
@@ -88,12 +88,12 @@ namespace Bssom.Serializer.BssMap.KeyResolvers
             return GetMap2KeySegment((Int16)key);
         }
 
-        public unsafe Int16 ReadMap2Key(IIteration<byte> key)
+        public unsafe Int16 ReadMap2Key(Iterable<byte> key)
         {
             return BssomBinaryPrimitives.ReadInt16LittleEndian(ref key.GetFirstElementReference(out bool isContiguousMemoryArea));
         }
 
-        object IBssMapKeyResolver.ReadMap2Key(IIteration<byte> key)
+        object IBssMapKeyResolver.ReadMap2Key(Iterable<byte> key)
         {
             return ReadMap2Key(key);
         }
@@ -130,12 +130,12 @@ namespace Bssom.Serializer.BssMap.KeyResolvers
             return GetMap2KeySegment((Int32)key);
         }
 
-        public unsafe Int32 ReadMap2Key(IIteration<byte> key)
+        public unsafe Int32 ReadMap2Key(Iterable<byte> key)
         {
             return BssomBinaryPrimitives.ReadInt32LittleEndian(ref key.GetFirstElementReference(out bool isContiguousMemoryArea));
         }
 
-        object IBssMapKeyResolver.ReadMap2Key(IIteration<byte> key)
+        object IBssMapKeyResolver.ReadMap2Key(Iterable<byte> key)
         {
             return ReadMap2Key(key);
         }
@@ -172,12 +172,12 @@ namespace Bssom.Serializer.BssMap.KeyResolvers
             return GetMap2KeySegment((Int64)key);
         }
 
-        public unsafe Int64 ReadMap2Key(IIteration<byte> key)
+        public unsafe Int64 ReadMap2Key(Iterable<byte> key)
         {
             return BssomBinaryPrimitives.ReadInt64LittleEndian(ref key.GetFirstElementReference(out bool isContiguousMemoryArea));
         }
 
-        object IBssMapKeyResolver.ReadMap2Key(IIteration<byte> key)
+        object IBssMapKeyResolver.ReadMap2Key(Iterable<byte> key)
         {
             return ReadMap2Key(key);
         }
@@ -214,12 +214,12 @@ namespace Bssom.Serializer.BssMap.KeyResolvers
             return GetMap2KeySegment((Byte)key);
         }
 
-        public unsafe Byte ReadMap2Key(IIteration<byte> key)
+        public unsafe Byte ReadMap2Key(Iterable<byte> key)
         {
             return BssomBinaryPrimitives.ReadUInt8(ref key.GetFirstElementReference(out bool isContiguousMemoryArea));
         }
 
-        object IBssMapKeyResolver.ReadMap2Key(IIteration<byte> key)
+        object IBssMapKeyResolver.ReadMap2Key(Iterable<byte> key)
         {
             return ReadMap2Key(key);
         }
@@ -256,12 +256,12 @@ namespace Bssom.Serializer.BssMap.KeyResolvers
             return GetMap2KeySegment((UInt16)key);
         }
 
-        public unsafe UInt16 ReadMap2Key(IIteration<byte> key)
+        public unsafe UInt16 ReadMap2Key(Iterable<byte> key)
         {
             return BssomBinaryPrimitives.ReadUInt16LittleEndian(ref key.GetFirstElementReference(out bool isContiguousMemoryArea));
         }
 
-        object IBssMapKeyResolver.ReadMap2Key(IIteration<byte> key)
+        object IBssMapKeyResolver.ReadMap2Key(Iterable<byte> key)
         {
             return ReadMap2Key(key);
         }
@@ -298,12 +298,12 @@ namespace Bssom.Serializer.BssMap.KeyResolvers
             return GetMap2KeySegment((UInt32)key);
         }
 
-        public unsafe UInt32 ReadMap2Key(IIteration<byte> key)
+        public unsafe UInt32 ReadMap2Key(Iterable<byte> key)
         {
             return BssomBinaryPrimitives.ReadUInt32LittleEndian(ref key.GetFirstElementReference(out bool isContiguousMemoryArea));
         }
 
-        object IBssMapKeyResolver.ReadMap2Key(IIteration<byte> key)
+        object IBssMapKeyResolver.ReadMap2Key(Iterable<byte> key)
         {
             return ReadMap2Key(key);
         }
@@ -340,12 +340,12 @@ namespace Bssom.Serializer.BssMap.KeyResolvers
             return GetMap2KeySegment((UInt64)key);
         }
 
-        public unsafe UInt64 ReadMap2Key(IIteration<byte> key)
+        public unsafe UInt64 ReadMap2Key(Iterable<byte> key)
         {
             return BssomBinaryPrimitives.ReadUInt64LittleEndian(ref key.GetFirstElementReference(out bool isContiguousMemoryArea));
         }
 
-        object IBssMapKeyResolver.ReadMap2Key(IIteration<byte> key)
+        object IBssMapKeyResolver.ReadMap2Key(Iterable<byte> key)
         {
             return ReadMap2Key(key);
         }
@@ -382,12 +382,12 @@ namespace Bssom.Serializer.BssMap.KeyResolvers
             return GetMap2KeySegment((Single)key);
         }
 
-        public unsafe Single ReadMap2Key(IIteration<byte> key)
+        public unsafe Single ReadMap2Key(Iterable<byte> key)
         {
             return BssomBinaryPrimitives.ReadFloat32LittleEndian(ref key.GetFirstElementReference(out bool isContiguousMemoryArea));
         }
 
-        object IBssMapKeyResolver.ReadMap2Key(IIteration<byte> key)
+        object IBssMapKeyResolver.ReadMap2Key(Iterable<byte> key)
         {
             return ReadMap2Key(key);
         }
@@ -424,12 +424,12 @@ namespace Bssom.Serializer.BssMap.KeyResolvers
             return GetMap2KeySegment((Double)key);
         }
 
-        public unsafe Double ReadMap2Key(IIteration<byte> key)
+        public unsafe Double ReadMap2Key(Iterable<byte> key)
         {
             return BssomBinaryPrimitives.ReadFloat64LittleEndian(ref key.GetFirstElementReference(out bool isContiguousMemoryArea));
         }
 
-        object IBssMapKeyResolver.ReadMap2Key(IIteration<byte> key)
+        object IBssMapKeyResolver.ReadMap2Key(Iterable<byte> key)
         {
             return ReadMap2Key(key);
         }
@@ -466,12 +466,12 @@ namespace Bssom.Serializer.BssMap.KeyResolvers
             return GetMap2KeySegment((Boolean)key);
         }
 
-        public unsafe Boolean ReadMap2Key(IIteration<byte> key)
+        public unsafe Boolean ReadMap2Key(Iterable<byte> key)
         {
             return BssomBinaryPrimitives.ReadBoolean(ref key.GetFirstElementReference(out bool isContiguousMemoryArea));
         }
 
-        object IBssMapKeyResolver.ReadMap2Key(IIteration<byte> key)
+        object IBssMapKeyResolver.ReadMap2Key(Iterable<byte> key)
         {
             return ReadMap2Key(key);
         }
@@ -508,12 +508,12 @@ namespace Bssom.Serializer.BssMap.KeyResolvers
             return GetMap2KeySegment((Char)key);
         }
 
-        public unsafe Char ReadMap2Key(IIteration<byte> key)
+        public unsafe Char ReadMap2Key(Iterable<byte> key)
         {
             return BssomBinaryPrimitives.ReadCharLittleEndian(ref key.GetFirstElementReference(out bool isContiguousMemoryArea));
         }
 
-        object IBssMapKeyResolver.ReadMap2Key(IIteration<byte> key)
+        object IBssMapKeyResolver.ReadMap2Key(Iterable<byte> key)
         {
             return ReadMap2Key(key);
         }
@@ -550,12 +550,12 @@ namespace Bssom.Serializer.BssMap.KeyResolvers
             return GetMap2KeySegment((Decimal)key);
         }
 
-        public unsafe Decimal ReadMap2Key(IIteration<byte> key)
+        public unsafe Decimal ReadMap2Key(Iterable<byte> key)
         {
             return BssomBinaryPrimitives.ReadDecimal(ref key.GetFirstElementReference(out bool isContiguousMemoryArea));
         }
 
-        object IBssMapKeyResolver.ReadMap2Key(IIteration<byte> key)
+        object IBssMapKeyResolver.ReadMap2Key(Iterable<byte> key)
         {
             return ReadMap2Key(key);
         }
@@ -592,12 +592,12 @@ namespace Bssom.Serializer.BssMap.KeyResolvers
             return GetMap2KeySegment((Guid)key);
         }
 
-        public unsafe Guid ReadMap2Key(IIteration<byte> key)
+        public unsafe Guid ReadMap2Key(Iterable<byte> key)
         {
             return BssomBinaryPrimitives.ReadGuid(ref key.GetFirstElementReference(out bool isContiguousMemoryArea));
         }
 
-        object IBssMapKeyResolver.ReadMap2Key(IIteration<byte> key)
+        object IBssMapKeyResolver.ReadMap2Key(Iterable<byte> key)
         {
             return ReadMap2Key(key);
         }

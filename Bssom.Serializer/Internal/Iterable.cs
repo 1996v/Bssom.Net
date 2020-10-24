@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Bssom.Serializer.Internal
 {
-    internal interface IIteration<T>
+    internal interface Iterable<T>
     {
         IEnumerable<T> Ts { get; }
         int Length { get; }

@@ -204,15 +204,15 @@ namespace Bssom.Serializer
                     else
                     {
                         int len;
-                        if (one == BssomType.BlankInt16Code)
+                        if (one == BssomType.BlankUInt16Code)
                         {
                             stream.Read(buffer, 0, buffer[2]);
-                            len = BssomBinaryPrimitives.ReadInt16LittleEndian(ref buffer[0]);
+                            len = BssomBinaryPrimitives.ReadUInt16LittleEndian(ref buffer[0]);
                         }
-                        else /*if (one == BssomType.EmptyInt32Code)*/
+                        else /*if (one == BssomType.EmptyUInt32Code)*/
                         {
                             stream.Read(buffer, 0, buffer[4]);
-                            len = BssomBinaryPrimitives.ReadInt32LittleEndian(ref buffer[0]);
+                            len = checked((int)BssomBinaryPrimitives.ReadUInt32LittleEndian(ref buffer[0]));
                         }
                         AdvanceStream(stream, buffer, len);
                     }

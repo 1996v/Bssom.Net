@@ -8,7 +8,7 @@ using Bssom.Serializer.Internal;
 
 namespace Bssom.Serializer.BssMap
 {
-    internal struct BssmapAnalysisStack :  IIteration<byte>
+    internal struct BssmapAnalysisStack :  Iterable<byte>
     {
         private ArrayPack<ulong> _values;
         private Stack<BssMapRouteToken> _tokens;
@@ -52,7 +52,7 @@ namespace Bssom.Serializer.BssMap
             _tokens.Push(branchToken);
         }
 
-        public IIteration<byte> ToUlongs(byte lastValueByteCount)
+        public Iterable<byte> ToUlongs(byte lastValueByteCount)
         {
             _lastValueByteCount = lastValueByteCount;
             return this;

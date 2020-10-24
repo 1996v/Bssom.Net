@@ -39,12 +39,12 @@ namespace Bssom.Serializer.BssMap.KeyResolvers
             return GetMap2KeySegment((DateTime)key);
         }
 
-        public unsafe DateTime ReadMap2Key(IIteration<byte> key)
+        public unsafe DateTime ReadMap2Key(Iterable<byte> key)
         {
             return BssomBinaryPrimitives.ReadNativeDateTime(ref key.GetFirstElementReference(out bool isContiguousMemoryArea));
         }
 
-        object IBssMapKeyResolver.ReadMap2Key(IIteration<byte> key)
+        object IBssMapKeyResolver.ReadMap2Key(Iterable<byte> key)
         {
             return ReadMap2Key(key);
         }
