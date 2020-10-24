@@ -95,8 +95,8 @@ namespace Bssom.Serializer.Internal
         public readonly static FieldInfo Type_MapHeadPackInfo_MapHead;
         //Type: MapHead.Count
         public readonly static FieldInfo Type_MapHead_Count;
-        //Type: MapHead.MetaLength
-        public readonly static FieldInfo Type_MapHead_MetaLength;
+        //Type: MapHead.RouteLength
+        public readonly static FieldInfo Type_MapHead_RouteLength;
         //Type: Buffer.TryReadFixedRef()
         public readonly static MethodInfo Type_Buffer_TryReadFixedRef;
         //Type: Buffer.UnFixed()
@@ -165,7 +165,7 @@ namespace Bssom.Serializer.Internal
                 typeof(BssMapHeadPackInfo).GetProperty(nameof(BssMapHeadPackInfo.DataEndPosition));
             Type_MapHeadPackInfo_MapHead = typeof(BssMapHeadPackInfo).GetField(nameof(BssMapHeadPackInfo.MapHead));
             Type_MapHead_Count = typeof(BssMapHead).GetField(nameof(BssMapHead.ElementCount));
-            Type_MapHead_MetaLength = typeof(BssMapHead).GetField(nameof(BssMapHead.MetaLength));
+            Type_MapHead_RouteLength = typeof(BssMapHead).GetField(nameof(BssMapHead.RouteLength));
             Type_Buffer_TryReadFixedRef = typeof(IBssomBuffer).GetMethod(nameof(IBssomBuffer.TryReadFixedRef));
             Type_Buffer_UnFixed = typeof(IBssomBuffer).GetMethod(nameof(IBssomBuffer.UnFixed));
 

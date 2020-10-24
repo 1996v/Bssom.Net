@@ -63,7 +63,7 @@ namespace Bssom.Serializer.BssMap
                 return Enumerable.Empty<KeyValuePair<TKey, TValue>>().GetEnumerator();
             }
 
-            Reader.BssomBuffer.TryReadFixedRef(Paras.MapHead.MetaLength, out bool haveEnoughSizeAndCanBeFixed);
+            Reader.BssomBuffer.TryReadFixedRef(Paras.MapHead.RouteLength, out bool haveEnoughSizeAndCanBeFixed);
             if (haveEnoughSizeAndCanBeFixed)
                 return new Enumerator(this);
             else

@@ -296,7 +296,7 @@ namespace Bssom.Serializer
                         var aprp = BssMapHeadPackInfo.Create(ref reader);
                         if (aprp.MapHead.ElementCount > 0)
                         {
-                            ref byte refb = ref reader.BssomBuffer.TryReadFixedRef(aprp.MapHead.MetaLength, out bool haveEnoughSizeAndCanBeFixed);
+                            ref byte refb = ref reader.BssomBuffer.TryReadFixedRef(aprp.MapHead.RouteLength, out bool haveEnoughSizeAndCanBeFixed);
                             if (haveEnoughSizeAndCanBeFixed)
                             {
                                 if (BssMapObjMarshalReader.TrySeek(keyISegment, resolver.KeyType, resolver.KeyIsNativeType, ref aprp, ref reader, ref refb))
@@ -471,7 +471,7 @@ namespace Bssom.Serializer
                         var aprp = BssMapHeadPackInfo.Create(ref reader);
                         if (aprp.MapHead.ElementCount > 0)
                         {
-                            ref byte refb = ref reader.BssomBuffer.TryReadFixedRef(aprp.MapHead.MetaLength, out bool haveEnoughSizeAndCanBeFixed);
+                            ref byte refb = ref reader.BssomBuffer.TryReadFixedRef(aprp.MapHead.RouteLength, out bool haveEnoughSizeAndCanBeFixed);
                             if (haveEnoughSizeAndCanBeFixed)
                             {
                                 if (BssMapObjMarshalReader.TrySeek(keyISegment, BssomType.StringCode, false, ref aprp, ref reader, ref refb))

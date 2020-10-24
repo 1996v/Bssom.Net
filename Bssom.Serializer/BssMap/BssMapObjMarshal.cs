@@ -17,7 +17,7 @@ namespace Bssom.Serializer.BssMap
     internal static class BssMapObjMarshal
     {
         public const int DefaultMapLengthFieldSize = BssomBinaryPrimitives.FixUInt32NumberSize;
-        public const int DefaultMetaLengthFieldSize = BssomBinaryPrimitives.FixUInt32NumberSize;
+        public const int DefaultRouteLengthFieldSize = BssomBinaryPrimitives.FixUInt32NumberSize;
         public static readonly byte[] Empty;
 
         static BssMapObjMarshal()
@@ -25,9 +25,9 @@ namespace Bssom.Serializer.BssMap
             var bw = ExpandableBufferWriter.CreateTemporary();
             var cw = new BssomWriter(bw);
             cw.WriteUInt32FixNumber(7);//reference DefaultMapLengthFieldSize
-            cw.WriteUInt32FixNumber(2);//reference DefaultMetaLengthFieldSize
             cw.WriteVariableNumber(0);
             cw.WriteVariableNumber(0);
+            cw.WriteUInt32FixNumber(0);//reference DefaultRouteLengthFieldSize
             Empty = bw.GetBufferedArray();
         }
 
@@ -41,21 +41,22 @@ namespace Bssom.Serializer.BssMap
         {
             DEBUG.Assert(valueCount != 0 && maxDepth != 0);
             writer.FillUInt32FixNumber();//len
-            long metaLengthPos = writer.FillUInt32FixNumber();//metalen
             writer.WriteVariableNumber(valueCount);//count
             writer.WriteVariableNumber(maxDepth);//depth
-            return metaLengthPos;
+            long routeLenPos = writer.Position;
+            writer.FillUInt32FixNumber();//routelen
+            return routeLenPos;
         }
 
         public static int SizeMapHead(int valueCount, int maxDepth)
         {
             DEBUG.Assert(valueCount != 0 && maxDepth != 0);
-            return DefaultMapLengthFieldSize + DefaultMetaLengthFieldSize + BssomBinaryPrimitives.VariableNumberSize((ulong)valueCount) + BssomBinaryPrimitives.VariableNumberSize((ulong)maxDepth);
+            return DefaultMapLengthFieldSize + BssomBinaryPrimitives.VariableNumberSize((ulong)valueCount) + BssomBinaryPrimitives.VariableNumberSize((ulong)maxDepth) + DefaultRouteLengthFieldSize;
         }
 
         public unsafe static string GetSchemaString(ref BssomReader reader)
         {
-            long positionWithOutTypeHead(ref BssomReader r) => r.Position - 1;
+            long positionWithOutMap2TypeHead(ref BssomReader r) => r.Position - 1;
 
             MapSchemaStringBuilder msb = new MapSchemaStringBuilder();
             var head = BssMapHead.Read(ref reader);
@@ -69,7 +70,7 @@ namespace Bssom.Serializer.BssMap
                 case AutomateState.ReadBranch:
                     {
                         t = reader.ReadMapToken();
-                        msb.AppendRouteToken(positionWithOutTypeHead(ref reader) - 1, t);
+                        msb.AppendRouteToken(positionWithOutMap2TypeHead(ref reader) - 1, t);
                         stack.PushToken(t);
 
                         if (t >= BssMapRouteToken.EqualNext1 && t <= BssMapRouteToken.EqualNext8 ||
@@ -77,7 +78,7 @@ namespace Bssom.Serializer.BssMap
                         {
                             if (t >= BssMapRouteToken.EqualNext1 && t <= BssMapRouteToken.EqualNext8)
                             {
-                                long position = positionWithOutTypeHead(ref reader);
+                                long position = positionWithOutMap2TypeHead(ref reader);
                                 reader.EnsureType(BssomBinaryPrimitives.FixUInt16);
                                 msb.AppendNextOff(position, reader.ReadUInt16WithOutTypeHead());
                             }
@@ -89,26 +90,35 @@ namespace Bssom.Serializer.BssMap
                         {
                             if (t == BssMapRouteToken.EqualNextN)
                             {
-                                long position = positionWithOutTypeHead(ref reader);
+                                long position = positionWithOutMap2TypeHead(ref reader);
                                 reader.EnsureType(BssomBinaryPrimitives.FixUInt16);
                                 msb.AppendNextOff(position, reader.ReadUInt16WithOutTypeHead());
                             }
 
                             ulong uint64Val = reader.ReadUInt64WithOutTypeHead();
-                            msb.AppendUInt64Val(positionWithOutTypeHead(ref reader) - 8, uint64Val);
+                            msb.AppendUInt64Val(positionWithOutMap2TypeHead(ref reader) - 8, uint64Val);
 
                             goto case AutomateState.ReadBranch;
                         }
                         else if (t >= BssMapRouteToken.LessThen1 && t <= BssMapRouteToken.LessThen8)
                         {
-                            long position = positionWithOutTypeHead(ref reader);
+                            long position = positionWithOutMap2TypeHead(ref reader);
                             reader.EnsureType(BssomBinaryPrimitives.FixUInt16);
                             msb.AppendNextOff(position, reader.ReadUInt16WithOutTypeHead());
 
                             nextKeyByteCount = BssMapRouteTokenHelper.GetLessThenByteCount(t);
 
-                            msb.AppendUInt64Val(positionWithOutTypeHead(ref reader) - nextKeyByteCount, ref reader.BssomBuffer.ReadRef(nextKeyByteCount), nextKeyByteCount);
-                            reader.BssomBuffer.SeekWithOutVerify(nextKeyByteCount, BssomSeekOrgin.Current);
+                            position = positionWithOutMap2TypeHead(ref reader);
+                            if (nextKeyByteCount == 8)
+                            {
+                                msb.AppendUInt64Val(position, reader.ReadUInt64WithOutTypeHead());
+                            }
+                            else
+                            {
+                                msb.AppendUInt64Val(position, ref reader.BssomBuffer.ReadRef(nextKeyByteCount), nextKeyByteCount);
+                                reader.BssomBuffer.SeekWithOutVerify(nextKeyByteCount, BssomSeekOrgin.Current);
+                            }
+
                             goto case AutomateState.ReadBranch;
                         }
                         else if (t == BssMapRouteToken.LessElse)
@@ -123,23 +133,23 @@ namespace Bssom.Serializer.BssMap
                         if (nextKeyByteCount == 8)
                         {
                             ulong uint64Val = reader.ReadUInt64WithOutTypeHead();
-                            msb.AppendUInt64Val(positionWithOutTypeHead(ref reader) - 8, uint64Val);
+                            msb.AppendUInt64Val(positionWithOutMap2TypeHead(ref reader) - 8, uint64Val);
                         }
                         else
                         {
                             //Read Raw(lessthan 8 byte)
                             ref byte ref1 = ref reader.BssomBuffer.ReadRef(nextKeyByteCount);
-                            msb.AppendUInt64Val(positionWithOutTypeHead(ref reader) - nextKeyByteCount, ref ref1, nextKeyByteCount);
+                            msb.AppendUInt64Val(positionWithOutMap2TypeHead(ref reader) - nextKeyByteCount, ref ref1, nextKeyByteCount);
                             reader.BssomBuffer.SeekWithOutVerify(nextKeyByteCount, BssomSeekOrgin.Current);
                         }
-                        long position = positionWithOutTypeHead(ref reader);
+                        long position = positionWithOutMap2TypeHead(ref reader);
                         var keyType = reader.ReadBssomType();
                         if (keyType == BssomType.NativeCode)
                             msb.AppendKeyType(position, true, reader.ReadBssomType());
                         else
                             msb.AppendKeyType(position, false, keyType);
 
-                        position = positionWithOutTypeHead(ref reader);
+                        position = positionWithOutMap2TypeHead(ref reader);
                         reader.EnsureType(BssomBinaryPrimitives.FixUInt32);
                         msb.AppendValOffset(position, reader.ReadUInt32WithOutTypeHead());
 
@@ -149,7 +159,7 @@ namespace Bssom.Serializer.BssMap
                 case AutomateState.ReadChildren:
                     {
                         t = reader.ReadMapToken();
-                        msb.AppendRouteToken(positionWithOutTypeHead(ref reader) - 1, t);
+                        msb.AppendRouteToken(positionWithOutMap2TypeHead(ref reader) - 1, t);
 
                         if (t == BssMapRouteToken.HasChildren)
                         {
@@ -490,12 +500,12 @@ namespace Bssom.Serializer.BssMap
             }
 
             long startPos = writer.Position;
-            long metaLenPos = BssMapObjMarshal.WriteMapHead(ref writer, ValueCount, MaxDepth);
+            long routeLenPos = BssMapObjMarshal.WriteMapHead(ref writer, ValueCount, MaxDepth);
             Queue<KeyValuePair<int, TValue>> valueMapOffsets = new Queue<KeyValuePair<int, TValue>>();
             MapRouteSegmentWriter mrsWriter = new MapRouteSegmentWriter(writer, startPos);
             mrsWriter.WriteRouteData(Entries, 0, Length, valueMapOffsets);
             writer = mrsWriter.GetBssomWriter();
-            writer.WriteBackFixNumber(metaLenPos, checked((int)(writer.Position - metaLenPos - BssMapObjMarshal.DefaultMetaLengthFieldSize)));
+            writer.WriteBackFixNumber(routeLenPos, checked((int)(writer.Position - routeLenPos - BssMapObjMarshal.DefaultRouteLengthFieldSize)));
             return valueMapOffsets;
         }
 

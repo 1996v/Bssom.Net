@@ -135,7 +135,7 @@ namespace Bssom.Serializer.Test
         public void Map2_Complex2_SchemaIsCorrectly()
         {
             AssertSchema(
-                "[12]LessThen8 [13]NextOff(63) KeyBytes(97,49,50,51,52,53,54,55) " +
+                "[12]LessThen8 [13]NextOff(63) KeyU64(3978425819141910881) " +
                      "[24]EqualNext2 [25]NextOff(37) KeyBytes(112,49) KeyType(StringCode) ValOffset(111) [36]NoChildren " +
                      "[37]EqualLast8 KeyU64(3978425819141910881) KeyType(StringCode) ValOffset(116) [52]HasChildren " +
                           "[53]EqualLast2 KeyBytes(98,49) KeyType(StringCode) ValOffset(121) [62]NoChildren " +

@@ -249,12 +249,12 @@ namespace Bssom.Serializer.Internal
                     il.EmitLdc_I4(0);
                     il.Emit(OpCodes.Ble, readBodyLabel);
 
-                    //ref byte refb = ref reader.Buffer.TryReadFixedRef(pars.MapHead.MetaLength, out bool haveEnoughSizeAndCanBeFixed);
+                    //ref byte refb = ref reader.Buffer.TryReadFixedRef(pars.MapHead.RouteLength, out bool haveEnoughSizeAndCanBeFixed);
                     il.EmitLdarg(args_reader);
                     il.EmitCall(CommonExpressionMeta.Type_Reader_Buffer.GetGetMethod());
                     il.EmitLdloc(aprp.LocalIndex);
                     il.Emit(OpCodes.Ldfld, CommonExpressionMeta.Type_MapHeadPackInfo_MapHead);
-                    il.Emit(OpCodes.Ldfld, CommonExpressionMeta.Type_MapHead_MetaLength);
+                    il.Emit(OpCodes.Ldfld, CommonExpressionMeta.Type_MapHead_RouteLength);
                     il.EmitLdloca(hesacbf.LocalIndex);
                     il.EmitCall(CommonExpressionMeta.Type_Buffer_TryReadFixedRef);
                     il.EmitStloc(refb.LocalIndex);
