@@ -1,4 +1,4 @@
-﻿using Bssom.Serializer.Resolver;
+﻿using Bssom.Serializer.Resolvers;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo(MapCodeGenResolver.ModuleName)]

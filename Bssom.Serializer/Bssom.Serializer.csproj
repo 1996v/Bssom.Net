@@ -59,6 +59,10 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>BssMapObjMarshalReader.Helper.cs</LastGenOutput>
     </None>
+    <None Update="BssMap\KeyResolvers\BssMapKeyResolvers.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>BssMapKeyResolvers.cs</LastGenOutput>
+    </None>
     <None Update="BssomMarshal\Array1ElementWriters.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Array1ElementWriters.cs</LastGenOutput>
@@ -106,6 +110,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>BssMapObjMarshalReader.Helper.tt</DependentUpon>
+    </Compile>
+    <Compile Update="BssMap\KeyResolvers\BssMapKeyResolvers.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>BssMapKeyResolvers.tt</DependentUpon>
     </Compile>
     <Compile Update="BssomMarshal\Array1ElementWriters.cs">
       <DesignTime>True</DesignTime>

@@ -1,7 +1,7 @@
 ﻿using Bssom.Serializer.BssMap;
 using Bssom.Serializer.BssomBuffer;
 using Bssom.Serializer.Internal;
-using Bssom.Serializer.Resolver;
+using Bssom.Serializer.Resolvers;
 using System;
 using System.Collections;
 using System.Collections.Generic;

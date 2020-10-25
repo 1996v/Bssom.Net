@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using Bssom.Serializer.Resolver;
+using Bssom.Serializer.Resolvers;
 using Bssom.Serializer.Binary;
 using Xunit;
 namespace Bssom.Serializer.Test

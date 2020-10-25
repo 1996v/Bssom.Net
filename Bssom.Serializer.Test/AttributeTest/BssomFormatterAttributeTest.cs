@@ -3,7 +3,7 @@ using Bssom.Serializer.BssMap.KeyResolvers;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
-using Bssom.Serializer.Resolver;
+using Bssom.Serializer.Resolvers;
 using Bssom.Serializer.BssomBuffer;
 using Xunit;
 using Xunit.Abstractions;

@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using Bssom.Serializer.Binary;
 using Bssom.Serializer.Formatters;
-using Bssom.Serializer.Resolver;
+using Bssom.Serializer.Resolvers;
 using Xunit;
 
 namespace Bssom.Serializer.Test

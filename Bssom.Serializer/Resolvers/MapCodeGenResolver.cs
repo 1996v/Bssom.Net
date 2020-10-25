@@ -13,7 +13,7 @@ using System.Runtime.InteropServices.ComTypes;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
-using Bssom.Serializer.Resolver;
+using Bssom.Serializer.Resolvers;
 using System.Buffers;
 using Bssom.Serializer.Binary;
 using Bssom.Serializer.BssMap;
@@ -21,7 +21,7 @@ using Bssom.Serializer.BssMap.KeyResolvers;
 using Bssom.Serializer.BssomBuffer;
 using Bssom.Serializer.Internal;
 
-namespace Bssom.Serializer.Resolver
+namespace Bssom.Serializer.Resolvers
 {
     /// <summary>
     /// <para>对实体(对象)进行动态代码生成BssomMap格式的<see cref="IBssomFormatter"/></para>

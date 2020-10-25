@@ -2,7 +2,7 @@
 using Bssom.Serializer.BssMap.KeyResolvers;
 using Bssom.Serializer.BssomBuffer;
 using Bssom.Serializer.BssMap;
-using Bssom.Serializer.Resolver;
+using Bssom.Serializer.Resolvers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ using Bssom.Serializer.Internal;
 using static Bssom.Serializer.BssomFloat;
 using static Bssom.Serializer.BssomNumber;
 
-namespace Bssom.Serializer.Resolver
+namespace Bssom.Serializer.Resolvers
 {
     /// <summary>
     /// <para>获取<see cref ="BssomValue"/>的类型的<see cref="IBssomFormatter"/></para>

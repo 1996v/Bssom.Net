@@ -8,8 +8,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Bssom.Serializer.Binary;
-using Bssom.Serializer.Internal;
 using Bssom.Serializer.BssMap.KeyResolvers;
+using Bssom.Serializer.Internal;
 using Bssom.Serializer.BssomBuffer;
 using Bssom.Serializer.BssMap;
 namespace Bssom.Serializer.BssMap.KeyResolvers

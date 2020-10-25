@@ -4,13 +4,13 @@ using Bssom.Serializer.Binary;
 using Bssom.Serializer.BssMap.KeyResolvers;
 using Bssom.Serializer.BssomBuffer;
 using Bssom.Serializer.BssMap;
-using Bssom.Serializer.Resolver;
+using Bssom.Serializer.Resolvers;
 using System;
 using System.Collections.Generic;
 using Bssom.Serializer.Formatters;
 using Bssom.Serializer.Internal;
 
-namespace Bssom.Serializer.Resolver
+namespace Bssom.Serializer.Resolvers
 {
     /// <summary>
     /// Provides formatters for <see cref="sbyte"/>,<see cref="Int16"/>,<see cref="Int32"/>,<see cref="Int64"/>,<see cref="byte"/>,<see cref="UInt16"/>,<see cref="UInt32"/>,<see cref="UInt64"/>,<see cref="Single"/>,<see cref="Double"/>,<see cref="bool"/>,<see cref="char"/>,<see cref="Guid"/>,<see cref="Decimal"/>,<see cref="string"/>,<see cref="DateTime"/>

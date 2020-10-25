@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Bssom.Serializer.Resolver;
+using Bssom.Serializer.Resolvers;
 using Bssom.Serializer.BssMap;
 using Bssom.Serializer.Formatters;
 using Xunit;

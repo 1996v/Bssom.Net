@@ -11,7 +11,7 @@ using Bssom.Serializer.BssMap.KeyResolvers;
 using Bssom.Serializer.BssomBuffer;
 using Bssom.Serializer.Internal;
 using Bssom.Serializer.Formatters;
-using Bssom.Serializer.Resolver;
+using Bssom.Serializer.Resolvers;
 
 namespace Bssom.Serializer
 {

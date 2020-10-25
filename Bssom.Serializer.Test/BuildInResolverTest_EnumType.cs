@@ -1,5 +1,5 @@
 ﻿using Bssom.Serializer.Formatters;
-using Bssom.Serializer.Resolver;
+using Bssom.Serializer.Resolvers;
 using Xunit;
 
 namespace Bssom.Serializer.Test

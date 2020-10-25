@@ -3,7 +3,7 @@ using Bssom.Serializer.BssMap.KeyResolvers;
 using Bssom.Serializer.Internal;
 using Bssom.Serializer.BssomBuffer;
 using Bssom.Serializer.BssMap;
-using Bssom.Serializer.Resolver;
+using Bssom.Serializer.Resolvers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Bssom.Serializer.Formatters;
 
-namespace Bssom.Serializer.Resolver
+namespace Bssom.Serializer.Resolvers
 {
     /// <summary>
     /// <para>获取object类型的<see cref="IBssomFormatter"/></para>

@@ -1,6 +1,6 @@
 ﻿//using System.Runtime.CompilerServices;
 
-using Bssom.Serializer.Resolver;
+using Bssom.Serializer.Resolvers;
 using System;
 using System.Collections;
 using System.Collections.Generic;

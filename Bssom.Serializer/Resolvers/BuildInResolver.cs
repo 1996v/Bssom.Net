@@ -4,7 +4,7 @@ using Bssom.Serializer.Binary;
 using Bssom.Serializer.BssMap.KeyResolvers;
 using Bssom.Serializer.BssomBuffer;
 using Bssom.Serializer.BssMap;
-using Bssom.Serializer.Resolver;
+using Bssom.Serializer.Resolvers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ using System.Text;
 using Bssom.Serializer.Formatters;
 using Bssom.Serializer.Internal;
 
-namespace Bssom.Serializer.Resolver
+namespace Bssom.Serializer.Resolvers
 {
     /// <summary>
     /// Provides formatters for <see cref="StringDictionary"/>,<see cref="StringBuilder"/>,<see cref="BitArray"/>,<see cref="NameValueCollection"/>,<see cref="Version"/>,<see cref="Uri"/>,<see cref="TimeSpan"/>,<see cref="DBNull"/>,<see cref="DataTable"/> , Provides nullable inline formatters for types in the <see cref="PrimitiveResolver"/>

@@ -3,7 +3,7 @@
 using Bssom.Serializer.Binary;
 using Bssom.Serializer.BssMap.KeyResolvers;
 using Bssom.Serializer.BssMap;
-using Bssom.Serializer.Resolver;
+using Bssom.Serializer.Resolvers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,7 +17,7 @@ using System.Threading;
 using Bssom.Serializer.Formatters;
 using Bssom.Serializer.Internal;
 
-namespace Bssom.Serializer.Resolver
+namespace Bssom.Serializer.Resolvers
 {
     /// <summary>
     /// <para>获取和生成具有IColloction行为的类型的<see cref="IBssomFormatter"/></para>

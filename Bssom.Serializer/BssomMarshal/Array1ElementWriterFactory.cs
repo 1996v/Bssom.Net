@@ -8,7 +8,7 @@ using Bssom.Serializer.BssMap.KeyResolvers;
 using Bssom.Serializer.Internal;
 using Bssom.Serializer.BssomBuffer;
 using Bssom.Serializer.BssMap;
-using Bssom.Serializer.Resolver;
+using Bssom.Serializer.Resolvers;
 namespace Bssom.Serializer.Internal
 {
     internal static class Array1ElementWriterFactory<T>

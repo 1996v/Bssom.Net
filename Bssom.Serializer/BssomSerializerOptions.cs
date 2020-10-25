@@ -1,5 +1,5 @@
 ﻿using System;
-using Bssom.Serializer.Resolver;
+using Bssom.Serializer.Resolvers;
 
 namespace Bssom.Serializer
 {
