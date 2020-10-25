@@ -77,6 +77,15 @@ namespace Bssom.Serializer.Internal
             DateTimeArray1ElementWriter.Instance,
         };
 
+        static Array1ElementWriterContainers()
+        {
+            nativeTypeContainers = new IArray1ElementWriter[NativeBssomType.MaxCode + 1];
+            nativeTypeContainers[NativeBssomType.CharCode] = CharArray1ElementWriter.Instance;
+            nativeTypeContainers[NativeBssomType.GuidCode] = GuidArray1ElementWriter.Instance;
+            nativeTypeContainers[NativeBssomType.DecimalCode] = DecimalArray1ElementWriter.Instance;
+            nativeTypeContainers[NativeBssomType.DateTimeCode] = DateTimeArray1ElementWriter.Instance;
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IArray1ElementWriter GetArray1ElementWriter(Type type)
         {
@@ -100,9 +109,11 @@ namespace Bssom.Serializer.Internal
             }
             else
             {
-                if (type >= NativeBssomType.MinCode && type <= NativeBssomType.MaxCode)
+                if (type <= NativeBssomType.MaxCode)
                 {
-                    return nativeTypeContainers[type - NativeBssomType.MinCode];
+                    var writer = nativeTypeContainers[type];
+                    if (writer != null)
+                        return writer;
                 }
             }
             return BssomSerializationArgumentException.InvalidOffsetInfoFormat<IArray1ElementWriter>();

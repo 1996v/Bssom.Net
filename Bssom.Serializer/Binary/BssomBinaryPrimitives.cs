@@ -374,7 +374,7 @@ namespace Bssom.Serializer.Binary
             return DateTimeConstants.UnixEpoch.AddSeconds(utcSeconds).AddTicks(utcNanoseconds);
         }
 
-       
+
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int DateTimeSize(bool isStandardDate)
@@ -921,7 +921,16 @@ namespace Bssom.Serializer.Binary
             return false;
         }
 
-        private readonly static int[] StaticNativeTypeSizes = new int[] { BssomBinaryPrimitives.CharSize, BssomBinaryPrimitives.GuidSize, BssomBinaryPrimitives.DecimalSize, BssomBinaryPrimitives.NativeDateTimeSize };
+        private readonly static sbyte[] StaticNativeTypeSizes;
+
+        static BssomBinaryPrimitives()
+        {
+            StaticNativeTypeSizes = new sbyte[NativeBssomType.MaxCode + 1];
+            StaticNativeTypeSizes[NativeBssomType.CharCode] = BssomBinaryPrimitives.CharSize;
+            StaticNativeTypeSizes[NativeBssomType.GuidCode] = BssomBinaryPrimitives.GuidSize;
+            StaticNativeTypeSizes[NativeBssomType.DecimalCode] = BssomBinaryPrimitives.DecimalSize;
+            StaticNativeTypeSizes[NativeBssomType.DateTimeCode] = BssomBinaryPrimitives.NativeDateTimeSize;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryGetTypeSizeFromStaticTypeSizes(bool isNativeType, byte type, out int size)
@@ -933,26 +942,23 @@ namespace Bssom.Serializer.Binary
                     size = StaticPrimitiveTypeSizes[type - BssomType.MinFixLenTypeCode];
                     return true;
                 }
+                size = default;
+                return false;
             }
             else
             {
-                if (type >= NativeBssomType.MinCode && type <= NativeBssomType.MaxCode)
-                {
-                    size = StaticNativeTypeSizes[type - NativeBssomType.MinCode];
-                    return true;
-                }
+                return TryGetNativeTypeSizeFromStaticTypeSizes(type, out size);
             }
-            size = default;
-            return false;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryGetNativeTypeSizeFromStaticTypeSizes(byte type, out int size)
         {
-            if (type >= NativeBssomType.MinCode && type <= NativeBssomType.MaxCode)
+            if (type <= NativeBssomType.MaxCode)
             {
-                size = StaticNativeTypeSizes[type - NativeBssomType.MinCode];
-                return true;
+                size = StaticNativeTypeSizes[type];
+                if (size != 0)
+                    return true;
             }
             size = default;
             return false;

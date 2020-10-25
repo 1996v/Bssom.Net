@@ -1,5 +1,7 @@
 ﻿//using System.Runtime.CompilerServices;
 
+using Bssom.Serializer.Binary;
+
 namespace Bssom.Serializer
 {
     /// <summary>
@@ -10,22 +12,21 @@ namespace Bssom.Serializer
         /// <summary>
         /// Utf16, Fixed occupy 2 bytes
         /// </summary>
-        public const byte CharCode = 0;
+        public const byte CharCode = BssomBinaryPrimitives.CharSize;
         /// <summary>
-        /// .Net Guid, Fixed occupy 16 bytes
+        /// .Net Guid, Fixed occupy 17 bytes
         /// </summary>
-        public const byte GuidCode = 1;
+        public const byte GuidCode = BssomBinaryPrimitives.GuidSize;
         /// <summary>
         /// .Net Decimal, Fixed occupy 16 bytes
         /// </summary>
-        public const byte DecimalCode = 2;
+        public const byte DecimalCode = BssomBinaryPrimitives.DecimalSize;
         /// <summary>
         /// .Net Decimal, Fixed occupy 8 bytes
         /// </summary>
-        public const byte DateTimeCode = 3;
+        public const byte DateTimeCode = BssomBinaryPrimitives.NativeDateTimeSize;
 
-        internal const int MinCode = CharCode;
-        internal const int MaxCode = DateTimeCode;
+        internal const int MaxCode = GuidCode;
     }
 
 }

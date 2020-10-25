@@ -13,7 +13,7 @@ namespace Bssom.Serializer.Internal
 {
     internal struct GuidBinaryBits
     {
-        public const int Size = 16;
+        public const int Size = 17;
 
         public int _a;   // Do not rename 
         public short _b; // Do not rename 
