@@ -120,10 +120,10 @@ namespace Bssom.Serializer.Test
 
             var bsfw = new BssomFieldMarshaller(buf);
             bsfw.TryWrite(BssomFieldOffsetInfo.Zero, val).IsTrue();
-            test(BssomSerializer.Deserialize(buf, 0, buf.Length, val.GetType())).IsTrue();
+            test(BssomSerializer.Deserialize(buf, 0, out int readSize, val.GetType())).IsTrue();
 
             bsfw.TryWrite(BssomFieldOffsetInfo.Zero, val).IsTrue();
-            test(BssomSerializer.Deserialize(buf, 0, buf.Length, val.GetType())).IsTrue();
+            test(BssomSerializer.Deserialize(buf, 0, out readSize, val.GetType())).IsTrue();
         }
 
         public static object[][] ReadBlankTestData = new object[][]

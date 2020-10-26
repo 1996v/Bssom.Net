@@ -348,27 +348,6 @@ namespace Bssom.Serializer
         /// <para>从指定的<paramref name="stream"/>反序列化给定类型的值</para>
         /// <para>Deserializes the value of the given type from the specified <paramref name="stream"/></para>
         /// </summary>
-        /// <param name="context">反序列化所需要的上下文. The context required for the deserialization </param>
-        /// <param name="stream">反序列化所需要的的缓冲区. The stream to deserialize from</param>
-        /// <param name="type">要反序列化的类型. The type to deserialize</param>
-        /// <returns>反序列化的值. The deserialized value</returns>
-        public static object Deserialize(ref BssomDeserializeContext context, Stream stream, Type type)
-        {
-            if (TryDeserializeFromMemoryStream(ref context, stream, type, out object result))
-            {
-                return result;
-            }
-
-            var aux = new StreamDeserializeAux(stream);
-            result = Deserialize(ref context, aux.GetBssomBuffer(), type);
-            aux.Dispose();
-            return result;
-        }
-
-        /// <summary>
-        /// <para>从指定的<paramref name="stream"/>反序列化给定类型的值</para>
-        /// <para>Deserializes the value of the given type from the specified <paramref name="stream"/></para>
-        /// </summary>
         /// <param name="stream">反序列化所需要的的流. The stream to deserialize from</param>
         /// <param name="type">要反序列化的类型. The type to deserialize</param>
         /// <param name="option">使用的配置,如果为<c>null</c>,则使用默认配置. The options. Use <c>null</c> to use default options</param>
@@ -379,6 +358,30 @@ namespace Bssom.Serializer
         {
             BssomDeserializeContext context = new BssomDeserializeContext(option, cancellationToken);
             return Deserialize(ref context, stream, type);
+        }
+
+        /// <summary>
+        /// <para>从指定的<paramref name="stream"/>反序列化给定类型的值</para>
+        /// <para>Deserializes the value of the given type from the specified <paramref name="stream"/></para>
+        /// </summary>
+        /// <param name="context">反序列化所需要的上下文. The context required for the deserialization </param>
+        /// <param name="stream">反序列化所需要的的缓冲区. The stream to deserialize from</param>
+        /// <param name="type">要反序列化的类型. The type to deserialize</param>
+        /// <returns>反序列化的值. The deserialized value</returns>
+        public static object Deserialize(ref BssomDeserializeContext context, Stream stream, Type type)
+        {
+            if (type == null)
+                throw new ArgumentNullException(nameof(type));
+
+            if (TryDeserializeFromMemoryStream(ref context, stream, type, out object result))
+            {
+                return result;
+            }
+
+            var aux = new StreamDeserializeAux(stream);
+            result = Deserialize(ref context, aux.GetBssomBuffer(), type);
+            aux.Dispose();
+            return result;
         }
 
         /// <summary>
@@ -393,6 +396,9 @@ namespace Bssom.Serializer
         public static async Task<object> DeserializeAsync(Stream stream, Type type, BssomSerializerOptions option = null,
             CancellationToken cancellationToken = default)
         {
+            if (type == null)
+                throw new ArgumentNullException(nameof(type));
+
             BssomDeserializeContext context = new BssomDeserializeContext(option, cancellationToken);
             if (TryDeserializeFromMemoryStream(ref context, stream, out object result))
             {
@@ -416,12 +422,8 @@ namespace Bssom.Serializer
         /// <returns>反序列化的值. The deserialized value</returns>
         public static T Deserialize<T>(IBssomBuffer buffer, BssomSerializerOptions option = null, CancellationToken cancellationToken = default)
         {
-            if (option == null)
-                option = BssomSerializerOptions.Default;
-
             BssomDeserializeContext context = new BssomDeserializeContext(option, cancellationToken);
-            var reader = new BssomReader(buffer);
-            return option.FormatterResolver.GetFormatterWithVerify<T>().Deserialize(ref reader, ref context);
+            return Deserialize<T>(ref context, buffer);
         }
 
         /// <summary>
@@ -445,14 +447,15 @@ namespace Bssom.Serializer
         /// <para>Deserializes the value of the given type from the specified <paramref name="buffer"/></para>
         /// </summary>
         /// <param name="buffer">反序列化所需要的的二进制数组. The binary array to deserialize from</param>
-        /// <param name="start">数组的起始位置. array start</param>
-        /// <param name="length">数组的长度. array length</param>
+        /// <param name="bufOffset">数组的起始位置. array start</param>
+        /// <param name="readSize">读取的字节数. read buffer size</param>
         /// <param name="option">使用的配置,如果为<c>null</c>,则使用默认配置. The options. Use <c>null</c> to use default options</param>
         /// <param name="cancellationToken">取消该操作的令牌. The token to cancel the operation</param>
         /// <returns>反序列化的值. The deserialized value</returns>
-        public static T Deserialize<T>(byte[] buffer, int start, int length, BssomSerializerOptions option = null, CancellationToken cancellationToken = default)
+        public static T Deserialize<T>(byte[] buffer, int bufOffset, out int readSize, BssomSerializerOptions option = null, CancellationToken cancellationToken = default)
         {
-            return Deserialize<T>(new SimpleBufferWriter(buffer, start, length), option);
+            BssomDeserializeContext context = new BssomDeserializeContext(option, cancellationToken);
+            return Deserialize<T>(ref context, buffer, bufOffset, out readSize);
         }
 
         /// <summary>
@@ -461,12 +464,21 @@ namespace Bssom.Serializer
         /// </summary>
         /// <param name="context">反序列化所需要的上下文. The context required for the deserialization </param>
         /// <param name="buffer">反序列化所需要的的二进制数组. The binary array to deserialize from</param>
-        /// <param name="start">数组的起始位置. array start</param>
-        /// <param name="length">数组的长度. array length</param>
+        /// <param name="bufOffset">数组的起始位置. array start</param>
+        /// <param name="readSize">读取的字节数. read buffer size</param>
         /// <returns>反序列化的值. The deserialized value</returns>
-        public static T Deserialize<T>(ref BssomDeserializeContext context, byte[] buffer, int start, int length)
+        public static T Deserialize<T>(ref BssomDeserializeContext context, byte[] buffer, int bufOffset, out int readSize)
         {
-            return Deserialize<T>(ref context, new SimpleBufferWriter(buffer, start, length));
+            if (buffer == null)
+                throw new ArgumentException(nameof(buffer));
+
+            if (bufOffset > buffer.Length - 1)
+                throw new ArgumentException(nameof(bufOffset));
+
+            var buf = new SimpleBuffer(buffer, bufOffset);
+            T value = Deserialize<T>(ref context, buf);
+            readSize = (int)buf.Position;
+            return value;
         }
 
         /// <summary>
@@ -479,10 +491,56 @@ namespace Bssom.Serializer
         /// <returns>反序列化的值. The deserialized value</returns>
         public static T Deserialize<T>(byte[] buffer, BssomSerializerOptions option = null, CancellationToken cancellationToken = default)
         {
-            if (buffer == null)
-                throw new ArgumentNullException(nameof(buffer));
+            return Deserialize<T>(buffer, 0, out int readSize, option, cancellationToken);
+        }
 
-            return Deserialize<T>(buffer, 0, buffer.Length, option);
+        /// <summary>
+        /// <para>从指定的<paramref name="buffer"/>反序列化给定类型的值</para>
+        /// <para>Deserializes the value of the given type from the specified <paramref name="buffer"/></para>
+        /// </summary>
+        /// <param name="buffer">反序列化所需要的的二进制数组. The binary array to deserialize from</param>
+        /// <param name="bufOffset">数组的起始位置. array start</param>
+        /// <param name="readSize">读取的字节数. read buffer size</param>
+        /// <param name="type">要反序列化的类型. The type to deserialize</param>
+        /// <param name="option">使用的配置,如果为<c>null</c>,则使用默认配置. The options. Use <c>null</c> to use default options</param>
+        /// <param name="cancellationToken">取消该操作的令牌. The token to cancel the operation</param>
+        /// <returns>反序列化的值. The deserialized value</returns>
+        public static object Deserialize(byte[] buffer, int bufOffset, out int readSize, Type type, BssomSerializerOptions option = null, CancellationToken cancellationToken = default)
+        {
+            if (buffer == null)
+                throw new ArgumentException(nameof(buffer));
+
+            if (bufOffset > buffer.Length - 1)
+                throw new ArgumentException(nameof(bufOffset));
+
+            var buf = new SimpleBuffer(buffer, bufOffset);
+            object value = Deserialize(buf, type, option, cancellationToken);
+            readSize = (int)buf.Position;
+            return value;
+        }
+
+        /// <summary>
+        /// <para>从指定的<paramref name="buffer"/>反序列化给定类型的值</para>
+        /// <para>Deserializes the value of the given type from the specified <paramref name="buffer"/></para>
+        /// </summary>
+        /// <param name="context">反序列化所需要的上下文. The context required for the deserialization </param>
+        /// <param name="buffer">反序列化所需要的的二进制数组. The binary array to deserialize from</param>
+        /// <param name="bufOffset">数组的起始位置. array start</param>
+        /// <param name="readSize">读取的字节数. read buffer size</param>
+        /// <param name="type">要反序列化的类型. The type to deserialize</param>
+        /// <returns>反序列化的值. The deserialized value</returns>
+        public static object Deserialize(ref BssomDeserializeContext context, byte[] buffer, int bufOffset, out int readSize, Type type)
+        {
+            if (buffer == null)
+                throw new ArgumentException(nameof(buffer));
+
+            if (bufOffset > buffer.Length - 1)
+                throw new ArgumentException(nameof(bufOffset));
+
+            var buf = new SimpleBuffer(buffer, bufOffset);
+            object value = Deserialize(ref context, buf, type);
+            readSize = (int)buf.Position;
+            return value;
         }
 
         /// <summary>
@@ -498,37 +556,6 @@ namespace Bssom.Serializer
         {
             BssomDeserializeContext context = new BssomDeserializeContext(option, cancellationToken);
             return Deserialize(ref context, buffer, type);
-        }
-
-        /// <summary>
-        /// <para>从指定的<paramref name="buffer"/>反序列化给定类型的值</para>
-        /// <para>Deserializes the value of the given type from the specified <paramref name="buffer"/></para>
-        /// </summary>
-        /// <param name="buffer">反序列化所需要的的二进制数组. The binary array to deserialize from</param>
-        /// <param name="start">数组的起始位置. array start</param>
-        /// <param name="length">数组的长度. array length</param>
-        /// <param name="type">要反序列化的类型. The type to deserialize</param>
-        /// <param name="option">使用的配置,如果为<c>null</c>,则使用默认配置. The options. Use <c>null</c> to use default options</param>
-        /// <param name="cancellationToken">取消该操作的令牌. The token to cancel the operation</param>
-        /// <returns>反序列化的值. The deserialized value</returns>
-        public static object Deserialize(byte[] buffer, int start, int length, Type type, BssomSerializerOptions option = null, CancellationToken cancellationToken = default)
-        {
-            return Deserialize(new SimpleBufferWriter(buffer, start, length), type, option);
-        }
-
-        /// <summary>
-        /// <para>从指定的<paramref name="buffer"/>反序列化给定类型的值</para>
-        /// <para>Deserializes the value of the given type from the specified <paramref name="buffer"/></para>
-        /// </summary>
-        /// <param name="context">反序列化所需要的上下文. The context required for the deserialization </param>
-        /// <param name="buffer">反序列化所需要的的二进制数组. The binary array to deserialize from</param>
-        /// <param name="start">数组的起始位置. array start</param>
-        /// <param name="length">数组的长度. array length</param>
-        /// <param name="type">要反序列化的类型. The type to deserialize</param>
-        /// <returns>反序列化的值. The deserialized value</returns>
-        public static object Deserialize(ref BssomDeserializeContext context, byte[] buffer, int start, int length, Type type)
-        {
-            return Deserialize(ref context, new SimpleBufferWriter(buffer, start, length), type);
         }
 
         /// <summary>
