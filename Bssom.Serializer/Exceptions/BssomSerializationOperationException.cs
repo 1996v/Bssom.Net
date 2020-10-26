@@ -10,7 +10,7 @@ namespace Bssom.Serializer
     {
         public enum SerializationErrorCode
         {
-            InputDataUnmatch, 
+            InputDataUnmatch,
             InputDataSouceIsEmpty,
             OperationObjectIsNull,
             UnsupportedOperation,
@@ -33,7 +33,7 @@ namespace Bssom.Serializer
         /// <summary>
         /// Initializes a new instance of the <see cref="BssomSerializationOperationException"/> class with a specified errorCode and error message.
         /// </summary>
-        public BssomSerializationOperationException(SerializationErrorCode errorCode, string message,Exception inner) : base($"ErrorCode : {errorCode}{errorCode.ToString()} , message: {message}", inner)
+        public BssomSerializationOperationException(SerializationErrorCode errorCode, string message, Exception inner) : base($"ErrorCode : {errorCode}{errorCode.ToString()} , message: {message}", inner)
         {
             ErrorCode = errorCode;
         }
@@ -102,7 +102,12 @@ namespace Bssom.Serializer
 
         internal static void CopyStreamError(Exception ex)
         {
-            throw new BssomSerializationOperationException(SerializationErrorCode.CopyStreamError, $"在拷贝流时发生错误. An error occurred while copying the stream.",ex);
+            throw new BssomSerializationOperationException(SerializationErrorCode.CopyStreamError, $"在拷贝流时发生错误. An error occurred while copying the stream.", ex);
+        }
+
+        internal static void InputTypeAndDataIsInconsistent(string inputType,string dataType)
+        {
+            throw new BssomSerializationOperationException(SerializationErrorCode.InputDataUnmatch, $"输入的类型和数据中的元素类型不一致,输入的是 {inputType}, 数据中的类型是 {dataType}. The input type is inconsistent with the element type in the data. The input is {inputType}, and the data type is {dataType}");
         }
     }
 }

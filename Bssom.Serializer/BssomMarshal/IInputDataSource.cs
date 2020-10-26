@@ -30,39 +30,11 @@ namespace Bssom.Serializer
         /// </summary>
         /// <returns>枚举器集合中当前位置的ArrayIndex. The ArrayIndex in the collection at the current position of the enumerator</returns>
         int CurrentArrayIndex();
-    }
 
-    public class IndexOfObjectsInputSource : IIndexOfInputSource
-    {
-        public struct Entry
-        {
-            /// <summary>
-            /// 
-            /// </summary>
-            public object Value;
-            public bool ValueIsMapKey;
-        }
-
-        private Entry[] values;
-
-        public IndexOfObjectsInputSource(IEnumerator<Entry> entries)
-        {
-
-        }
-
-        public bool MoveNext()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public object CurrentMapKey()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public int CurrentArrayIndex()
-        {
-            throw new System.NotImplementedException();
-        }
+        /// <summary>
+        /// <para>对枚举器进行重置操作</para>
+        /// <para>Reset the enumerator</para>
+        /// </summary>
+        void Reset();
     }
 }

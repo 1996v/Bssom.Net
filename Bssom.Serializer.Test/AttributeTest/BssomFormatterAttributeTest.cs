@@ -7,6 +7,7 @@ using Bssom.Serializer.Resolvers;
 using Bssom.Serializer.BssomBuffer;
 using Xunit;
 using Xunit.Abstractions;
+using Bssom.Serializer.Formatters;
 
 namespace Bssom.Serializer.Test
 {
@@ -139,7 +140,7 @@ namespace Bssom.Serializer.Test
         {
             public int Age;
         }
-        
+
 
         private ITestOutputHelper _o;
         public BssomFormatterAttributeTest(ITestOutputHelper output)

@@ -1,6 +1,7 @@
 ﻿//using System.Runtime.CompilerServices;
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Bssom.Serializer.BssMap;
 using Bssom.Serializer.Internal;
@@ -17,6 +18,7 @@ namespace Bssom.Serializer
         private int mapKeyLength;
         private bool curIsMapKey;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public StringInputDataSource(string str) : this()
         {
             if (str is null)
@@ -66,6 +68,7 @@ namespace Bssom.Serializer
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private int ReadInt()
         {
             if (_str[curIndex] < '0' || _str[curIndex] > '9')
@@ -91,10 +94,11 @@ namespace Bssom.Serializer
             return checked((int)num);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public unsafe Raw64BytesISegment GetCurrentSegmentFromMap1StringKey()
         {
             if (!curIsMapKey)
-                throw BssomSerializationArgumentException.InputDataFormatterError();
+                BssomSerializationOperationException.InputTypeAndDataIsInconsistent(GetCurrentSegmentString(), "Map");
 
             byte[] buffer = GetBuffer(UTF8Encoding.UTF8.GetMaxByteCount(mapKeyLength));
             fixed (char* pChar = _str) fixed (byte* pByte = &buffer[0])
@@ -104,10 +108,11 @@ namespace Bssom.Serializer
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public unsafe UInt64BytesISegment GetCurrentSegmentFromMap2StringKey()
         {
             if (!curIsMapKey)
-                throw BssomSerializationArgumentException.InputDataFormatterError();
+                BssomSerializationOperationException.InputTypeAndDataIsInconsistent(GetCurrentSegmentString(), "Map");
 
             byte[] buffer = GetBuffer(UTF8Encoding.UTF8.GetMaxByteCount(mapKeyLength));
             fixed (char* pChar = _str) fixed (byte* pByte = &buffer[0])
@@ -117,10 +122,11 @@ namespace Bssom.Serializer
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int GetCurrentArrayIndex()
         {
             if (curIsMapKey)
-                throw BssomSerializationArgumentException.InputDataFormatterError();
+                BssomSerializationOperationException.InputTypeAndDataIsInconsistent(GetCurrentSegmentString(), "Array");
 
             return aryIndexNumber;
         }
@@ -135,6 +141,8 @@ namespace Bssom.Serializer
 
         [ThreadStatic]
         private static byte[] StaticBuffer;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static byte[] GetBuffer(int len)
         {
             if (len > 256)

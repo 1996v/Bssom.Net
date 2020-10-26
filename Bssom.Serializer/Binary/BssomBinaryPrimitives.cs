@@ -12,7 +12,7 @@ namespace Bssom.Serializer.Binary
      */
 
     //variable length write/read
-    internal static partial class BssomBinaryPrimitives
+    public static partial class BssomBinaryPrimitives
     {
         internal const int VariableUInt8Max = 0xfa;
         internal const int VariableUInt9Max = VariableUInt8Max + 0xff;
@@ -398,7 +398,7 @@ namespace Bssom.Serializer.Binary
     }
 
     //base
-    internal static partial class BssomBinaryPrimitives
+    public static partial class BssomBinaryPrimitives
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static short ReverseEndianness(short value) => (short)ReverseEndianness((ushort)value);
@@ -461,7 +461,7 @@ namespace Bssom.Serializer.Binary
     }
 
     //write
-    internal static partial class BssomBinaryPrimitives
+    public static partial class BssomBinaryPrimitives
     {
         internal static class DateTimeConstants
         {
@@ -608,7 +608,7 @@ namespace Bssom.Serializer.Binary
     }
 
     //reade
-    internal static partial class BssomBinaryPrimitives
+    public static partial class BssomBinaryPrimitives
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool ReadBoolean(ref byte destination)
@@ -748,7 +748,7 @@ namespace Bssom.Serializer.Binary
     }
 
     //size
-    internal static partial class BssomBinaryPrimitives
+    public static partial class BssomBinaryPrimitives
     {
         public const int BooleanSize = 1;
         public const int Int8Size = 1;

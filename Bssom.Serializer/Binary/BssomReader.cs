@@ -58,13 +58,13 @@ namespace Bssom.Serializer
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal byte ReadBssomType()
+        public byte ReadBssomType()
         {
             return ReadOne<byte>();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal bool TryReadNull()
+        public bool TryReadNull()
         {
             if (PeekOne<byte>() == BssomType.NullCode)
             {
@@ -89,7 +89,7 @@ namespace Bssom.Serializer
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal void EnsureType(byte buildInType)
+        public void EnsureType(byte buildInType)
         {
             var t = ReadOne<byte>();
             if (t != buildInType)
@@ -289,7 +289,7 @@ namespace Bssom.Serializer
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal int ReadVariableNumber()
+        public int ReadVariableNumber()
         {
             return (int)BssomBinaryPrimitives.ReadVariableNumber(BssomBuffer);
         }

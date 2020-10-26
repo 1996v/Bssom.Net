@@ -6,7 +6,7 @@ namespace Bssom.Serializer
     /// <para>用于在上下文中存储和读取自定义的数据</para>
     /// <para>Used to store and read data taken from definitions in context</para>
     /// </summary>
-    public struct ContextDataSlots
+    public class ContextDataSlots
     {
         private Dictionary<string, object> storeSlots;
 

@@ -40,7 +40,7 @@ namespace Bssom.Serializer
         public long Position => BufferWriter.Position;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal void WriteNativeType(byte nativeType)
+        public void WriteNativeType(byte nativeType)
         {
             ref byte refb = ref BufferWriter.GetRef(2);
             refb = BssomType.NativeCode;
@@ -49,13 +49,13 @@ namespace Bssom.Serializer
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal void WriteBuildInType(byte type)
+        public void WriteBuildInType(byte type)
         {
             WriteWithOutTypeHead(type);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal void WriteArray2Type()
+        public void WriteArray2Type()
         {
             WriteBuildInType(BssomType.Array2);
         }
@@ -80,7 +80,7 @@ namespace Bssom.Serializer
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal void WriteVariableNumber(int value)
+        public void WriteVariableNumber(int value)
         {
             BssomBinaryPrimitives.WriteVariableNumber(BufferWriter, unchecked((ulong)value));
         }
@@ -142,7 +142,7 @@ namespace Bssom.Serializer
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal void WriteNull()
+        public void WriteNull()
         {
             WriteBuildInType(BssomType.NullCode);
         }
@@ -250,7 +250,7 @@ namespace Bssom.Serializer
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal void WriteRaw(byte[] value)
+        public void WriteRaw(byte[] value)
         {
             WriteRaw(value, 0, value.Length);
         }

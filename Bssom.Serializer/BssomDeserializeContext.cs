@@ -8,6 +8,8 @@ namespace Bssom.Serializer
     /// </summary>
     public struct BssomDeserializeContext
     {
+        private ContextDataSlots _contextDataSlots;
+
         /// <summary>
         /// <para>反序列化期间使用的配置</para>
         /// <para>The configuration used during deserialization</para>
@@ -15,16 +17,25 @@ namespace Bssom.Serializer
         public BssomSerializerOptions Option { get; set; }
 
         /// <summary>
-        /// <para>在反序列化期间可用于存储和读取的数据容器</para>
-        /// <para>A data container that can be used to store and read during the fetch of the deserialization</para>
-        /// </summary>
-        public ContextDataSlots ContextDataSlots { get; set; }
-
-        /// <summary>
         /// <para>此反序列化操作的取消标记</para>
         /// <para>The cancellation token for this deserialization operation</para>
         /// </summary>
         public CancellationToken CancellationToken { get; set; }
+
+        /// <summary>
+        /// <para>在反序列化期间可用于存储和读取的数据容器</para>
+        /// <para>A data container that can be used to store and read during the fetch of the deserialization</para>
+        /// </summary>
+        public ContextDataSlots ContextDataSlots
+        {
+            get
+            {
+                if (_contextDataSlots == null)
+                    _contextDataSlots = new ContextDataSlots();
+                return _contextDataSlots;
+            }
+            set => _contextDataSlots = value;
+        }
 
         /// <summary>
         /// <para>当前反序列化时的深度</para>
@@ -44,8 +55,8 @@ namespace Bssom.Serializer
         /// </summary>
         public BssomDeserializeContext(BssomSerializerOptions option, CancellationToken canceToken)
         {
+            this._contextDataSlots = default;
             this.Option = option;
-            this.ContextDataSlots = default;
             this.CancellationToken = canceToken;
             this.Depth = 0;
         }

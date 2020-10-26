@@ -163,9 +163,9 @@ namespace Bssom.Serializer
         /// <param name="offsetInfo">用于读取元素的位置信息. Location information for reading</param>
         /// <returns>Array对象的元素数量. The number of elements of the Array object</returns>
         /// <exception cref="BssomSerializationOperationException">缓冲区<paramref name="offsetInfo"/>位置处的对象并不是Array类型,类型读取错误. The object at the position of the buffer <paramref name="offsetInfo"/> is not a Array type, and the type is read incorrectly</exception>
-        public int ReadArrayCount(BssomFieldOffsetInfo offsetInfo)
+        public int ReadArrayCountByMapType(BssomFieldOffsetInfo offsetInfo)
         {
-            return ReadArrayCount(bufferWriter.GetBssomBuffer(), offsetInfo);
+            return ReadArrayCountByMapType(bufferWriter.GetBssomBuffer(), offsetInfo);
         }
 
         /// <summary>
@@ -212,7 +212,7 @@ namespace Bssom.Serializer
 
         public static byte ReadValueTypeCode(byte[] buffer, int start, int end, BssomFieldOffsetInfo offsetInfo, out bool isNativeType) => ReadValueTypeCode(new SimpleBufferWriter(buffer, start, end), offsetInfo, out isNativeType);
 
-        public static int ReadArrayCount(byte[] buffer, int start, int end, BssomFieldOffsetInfo offsetInfo) => ReadArrayCount(new SimpleBufferWriter(buffer, start, end), offsetInfo);
+        public static int ReadArrayCount(byte[] buffer, int start, int end, BssomFieldOffsetInfo offsetInfo) => ReadArrayCountByMapType(new SimpleBufferWriter(buffer, start, end), offsetInfo);
 
         public static IEnumerable<KeyValuePair<TKey, BssomFieldOffsetInfo>> ReadAllKeysByMapType<TKey>(byte[] buffer, int start, int end, BssomFieldOffsetInfo offsetInfo, BssomSerializerOptions option = null) => ReadAllKeysByMapType<TKey>(new SimpleBufferWriter(buffer, start, end), offsetInfo, option);
 
@@ -229,6 +229,7 @@ namespace Bssom.Serializer
             var reader = new BssomReader(buffer);
             BssomFieldOffsetInfo info = new BssomFieldOffsetInfo();
 
+            indexOfInputSource.Reset();
             if (!indexOfInputSource.MoveNext())
                 throw BssomSerializationOperationException.InputDataSouceIsEmpty();
             Next:
@@ -657,7 +658,7 @@ namespace Bssom.Serializer
             return typeCode;
         }
 
-        public static int ReadArrayCount(IBssomBuffer buffer, BssomFieldOffsetInfo offsetInfo)
+        public static int ReadArrayCountByMapType(IBssomBuffer buffer, BssomFieldOffsetInfo offsetInfo)
         {
             if (buffer is null)
                 throw new ArgumentNullException(nameof(buffer));
