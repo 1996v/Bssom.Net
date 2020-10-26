@@ -18,6 +18,8 @@
     <SignAssembly>false</SignAssembly>
     <RepositoryUrl>https://github.com/1996v/Bssom.Net/</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageIcon>packageIcon.png</PackageIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net45|AnyCPU'">
@@ -106,6 +108,10 @@
     <None Update="Formatters\StaticNullableFormatters.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>StaticNullableFormatters.cs</LastGenOutput>
+    </None>
+    <None Include="packageIcon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
     </None>
   </ItemGroup>
   <ItemGroup>
