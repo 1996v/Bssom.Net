@@ -7,6 +7,17 @@
     <LangVersion>8.0</LangVersion>
     <AssemblyName>Bssom.Serializer</AssemblyName>
     <RootNamespace>Bssom.Serializer</RootNamespace>
+    <Authors>1996v</Authors>
+    <PackageId>BssomSerializer</PackageId>
+    <Product>BssomSerializer</Product>
+    <Description>A small, high performance, powerful serializer using bssom binary protocol</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Copyright>© 1996v and contributors. All rights reserved.</Copyright>
+    <PackageProjectUrl>https://github.com/1996v/Bssom.Net/</PackageProjectUrl>
+    <PackageTags>Binary;Serializer;Bssom;Performance;Marshal;Serialization;Formatter</PackageTags>
+    <SignAssembly>false</SignAssembly>
+    <RepositoryUrl>https://github.com/1996v/Bssom.Net/</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net45|AnyCPU'">
@@ -14,30 +25,35 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net45|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>F:\MyGithub\Bssom.Net\Bssom.Serializer\Bssom.Serializer.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net47|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net47|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>F:\MyGithub\Bssom.Net\Bssom.Serializer\Bssom.Serializer.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>F:\MyGithub\Bssom.Net\Bssom.Serializer\Bssom.Serializer.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.1|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp2.1|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>F:\MyGithub\Bssom.Net\Bssom.Serializer\Bssom.Serializer.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp3.1|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp3.1|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>F:\MyGithub\Bssom.Net\Bssom.Serializer\Bssom.Serializer.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.Buffers" Version="4.5.1" />
