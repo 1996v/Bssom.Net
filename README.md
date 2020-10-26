@@ -162,13 +162,13 @@ GetFormatter | 获取对象的格式化器实例
 
 让我们看一下Bssom.Net序列化的过程:
 
-     input T ->	Call serialize(T) -> Find BssomResolver -> Provide type formatter -> formatter.Serialize(T);
+     input T -> Call serialize(T) -> Find BssomResolver -> Provide type formatter -> formatter.Serialize(T);
     
 在整个序列化的过程中,  每个步骤都是**透明**的,  这意味着若用户对Bssom.Net内部定义的解析器或格式化器不满意的话,  则可以自己扩展它.  
 
 用户可以自己通过实现`IFormatterResolver`和`IBssomFormatter`来**替代默认的解析器**,  在`Bssom.Serializer.Binary.BssomBinaryPrimitives`(在即将到来的小版本中将重构该类)和读写器本身所暴露的公开API中提供对Bssom格式的低级写入和读取实现.  
 
-简单示例可以参考[更多可能介绍](#更多的可能性)
+简单示例可以参考[更多可能介绍](#10更多的可能性)
 
 ## 6.高级API
 
@@ -268,7 +268,8 @@ output => "Fair5"
 
 Bssom.Net对`IDictionaryResolver`, `ICollectionResolver`, `MapCodeGenResolver`, `ObjectResolver` 使用了动态代码生成技术,  通过**表达式树和Emit**共同生成运行时代码,  如果应用程序是纯AOT环境,  则将不支持.
 
-在`MapCodeGenResolver`中对`Map1`类型的反序列化使用了以8字节(64位字长)为单位的类前缀树的自动机查找模式,  这是非常有效且快速的方式,  它避免了对字符串进行完全Hash运算以及字符比较开销,  通过对`MapCodeGenResolver.Save()`方法你将看到这些自动生成的代码.
+在`MapCodeGenResolver`中对`Map1`类型的反序列化使用了以8字节(64位字长)为单位的类前缀树的自动机查找模式,  这是非常有效且快速的方式,  它避免了对字符串进行完全Hash运算以及字符比较开销,  通过对`MapCodeGenResolver.Save()`方法你将看到这些自动生成的代码.  
+
 ![](https://user-images.githubusercontent.com/30827194/97230916-b2518980-1815-11eb-891d-12fee0f2fe0a.png)
 
 `MapCodeGenResolver`中对`Map2`类型的反序列化则使用了内置的[Bssom协议](https://github.com/1996v/Bssom)的Map格式查找代码,该代码是状态机模式编写,  分为快速和低速版,  这取决于[读取器](#ibssombuffer)是否能够提供 [TryReadFixedRef](#tryreadfixedref).
@@ -288,7 +289,7 @@ Bssom.Net中目前拥有5个特性.
 
 ## 10.更多的可能性
 
-你可以自己编写[解析器](#解析器),   编写[格式化器](#格式化器),   也可以定义你自己的特性,   也可以封装用于序列化的[Option](#bssomserializeroptions),   并且Bssom.Net还提供了上下文[数据槽](#contextdataslots)的支持,   这可以让序列化行为变得多样性.  
+你可以自己编写[解析器](#4解析器),   编写[格式化器](#3格式化器),   也可以定义你自己的特性,   也可以封装用于序列化的[Option](#bssomserializeroptions),   并且Bssom.Net还提供了上下文[数据槽](#contextdataslots)的支持,   这可以让序列化行为变得多样性.  
 
 如果你能为Bssom.Net提供有用或者侧重于高性能的**扩展包**,  那么请您告诉我.  
 
@@ -447,7 +448,7 @@ Stream stream = new MemoryStream();
 await BssomSerializer.SerializeAsync(stream, value, option: BssomSerializerOptions.Default);
 ```
 ### Deserialize
-[BssomSerializer.Deserialize](de#serializeapi) 方法用于 将给定的Bssom缓冲区反序列化为对象,高性能的内部实现,以下是部分常用方法,每个方法都拥有CancellationToken的重载
+[BssomSerializer.Deserialize](#deserializeapi) 方法用于 将给定的Bssom缓冲区反序列化为对象,高性能的内部实现,以下是部分常用方法,每个方法都拥有CancellationToken的重载
 ```c#
 //从给定的字节数组中反序列化对象
 byte[] buf = remote();
@@ -632,8 +633,8 @@ var upVal = BssomSerializer.Deserialize<MyClass>(buf);
 ((MyClass)upVal[1]).Name.Is("zz");
 ```
 
-### [如何使用特性](#9.特性)
-### [如何定义扩展](#5.扩展)
+### [如何使用特性](#9特性)
+### [如何定义扩展](#5扩展)
 
 ## 12.如何参与项目贡献
 ### 如果你想参与本项目的发展,那么我将非常荣幸和高兴,欢迎Fork或Pull Request,也可以加入QQ群976304396来进行开源技术的探讨
