@@ -1,7 +1,7 @@
 ﻿//using System.Runtime.CompilerServices;
 
-using System;
 using Bssom.Serializer.Resolvers;
+using System;
 
 namespace Bssom.Serializer
 {
@@ -12,7 +12,7 @@ namespace Bssom.Serializer
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
     public class AliasAttribute : Attribute
     {
-        public string Name { get;  }
+        public string Name { get; }
 
         public AliasAttribute(string name)
         {

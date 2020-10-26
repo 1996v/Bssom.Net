@@ -1,15 +1,12 @@
 ﻿
+using Bssom.Serializer.Binary;
+using Bssom.Serializer.BssMap.KeyResolvers;
+using Bssom.Serializer.Internal;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq.Expressions;
-using System.Reflection;
 using System.Runtime.CompilerServices;
-using Bssom.Serializer.Binary;
-using Bssom.Serializer.BssMap.KeyResolvers;
-using Bssom.Serializer.Internal;
-using Bssom.Serializer.BssomBuffer;
 namespace Bssom.Serializer.BssMap
 {
     internal static class MapFormatterHelper
@@ -23,9 +20,13 @@ namespace Bssom.Serializer.BssMap
             }
 
             if (context.Option.IDictionaryIsSerializeMap1Type)
+            {
                 return MapFormatterHelper_Map1.Size(ref context, value, count);
+            }
             else
+            {
                 return MapFormatterHelper_Map2.Size(ref context, value, count);
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -49,17 +50,25 @@ namespace Bssom.Serializer.BssMap
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IMapDataSource<TKey, TValue> Deserialize<TKey, TValue>(ref BssomReader reader, ref BssomDeserializeContext context)
         {
-            var type = reader.SkipBlankCharacterAndReadBssomType();
+            byte type = reader.SkipBlankCharacterAndReadBssomType();
             if (type == BssomType.NullCode)
+            {
                 return default;
+            }
 
             IMapDataSource<TKey, TValue> map;
             if (type == BssomType.Map1)
+            {
                 map = new Map1DataSource<TKey, TValue>(reader, context);
+            }
             else if (type == BssomType.Map2)
+            {
                 map = BssMapObjMarshalReader<TKey, TValue>.Create(ref reader, ref context);
+            }
             else
+            {
                 map = BssomSerializationOperationException.UnexpectedCodeRead<IMapDataSource<TKey, TValue>>(type, reader.Position);
+            }
 
             return map;
         }
@@ -67,17 +76,25 @@ namespace Bssom.Serializer.BssMap
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IMapDataSource<TKey, BssomFieldOffsetInfo> ReadAllKeys<TKey>(ref BssomReader reader, ref BssomDeserializeContext context)
         {
-            var type = reader.SkipBlankCharacterAndReadBssomType();
+            byte type = reader.SkipBlankCharacterAndReadBssomType();
             if (type == BssomType.NullCode)
+            {
                 return default;
+            }
 
             IMapDataSource<TKey, BssomFieldOffsetInfo> map;
             if (type == BssomType.Map1)
+            {
                 map = new Map1DataSource<TKey, BssomFieldOffsetInfo>(reader, context, true);
+            }
             else if (type == BssomType.Map2)
+            {
                 map = BssMapObjMarshalReader<TKey, BssomFieldOffsetInfo>.Create(ref reader, ref context, true);
+            }
             else
+            {
                 map = BssomSerializationOperationException.UnexpectedCodeRead<IMapDataSource<TKey, BssomFieldOffsetInfo>>(type, reader.Position);
+            }
 
             return map;
         }
@@ -98,18 +115,22 @@ namespace Bssom.Serializer.BssMap
         public static int SizeIDictionary(ref BssomSizeContext context, IDictionary value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
-            return Size(ref context,value.GetGetEnumerator(),  value.Count);
+            return Size(ref context, value.GetGetEnumerator(), value.Count);
         }
 
         //Size IDictionary<TKey,TValue>/IReadOnlyDictionary<TKey,TValue>
         public static int SizeGenericDictionary<TKey, TValue>(ref BssomSizeContext context, IEnumerable<KeyValuePair<TKey, TValue>> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
-            return Size(ref context,value, value.GetIDictionaryCount());
+            return Size(ref context, value, value.GetIDictionaryCount());
         }
 
         //Serialize IDictionary<TKey,TValue>/IReadOnlyDictionary<TKey,TValue>
@@ -127,12 +148,14 @@ namespace Bssom.Serializer.BssMap
         //Deserialize IDictionary<TKey,TValue>/IDictionary
         public static Dictionary<TKey, TValue> GenericDictionaryDeserialize<TKey, TValue>(ref BssomReader reader, ref BssomDeserializeContext context)
         {
-            var map = Deserialize<TKey, TValue>(ref reader, ref context);
+            IMapDataSource<TKey, TValue> map = Deserialize<TKey, TValue>(ref reader, ref context);
             if (map == null)
+            {
                 return null;
+            }
 
-            var dict = new Dictionary<TKey, TValue>(map.Count);
-            foreach (var item in map)
+            Dictionary<TKey, TValue> dict = new Dictionary<TKey, TValue>(map.Count);
+            foreach (KeyValuePair<TKey, TValue> item in map)
             {
                 dict.Add(item.Key, item.Value);
             }
@@ -147,16 +170,18 @@ namespace Bssom.Serializer.BssMap
         //Deserialize IReadOnlyDictionary<TKey,TValue>
         public static ReadOnlyDictionary<TKey, TValue> ReadOnlyGenericDictionaryDeserialize<TKey, TValue>(ref BssomReader reader, ref BssomDeserializeContext context)
         {
-            var dict = GenericDictionaryDeserialize<TKey, TValue>(ref reader, ref context);
+            Dictionary<TKey, TValue> dict = GenericDictionaryDeserialize<TKey, TValue>(ref reader, ref context);
             if (dict == null)
+            {
                 return null;
+            }
 
             return new ReadOnlyDictionary<TKey, TValue>(dict);
         }
 
         public static void FillGenericIDictionaryData<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> pairs, ICollection<KeyValuePair<TKey, TValue>> collection)
         {
-            foreach (var item in pairs)
+            foreach (KeyValuePair<TKey, TValue> item in pairs)
             {
                 collection.Add(item);
             }
@@ -164,7 +189,7 @@ namespace Bssom.Serializer.BssMap
 
         public static void FillIDictionaryData(IEnumerable<KeyValuePair<object, object>> pairs, IDictionary dictionary)
         {
-            foreach (var item in pairs)
+            foreach (KeyValuePair<object, object> item in pairs)
             {
                 dictionary.Add(item.Key, item.Value);
             }
@@ -177,23 +202,31 @@ namespace Bssom.Serializer.BssMap
         {
             DEBUG.Assert(value != null);
 
-            var keyFormatter = context.Option.FormatterResolver.GetFormatterWithVerify<TKey>();
-            var valueFormatter = context.Option.FormatterResolver.GetFormatterWithVerify<TValue>();
+            IBssomFormatter<TKey> keyFormatter = context.Option.FormatterResolver.GetFormatterWithVerify<TKey>();
+            IBssomFormatter<TValue> valueFormatter = context.Option.FormatterResolver.GetFormatterWithVerify<TValue>();
             bool keyIsObjectType = typeof(TKey) == typeof(object);
             bool keyIsStringType = typeof(TKey) == typeof(string);
 
             int len = BssomBinaryPrimitives.BuildInTypeCodeSize + BssomBinaryPrimitives.FixUInt32NumberSize;
             if (count == -1)
+            {
                 len += BssomBinaryPrimitives.FixUInt32NumberSize;
+            }
             else
+            {
                 len += BssomBinaryPrimitives.VariableNumberSize((ulong)count);
+            }
 
             foreach (KeyValuePair<TKey, TValue> item in value)
             {
                 if (keyIsObjectType)
+                {
                     BssMapKeyResolverProvider.VertyBssMapKeyType(item.Key);
+                }
                 else if (keyIsStringType)
+                {
                     BssMapKeyResolverProvider.VertyBssMapStringKey(item.Key);
+                }
 
                 len += keyFormatter.Size(ref context, item.Key);
                 len += valueFormatter.Size(ref context, item.Value);
@@ -206,8 +239,8 @@ namespace Bssom.Serializer.BssMap
         {
             DEBUG.Assert(value != null);
 
-            var keyFormatter = context.Option.FormatterResolver.GetFormatterWithVerify<TKey>();
-            var valueFormatter = context.Option.FormatterResolver.GetFormatterWithVerify<TValue>();
+            IBssomFormatter<TKey> keyFormatter = context.Option.FormatterResolver.GetFormatterWithVerify<TKey>();
+            IBssomFormatter<TValue> valueFormatter = context.Option.FormatterResolver.GetFormatterWithVerify<TValue>();
             bool keyIsObjectType = typeof(TKey) == typeof(object);
             bool keyIsStringType = typeof(TKey) == typeof(string);
 
@@ -215,17 +248,25 @@ namespace Bssom.Serializer.BssMap
             writer.WriteBuildInType(BssomType.Map1);
             long lenPos = writer.FillUInt32FixNumber();
             if (count != -1)
+            {
                 writer.WriteVariableNumber(count);
+            }
             else
+            {
                 writer.FillUInt32FixNumber();
+            }
 
             int num = 0;
             foreach (KeyValuePair<TKey, TValue> item in value)
             {
                 if (keyIsObjectType)
+                {
                     BssMapKeyResolverProvider.VertyBssMapKeyType(item.Key);
+                }
                 else if (keyIsStringType)
+                {
                     BssMapKeyResolverProvider.VertyBssMapStringKey(item.Key);
+                }
 
                 //Write Key
                 keyFormatter.Serialize(ref writer, ref context, item.Key);
@@ -262,12 +303,12 @@ namespace Bssom.Serializer.BssMap
                 genericKeyConvert = BssMapKeyResolverProvider.GetAndVertiyBssMapKeyResolver<TKey>();
             }
             ArrayPack<BssRow<TValue>> rows = new ArrayPack<BssRow<TValue>>(count);
-            foreach (var item in value)
+            foreach (KeyValuePair<TKey, TValue> item in value)
             {
                 if (keyIsObjectType)
                 {
                     //VertyNull(item.Key)
-                    var keyConvert = BssMapKeyResolverProvider.GetAndVertiyBssMapKeyResolver(item.Key.GetType());
+                    IBssMapKeyResolver keyConvert = BssMapKeyResolverProvider.GetAndVertiyBssMapKeyResolver(item.Key.GetType());
                     rows.Add(new BssRow<TValue>(keyConvert.GetMap2KeySegment(item.Key), item.Value, keyConvert.KeyType, keyConvert.KeyIsNativeType));
                 }
                 else
@@ -279,11 +320,11 @@ namespace Bssom.Serializer.BssMap
             return rows.GetArray();
         }
 
-        public static int Size<TKey, TValue>(ref BssomSizeContext context,IEnumerable<KeyValuePair<TKey, TValue>> value,  int count)
+        public static int Size<TKey, TValue>(ref BssomSizeContext context, IEnumerable<KeyValuePair<TKey, TValue>> value, int count)
         {
             DEBUG.Assert(value != null);
 
-            var ap = new BssMapObjMarshal<TValue>(GenericRows(value, count));
+            BssMapObjMarshal<TValue> ap = new BssMapObjMarshal<TValue>(GenericRows(value, count));
             return BssomBinaryPrimitives.BuildInTypeCodeSize + ap.Size(ref context);
         }
 
@@ -292,7 +333,7 @@ namespace Bssom.Serializer.BssMap
             DEBUG.Assert(value != null);
 
             writer.WriteBuildInType(BssomType.Map2);
-            var ap = new BssMapObjMarshal<TValue>(GenericRows(value, count));
+            BssMapObjMarshal<TValue> ap = new BssMapObjMarshal<TValue>(GenericRows(value, count));
             ap.Write(ref writer, ref context);
         }
     }

@@ -1,20 +1,10 @@
 ﻿
 using Bssom.Serializer.Binary;
-using Bssom.Serializer.BssMap.KeyResolvers;
-using Bssom.Serializer.Internal;
-using Bssom.Serializer.BssomBuffer;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Bssom.Serializer.Formatters
 {
-     /// <summary>
+    /// <summary>
     /// Format <see cref="SByte"/>? as BssomType.Null or BssomType.Int8 
     /// </summary>
     public sealed class StaticNullableInt8Formatter : IBssomFormatter<SByte?>
@@ -27,15 +17,21 @@ namespace Bssom.Serializer.Formatters
 
         public int Size(ref BssomSizeContext context, SByte? value)
         {
-            if(value == null)
+            if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
+
             return BssomBinaryPrimitives.Int8Size + BssomBinaryPrimitives.BuildInTypeCodeSize;
         }
 
         public SByte? Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNull())
+            {
                 return default;
+            }
+
             return reader.ReadInt8();
         }
 
@@ -62,15 +58,21 @@ namespace Bssom.Serializer.Formatters
 
         public int Size(ref BssomSizeContext context, Int16? value)
         {
-            if(value == null)
+            if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
+
             return BssomBinaryPrimitives.Int16Size + BssomBinaryPrimitives.BuildInTypeCodeSize;
         }
 
         public Int16? Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNull())
+            {
                 return default;
+            }
+
             return reader.ReadInt16();
         }
 
@@ -97,15 +99,21 @@ namespace Bssom.Serializer.Formatters
 
         public int Size(ref BssomSizeContext context, Int32? value)
         {
-            if(value == null)
+            if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
+
             return BssomBinaryPrimitives.Int32Size + BssomBinaryPrimitives.BuildInTypeCodeSize;
         }
 
         public Int32? Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNull())
+            {
                 return default;
+            }
+
             return reader.ReadInt32();
         }
 
@@ -132,15 +140,21 @@ namespace Bssom.Serializer.Formatters
 
         public int Size(ref BssomSizeContext context, Int64? value)
         {
-            if(value == null)
+            if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
+
             return BssomBinaryPrimitives.Int64Size + BssomBinaryPrimitives.BuildInTypeCodeSize;
         }
 
         public Int64? Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNull())
+            {
                 return default;
+            }
+
             return reader.ReadInt64();
         }
 
@@ -167,15 +181,21 @@ namespace Bssom.Serializer.Formatters
 
         public int Size(ref BssomSizeContext context, Byte? value)
         {
-            if(value == null)
+            if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
+
             return BssomBinaryPrimitives.UInt8Size + BssomBinaryPrimitives.BuildInTypeCodeSize;
         }
 
         public Byte? Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNull())
+            {
                 return default;
+            }
+
             return reader.ReadUInt8();
         }
 
@@ -202,15 +222,21 @@ namespace Bssom.Serializer.Formatters
 
         public int Size(ref BssomSizeContext context, UInt16? value)
         {
-            if(value == null)
+            if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
+
             return BssomBinaryPrimitives.UInt16Size + BssomBinaryPrimitives.BuildInTypeCodeSize;
         }
 
         public UInt16? Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNull())
+            {
                 return default;
+            }
+
             return reader.ReadUInt16();
         }
 
@@ -237,15 +263,21 @@ namespace Bssom.Serializer.Formatters
 
         public int Size(ref BssomSizeContext context, UInt32? value)
         {
-            if(value == null)
+            if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
+
             return BssomBinaryPrimitives.UInt32Size + BssomBinaryPrimitives.BuildInTypeCodeSize;
         }
 
         public UInt32? Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNull())
+            {
                 return default;
+            }
+
             return reader.ReadUInt32();
         }
 
@@ -272,15 +304,21 @@ namespace Bssom.Serializer.Formatters
 
         public int Size(ref BssomSizeContext context, UInt64? value)
         {
-            if(value == null)
+            if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
+
             return BssomBinaryPrimitives.UInt64Size + BssomBinaryPrimitives.BuildInTypeCodeSize;
         }
 
         public UInt64? Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNull())
+            {
                 return default;
+            }
+
             return reader.ReadUInt64();
         }
 
@@ -307,15 +345,21 @@ namespace Bssom.Serializer.Formatters
 
         public int Size(ref BssomSizeContext context, Single? value)
         {
-            if(value == null)
+            if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
+
             return BssomBinaryPrimitives.Float32Size + BssomBinaryPrimitives.BuildInTypeCodeSize;
         }
 
         public Single? Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNull())
+            {
                 return default;
+            }
+
             return reader.ReadFloat32();
         }
 
@@ -342,15 +386,21 @@ namespace Bssom.Serializer.Formatters
 
         public int Size(ref BssomSizeContext context, Double? value)
         {
-            if(value == null)
+            if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
+
             return BssomBinaryPrimitives.Float64Size + BssomBinaryPrimitives.BuildInTypeCodeSize;
         }
 
         public Double? Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNull())
+            {
                 return default;
+            }
+
             return reader.ReadFloat64();
         }
 
@@ -377,15 +427,21 @@ namespace Bssom.Serializer.Formatters
 
         public int Size(ref BssomSizeContext context, Boolean? value)
         {
-            if(value == null)
+            if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
+
             return BssomBinaryPrimitives.BooleanSize + BssomBinaryPrimitives.BuildInTypeCodeSize;
         }
 
         public Boolean? Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNull())
+            {
                 return default;
+            }
+
             return reader.ReadBoolean();
         }
 
@@ -400,7 +456,7 @@ namespace Bssom.Serializer.Formatters
         }
     }
 
-     /// <summary>
+    /// <summary>
     /// Format <see cref="Char"/>? as BssomType.Null or BssomType.Char 
     /// </summary>
     public sealed class StaticNullableCharFormatter : IBssomFormatter<Char?>
@@ -413,15 +469,21 @@ namespace Bssom.Serializer.Formatters
 
         public int Size(ref BssomSizeContext context, Char? value)
         {
-            if(value == null)
+            if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
+
             return BssomBinaryPrimitives.CharSize + BssomBinaryPrimitives.NativeTypeCodeSize;
         }
 
         public Char? Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNull())
+            {
                 return default;
+            }
+
             return reader.ReadChar();
         }
 
@@ -448,15 +510,21 @@ namespace Bssom.Serializer.Formatters
 
         public int Size(ref BssomSizeContext context, Decimal? value)
         {
-            if(value == null)
+            if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
+
             return BssomBinaryPrimitives.DecimalSize + BssomBinaryPrimitives.NativeTypeCodeSize;
         }
 
         public Decimal? Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNull())
+            {
                 return default;
+            }
+
             return reader.ReadDecimal();
         }
 
@@ -483,15 +551,21 @@ namespace Bssom.Serializer.Formatters
 
         public int Size(ref BssomSizeContext context, Guid? value)
         {
-            if(value == null)
+            if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
+
             return BssomBinaryPrimitives.GuidSize + BssomBinaryPrimitives.NativeTypeCodeSize;
         }
 
         public Guid? Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNull())
+            {
                 return default;
+            }
+
             return reader.ReadGuid();
         }
 

@@ -1,10 +1,8 @@
-﻿using Bssom.Serializer.BssMap.KeyResolvers;
-using System;
-using System.Runtime.CompilerServices;
-using System.Threading;
-using Bssom.Serializer.Binary;
+﻿using Bssom.Serializer.Binary;
 using Bssom.Serializer.BssMap;
 using Bssom.Serializer.Internal;
+using System;
+using System.Runtime.CompilerServices;
 
 //using System.Runtime.CompilerServices;
 
@@ -77,9 +75,11 @@ namespace Bssom.Serializer
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void EnsureMapToken(BssMapRouteToken token)
         {
-            var t = ReadOne<BssMapRouteToken>();
+            BssMapRouteToken t = ReadOne<BssMapRouteToken>();
             if (t != token)
+            {
                 BssomSerializationOperationException.UnexpectedCodeRead((byte)t, Position);
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -91,39 +91,49 @@ namespace Bssom.Serializer
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void EnsureType(byte buildInType)
         {
-            var t = ReadOne<byte>();
+            byte t = ReadOne<byte>();
             if (t != buildInType)
+            {
                 BssomSerializationOperationException.UnexpectedCodeRead(t, Position);
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void EnsureTypeWithSkipBlankCharacter(byte buildInType)
         {
-            var t = SkipBlankCharacterAndReadBssomType();
+            byte t = SkipBlankCharacterAndReadBssomType();
             if (t != buildInType)
+            {
                 BssomSerializationOperationException.UnexpectedCodeRead(t, Position);
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void EnsureNativeType(byte nativeType)
         {
             if (ReadBssomType() != BssomType.NativeCode || ReadBssomType() != nativeType)
+            {
                 BssomSerializationOperationException.UnexpectedCodeRead(Position);
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void EnsureNativeTypeWithSkipBlankCharacter(byte nativeType)
         {
             if (SkipBlankCharacterAndReadBssomType() != BssomType.NativeCode || ReadBssomType() != nativeType)
+            {
                 BssomSerializationOperationException.UnexpectedCodeRead(Position);
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void SkipBlankCharacterAndEnsureType(byte buildInType)
         {
-            var t = SkipBlankCharacterAndReadBssomType();
+            byte t = SkipBlankCharacterAndReadBssomType();
             if (t != buildInType)
+            {
                 BssomSerializationOperationException.UnexpectedCodeRead(t, Position);
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -155,7 +165,7 @@ namespace Bssom.Serializer
             else if (type == BssomType.Array1)
             {
                 BssomBuffer.SeekWithOutVerify(BssomBinaryPrimitives.BuildInTypeCodeSize, BssomSeekOrgin.Current);
-                this.EnsureType(buildInType);
+                EnsureType(buildInType);
                 return false;
             }
             return BssomSerializationOperationException.UnexpectedCodeRead<bool>(type, Position);
@@ -173,7 +183,7 @@ namespace Bssom.Serializer
             else if (type == BssomType.Array1)
             {
                 BssomBuffer.SeekWithOutVerify(BssomBinaryPrimitives.BuildInTypeCodeSize, BssomSeekOrgin.Current);
-                this.EnsureNativeType(nativeType);
+                EnsureNativeType(nativeType);
                 return false;
             }
             return BssomSerializationOperationException.UnexpectedCodeRead<bool>(type, Position);
@@ -202,13 +212,21 @@ namespace Bssom.Serializer
         {
             byte code = BssomBuffer.ReadRef(1);
             if (code == 4)
+            {
                 BssomBuffer.Seek(5, BssomSeekOrgin.Current);
+            }
             else if (code == 8)
+            {
                 BssomBuffer.Seek(9, BssomSeekOrgin.Current);
+            }
             else if (code == 12)
+            {
                 BssomBuffer.Seek(13, BssomSeekOrgin.Current);
+            }
             else
+            {
                 throw BssomSerializationOperationException.UnexpectedCodeRead(code, BssomBuffer.Position);
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -220,7 +238,7 @@ namespace Bssom.Serializer
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal DateTime ReadNativeDateTimeWithOutTypeHead()
         {
-            var dt = BssomBinaryPrimitives.ReadNativeDateTime(ref BssomBuffer.ReadRef(BssomBinaryPrimitives.NativeDateTimeSize));
+            DateTime dt = BssomBinaryPrimitives.ReadNativeDateTime(ref BssomBuffer.ReadRef(BssomBinaryPrimitives.NativeDateTimeSize));
             BssomBuffer.Seek(BssomBinaryPrimitives.NativeDateTimeSize, BssomSeekOrgin.Current);
             return dt;
         }
@@ -229,7 +247,9 @@ namespace Bssom.Serializer
         internal string ReadString()
         {
             if (TryReadNullWithEnsureBuildInType(BssomType.StringCode))
+            {
                 return default;
+            }
 
             return BssomBinaryPrimitives.ReadString(BssomBuffer);
         }
@@ -245,7 +265,10 @@ namespace Bssom.Serializer
         {
             byte one = PeekOne<byte>();
             if (one > BssomType.MaxBlankCodeValue)
+            {
                 return;
+            }
+
             BssomBuffer.SeekWithOutVerify(1, BssomSeekOrgin.Current);
             SkipBlankCharacterFromBcCode(one);
         }
@@ -255,7 +278,10 @@ namespace Bssom.Serializer
         {
             byte one = ReadOne<byte>();
             if (one > BssomType.MaxBlankCodeValue)
+            {
                 return one;
+            }
+
             SkipBlankCharacterFromBcCode(one);
             return ReadOne<byte>();
         }
@@ -265,7 +291,10 @@ namespace Bssom.Serializer
         {
             byte one = PeekOne<byte>();
             if (one > BssomType.MaxBlankCodeValue)
+            {
                 return one;
+            }
+
             BssomBuffer.SeekWithOutVerify(1, BssomSeekOrgin.Current);
             SkipBlankCharacterFromBcCode(one);
             return PeekOne<byte>();
@@ -275,11 +304,17 @@ namespace Bssom.Serializer
         private void SkipBlankCharacterFromBcCode(byte bcCode)
         {
             if (bcCode < BssomType.BlankUInt16Code)
+            {
                 BssomBuffer.Seek(bcCode, BssomSeekOrgin.Current);
+            }
             else if (bcCode == BssomType.BlankUInt16Code)
+            {
                 BssomBuffer.Seek(ReadUInt16WithOutTypeHead(), BssomSeekOrgin.Current);
+            }
             else//(bcCode == BssomType.EmptyUInt32Code)
+            {
                 BssomBuffer.Seek(ReadUInt32WithOutTypeHead(), BssomSeekOrgin.Current);
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -307,12 +342,16 @@ namespace Bssom.Serializer
             {
                 keyType = ReadBssomType();
                 if (BssomBinaryPrimitives.TryGetNativeTypeSizeFromStaticTypeSizes(keyType, out int size))
+                {
                     return size;
+                }
             }
             else if (keyType != BssomType.NullCode)
             {
                 if (BssomBinaryPrimitives.TryGetPrimitiveTypeSizeFromStaticTypeSizes(keyType, out int size))
+                {
                     return size;
+                }
             }
             return BssomSerializationOperationException.UnexpectedCodeRead<int>(keyType, Position);
         }
@@ -322,7 +361,10 @@ namespace Bssom.Serializer
         {
             byte keyType = ReadBssomType();
             if (keyType == BssomType.StringCode)
+            {
                 return (int)BssomBinaryPrimitives.ReadVariableNumber(BssomBuffer);
+            }
+
             return BssomSerializationOperationException.UnexpectedCodeRead<int>(keyType, Position);
         }
 
@@ -332,13 +374,19 @@ namespace Bssom.Serializer
             if (typeCode <= BssomType.MaxBlankCodeValue)
             {
                 if (typeCode <= BssomType.MaxVarBlankCodeValue)
+                {
                     BssomBuffer.Seek(typeCode, BssomSeekOrgin.Current);
+                }
                 else
                 {
                     if (typeCode == BssomType.BlankUInt16Code)
+                    {
                         BssomBuffer.Seek(ReadUInt16WithOutTypeHead(), BssomSeekOrgin.Current);
+                    }
                     else //if (type == BssomType.EmptyInt32Code)
+                    {
                         BssomBuffer.Seek(ReadUInt32WithOutTypeHead(), BssomSeekOrgin.Current);
+                    }
                 }
                 typeCode = ReadBssomType();
             }
@@ -348,7 +396,7 @@ namespace Bssom.Serializer
 
         internal int GetObjectLengthWithBlank()
         {
-            var type = ReadBssomType();
+            byte type = ReadBssomType();
             int len = 1;
             if (type <= BssomType.MaxBlankCodeValue)
             {
@@ -387,7 +435,9 @@ namespace Bssom.Serializer
         internal int GetRemainingLengthOfObject(byte objType)
         {
             if (BssomBinaryPrimitives.TryGetPrimitiveTypeSizeFromStaticTypeSizes(objType, out int size))
+            {
                 return size;
+            }
 
             switch (objType)
             {
@@ -397,13 +447,22 @@ namespace Bssom.Serializer
                     {
                         objType = ReadBssomType();
                         if (objType == NativeBssomType.CharCode)
+                        {
                             return BssomBinaryPrimitives.CharSize;
+                        }
                         else if (objType == NativeBssomType.DateTimeCode)
+                        {
                             return BssomBinaryPrimitives.NativeDateTimeSize;
+                        }
                         else if (objType == NativeBssomType.DecimalCode)
+                        {
                             return BssomBinaryPrimitives.DecimalSize;
+                        }
                         else if (objType == NativeBssomType.GuidCode)
+                        {
                             return BssomBinaryPrimitives.GuidSize;
+                        }
+
                         throw BssomSerializationOperationException.UnexpectedCodeRead(objType, BssomBuffer.Position);
                     }
                 case BssomType.Map1:
@@ -414,7 +473,10 @@ namespace Bssom.Serializer
                 case BssomType.Array1:
                     {
                         if (ReadBssomType()/*elementType*/ == BssomType.NativeCode)
+                        {
                             BssomBuffer.Seek(BssomBinaryPrimitives.BuildInTypeCodeSize, BssomSeekOrgin.Current);
+                        }
+
                         return ReadVariableNumber();
                     }
 
@@ -471,7 +533,10 @@ namespace Bssom.Serializer
         internal byte[] ReadBytes()
         {
             if (TryReadNullWithEnsureArray1BuildInType(BssomType.UInt8Code))
+            {
                 return null;
+            }
+
             SkipVariableNumber();
             byte[] val = new byte[ReadVariableNumber()];
             ref byte refb = ref BssomBuffer.ReadRef(val.Length);

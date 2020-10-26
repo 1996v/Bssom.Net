@@ -1,8 +1,4 @@
 ﻿//using System.Runtime.CompilerServices;
-using Bssom.Serializer.Binary;
-using Bssom.Serializer.BssMap.KeyResolvers;
-using Bssom.Serializer.Internal;
-using Bssom.Serializer.BssomBuffer;
 using System.Reflection;
 
 namespace Bssom.Serializer.BssMap

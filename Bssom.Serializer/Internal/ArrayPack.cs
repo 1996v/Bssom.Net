@@ -12,7 +12,7 @@ namespace Bssom.Serializer.Internal
 
         public int NextPos => _nextPos;
 
-        public T this[int item] { get => _array[item];set => _array[item] = value; }
+        public T this[int item] { get => _array[item]; set => _array[item] = value; }
 
         public ArrayPack(T[] array)
         {
@@ -37,7 +37,10 @@ namespace Bssom.Serializer.Internal
             _nextPos--;
         }
 
-        public T[] GetArray() => _array;
+        public T[] GetArray()
+        {
+            return _array;
+        }
 
         public IEnumerator<T> GetEnumerator()
         {

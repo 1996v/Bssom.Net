@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-
-namespace Bssom.Serializer
+﻿namespace Bssom.Serializer
 {
     /// <summary>
     /// <para>获取序列化大小期间使用的上下文</para>
@@ -26,7 +23,10 @@ namespace Bssom.Serializer
             get
             {
                 if (_contextDataSlots == null)
+                {
                     _contextDataSlots = new ContextDataSlots();
+                }
+
                 return _contextDataSlots;
             }
             set => _contextDataSlots = value;
@@ -37,8 +37,8 @@ namespace Bssom.Serializer
         /// </summary>
         public BssomSizeContext(BssomSerializerOptions option)
         {
-            this._contextDataSlots = default;
-            this.Option = option;
+            _contextDataSlots = default;
+            Option = option;
         }
     }
 }

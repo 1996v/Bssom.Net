@@ -1,8 +1,5 @@
 ﻿//using System.Runtime.CompilerServices;
 
-using Bssom.Serializer.Binary;
-using System.Runtime.CompilerServices;
-
 namespace Bssom.Serializer.BssMap
 {
     internal struct BssMapHead

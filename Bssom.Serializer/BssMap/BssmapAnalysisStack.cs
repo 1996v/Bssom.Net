@@ -1,14 +1,11 @@
 ﻿//using System.Runtime.CompilerServices;
-using Bssom.Serializer.Binary;
-using Bssom.Serializer.BssMap.KeyResolvers;
-using Bssom.Serializer.BssomBuffer;
+using Bssom.Serializer.Internal;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using Bssom.Serializer.Internal;
 
 namespace Bssom.Serializer.BssMap
 {
-    internal struct BssmapAnalysisStack :  Iterable<byte>
+    internal struct BssmapAnalysisStack : Iterable<byte>
     {
         private ArrayPack<ulong> _values;
         private Stack<BssMapRouteToken> _tokens;
@@ -34,7 +31,9 @@ namespace Bssom.Serializer.BssMap
         {
             _values.RollbackOne();
             if (_values.NextPos == 0)
+            {
                 _lastValueByteCount = 0;
+            }
         }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void PopToken()
@@ -71,7 +70,7 @@ namespace Bssom.Serializer.BssMap
             {
                 for (int i = 0; i < Length; i++)
                 {
-                    yield return Unsafe.Add(ref GetFirstElementReference(out var isContiguousMemoryArea), i);
+                    yield return Unsafe.Add(ref GetFirstElementReference(out bool isContiguousMemoryArea), i);
                 }
             }
         }

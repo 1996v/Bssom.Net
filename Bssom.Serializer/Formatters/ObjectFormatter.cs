@@ -1,15 +1,10 @@
 ﻿
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Reflection;
-using Bssom.Serializer.BssMap.KeyResolvers;
-using Bssom.Serializer.Internal;
-using Bssom.Serializer.BssomBuffer;
-using Bssom.Serializer.Formatters;
-using System.Collections.Concurrent;
 using Bssom.Serializer.Binary;
 using Bssom.Serializer.BssMap;
+using System;
+using System.Collections.Concurrent;
+using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Bssom.Serializer.Formatters
 {
@@ -44,7 +39,7 @@ namespace Bssom.Serializer.Formatters
                 return;
             }
 
-            var realType = value.GetType();
+            Type realType = value.GetType();
             if (realType == typeof(object))
             {
                 writer.WriteArray1BuildInType(BssomType.Map2);
@@ -86,7 +81,7 @@ namespace Bssom.Serializer.Formatters
                 return BssomBinaryPrimitives.NullSize;
             }
 
-            var realType = value.GetType();
+            Type realType = value.GetType();
             if (realType == typeof(object))
             {
                 return BssMapObjMarshal.Empty.Length + BssomBinaryPrimitives.BuildInTypeCodeSize;
@@ -141,7 +136,7 @@ namespace Bssom.Serializer
                 MethodInfo deserializeMethod = formatterType.GetRuntimeMethod(nameof(Deserialize), new[] { typeof(BssomReader).MakeByRefType(), typeof(BssomDeserializeContext).MakeByRefType() });
 
                 //(object)IBssomFormatter<T>.Deserialize(ref reader,option);
-                var body = Expression.Convert(Expression.Call(
+                UnaryExpression body = Expression.Convert(Expression.Call(
                     Expression.Convert(param0, formatterType),
                     deserializeMethod,
                     param1,

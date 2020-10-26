@@ -40,6 +40,6 @@ namespace Bssom.Serializer.Internal
 
         public int Length => _len;
 
-        public T this[int i] { get=> _ptr[i];  set => _ptr[i] = value; } 
+        public T this[int i] { get => _ptr[i]; set => _ptr[i] = value; }
     }
 }

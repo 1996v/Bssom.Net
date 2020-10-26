@@ -41,17 +41,23 @@ namespace Bssom.Serializer
 
         public object CurrentMapKey()
         {
-            var entry = entries.Current;
+            Entry entry = entries.Current;
             if (!entry.ValueIsMapKey)
+            {
                 BssomSerializationOperationException.InputTypeAndDataIsInconsistent(entry.Value.ToString(), "Map");
+            }
+
             return entry.Value;
         }
 
         public int CurrentArrayIndex()
         {
-            var entry = entries.Current;
+            Entry entry = entries.Current;
             if (entry.ValueIsMapKey)
+            {
                 BssomSerializationOperationException.InputTypeAndDataIsInconsistent(entry.Value.ToString(), "Array");
+            }
+
             return (int)entry.Value;
         }
 

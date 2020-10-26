@@ -1,25 +1,18 @@
 ﻿//using System.Runtime.CompilerServices;
 
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Runtime.InteropServices.ComTypes;
-using System.Runtime.Serialization;
-using System.Text.RegularExpressions;
-using System.Threading;
-using Bssom.Serializer.Resolvers;
-using System.Buffers;
 using Bssom.Serializer.Binary;
 using Bssom.Serializer.BssMap;
 using Bssom.Serializer.BssMap.KeyResolvers;
 using Bssom.Serializer.BssomBuffer;
 using Bssom.Serializer.Internal;
+using System;
+using System.Buffers;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Reflection.Emit;
 
 namespace Bssom.Serializer.Resolvers
 {
@@ -79,13 +72,13 @@ namespace Bssom.Serializer.Internal
         public static TypeInfo Build(DynamicFormatterAssembly assembly, Type type)
         {
             TypeBuilder typeBuilder = assembly.DefineFormatterType(type);
-            var serializationInfo = new ObjectSerializationInfo(type, false);
+            ObjectSerializationInfo serializationInfo = new ObjectSerializationInfo(type, false);
 
             MethodBuilder serializeMethod = TypeBuildHelper.DefineSerializeMethod(typeBuilder, type);
             MethodBuilder deserializeMethod = TypeBuildHelper.DefineDeserializeMethod(typeBuilder, type);
             MethodBuilder sizeMethod = TypeBuildHelper.DefineSizeMethod(typeBuilder, type);
 
-            var delegateCacheType = typeof(MapDynamicDelegateCache<>).MakeGenericType(type);
+            Type delegateCacheType = typeof(MapDynamicDelegateCache<>).MakeGenericType(type);
             delegateCacheType.GetMethod(nameof(MapDynamicDelegateCache<int>.Factory), BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, new object[] { assembly, serializationInfo });
 
             TypeBuildHelper.CallSerializeDelegate(serializeMethod, type, delegateCacheType.GetField(nameof(MapDynamicDelegateCache<int>.Serialize)));
@@ -97,7 +90,7 @@ namespace Bssom.Serializer.Internal
 
         private static void BuildDeserializeCore(MethodBuilder method, ObjectSerializationInfo serializationInfo)
         {
-            var il = method.GetILGenerator();
+            ILGenerator il = method.GetILGenerator();
             LocalBuilder instance = il.DeclareLocal(serializationInfo.Type); // [loc:0]
             LocalBuilder aprp = il.DeclareLocal(typeof(BssMapHeadPackInfo)); // [loc:1]
             LocalBuilder refb = il.DeclareLocal(typeof(byte).MakeByRefType()); // [loc:2]
@@ -146,7 +139,7 @@ namespace Bssom.Serializer.Internal
                 else
                 {
                     il.EmitLdloca(instance.LocalIndex);
-                    var parInfos = serializationInfo.BestmatchConstructor.GetParameters();
+                    ParameterInfo[] parInfos = serializationInfo.BestmatchConstructor.GetParameters();
                     if (serializationInfo.ConstructorParametersIsDefaultValue)
                     {
                         for (int i = 0; i < parInfos.Length; i++)
@@ -156,7 +149,7 @@ namespace Bssom.Serializer.Internal
                     }
                     else
                     {
-                        var cpcf = serializationInfo.StoreConstructorParameters();
+                        FieldInfo cpcf = serializationInfo.StoreConstructorParameters();
                         for (int i = 0; i < parInfos.Length; i++)
                         {
                             il.Emit(OpCodes.Ldsfld, cpcf);
@@ -172,7 +165,7 @@ namespace Bssom.Serializer.Internal
             {
                 if (!serializationInfo.IsDefaultNoArgsCtor)
                 {
-                    var parInfos = serializationInfo.BestmatchConstructor.GetParameters();
+                    ParameterInfo[] parInfos = serializationInfo.BestmatchConstructor.GetParameters();
                     if (serializationInfo.ConstructorParametersIsDefaultValue)
                     {
                         for (int i = 0; i < parInfos.Length; i++)
@@ -182,7 +175,7 @@ namespace Bssom.Serializer.Internal
                     }
                     else
                     {
-                        var cpcf = serializationInfo.StoreConstructorParameters();
+                        FieldInfo cpcf = serializationInfo.StoreConstructorParameters();
                         for (int i = 0; i < parInfos.Length; i++)
                         {
                             il.Emit(OpCodes.Ldsfld, cpcf);
@@ -262,9 +255,9 @@ namespace Bssom.Serializer.Internal
                     Label isFixedFalseLabel = il.DefineLabel();
                     Label readerSeekLabel = il.DefineLabel();
 
-                    var members = serializationInfo.SerializeMemberInfos;
-                    var mpf = serializationInfo.StoreMemberPredefinedNames();
-                    var mfif = serializationInfo.StoreMemberFormatterInstances();
+                    SerializeMemberInfo[] members = serializationInfo.SerializeMemberInfos;
+                    FieldInfo mpf = serializationInfo.StoreMemberPredefinedNames();
+                    FieldInfo mfif = serializationInfo.StoreMemberFormatterInstances();
                     //if(isFixed)
                     {
                         il.EmitLdloc(hesacbf.LocalIndex);
@@ -272,12 +265,17 @@ namespace Bssom.Serializer.Internal
 
                         for (int i = 0; i < members.Length; i++)
                         {
-                            var member = members[i];
+                            SerializeMemberInfo member = members[i];
                             //instance.Member = AutomatePrefixReader.TryGet<#TypeName#>Value(mpf[i], BssomType.String, ref aprp, ref reader, ref context, ref refb, out haveEnoughSizeAndCanBeFixed);
                             if (serializationInfo.Type.IsValueType)
+                            {
                                 il.EmitLdloca(instance.LocalIndex);
+                            }
                             else
+                            {
                                 il.EmitLdloc(instance.LocalIndex);
+                            }
+
                             il.Emit(OpCodes.Ldsfld, mpf);
                             il.EmitLdc_I4(i);
                             il.Emit(OpCodes.Ldelem_Ref);
@@ -294,7 +292,9 @@ namespace Bssom.Serializer.Internal
                                 methodInfo = BssMapObjMarshalReader.TryGetValueUlongsKeyMethodInfo.MakeGenericMethod(member.Type);
 
                                 if (member.FormatterAttribute == null)
+                                {
                                     il.Emit(OpCodes.Ldnull);
+                                }
                                 else
                                 {
                                     il.Emit(OpCodes.Ldsfld, mfif);
@@ -321,12 +321,17 @@ namespace Bssom.Serializer.Internal
 
                         for (int i = 0; i < members.Length; i++)
                         {
-                            var member = members[i];
+                            SerializeMemberInfo member = members[i];
                             //instance.Member = AutomatePrefixReader.TryGet<#TypeName#>ValueSlow(mpf[i], BssomType.String, false, ref aprp, ref reader, ref context, out haveEnoughSizeAndCanBeFixed);
                             if (serializationInfo.Type.IsValueType)
+                            {
                                 il.EmitLdloca(instance.LocalIndex);
+                            }
                             else
+                            {
                                 il.EmitLdloc(instance.LocalIndex);
+                            }
+
                             il.Emit(OpCodes.Ldsfld, mpf);
                             il.EmitLdc_I4(i);
                             il.Emit(OpCodes.Ldelem_Ref);
@@ -343,7 +348,9 @@ namespace Bssom.Serializer.Internal
                                 methodInfo = BssMapObjMarshalReader.TryGetValueSlowUlongsKeyMethodInfo.MakeGenericMethod(member.Type);
 
                                 if (member.FormatterAttribute == null)
+                                {
                                     il.Emit(OpCodes.Ldnull);
+                                }
                                 else
                                 {
                                     il.Emit(OpCodes.Ldsfld, mfif);
@@ -388,7 +395,7 @@ namespace Bssom.Serializer.Internal
     }
     internal static class MapDynamicDelegateCache<T>
     {
-        public readonly static FieldInfo _MapBuffer = typeof(MapDynamicDelegateCache<T>).GetField(nameof(MapBuffer));
+        public static readonly FieldInfo _MapBuffer = typeof(MapDynamicDelegateCache<T>).GetField(nameof(MapBuffer));
 
         public static byte[] MapBuffer;
         public static Serialize<T> Serialize;
@@ -452,19 +459,19 @@ namespace Bssom.Serializer.Internal
             SerializeMemberInfos = GetAllPublicInstanceReadableAndWritableElements(type).ToArray();
             if (type.IsValueType)
             {
-                BestmatchConstructor = GetValueTypeCtor(type, out var paras);
+                BestmatchConstructor = GetValueTypeCtor(type, out object[] paras);
                 ConstructorParameters = paras;
             }
             else
             {
                 if (type.IsInterface)
                 {
-                    var impType = InterfaceImplementation.CreateType(type);
+                    Type impType = InterfaceImplementation.CreateType(type);
                     BestmatchConstructor = impType.GetConstructors()[0];
                 }
                 else
                 {
-                    BestmatchConstructor = GetClassCtor(type, out var paras);
+                    BestmatchConstructor = GetClassCtor(type, out object[] paras);
                     ConstructorParameters = paras;
                 }
             }
@@ -474,7 +481,7 @@ namespace Bssom.Serializer.Internal
         {
             if (ConstructorParametersIsDefaultValue == false)
             {
-                var cspcfield = typeof(MayCodeGenDeserializeCache<>).MakeGenericType(Type).GetField(nameof(MayCodeGenDeserializeCache<int>.ConstructorStaticParameters));
+                FieldInfo cspcfield = typeof(MayCodeGenDeserializeCache<>).MakeGenericType(Type).GetField(nameof(MayCodeGenDeserializeCache<int>.ConstructorStaticParameters));
                 cspcfield.SetValue(null, ConstructorParameters);
                 return cspcfield;
             }
@@ -485,7 +492,7 @@ namespace Bssom.Serializer.Internal
         {
             if (SerializeMemberInfos.Length > 0)
             {
-                var pnfield = typeof(MayCodeGenDeserializeCache<>).MakeGenericType(Type).GetField(nameof(MayCodeGenDeserializeCache<int>.PredefinedNames));
+                FieldInfo pnfield = typeof(MayCodeGenDeserializeCache<>).MakeGenericType(Type).GetField(nameof(MayCodeGenDeserializeCache<int>.PredefinedNames));
                 pnfield.SetValue(null, GetMemberPredefinedNames());
                 return pnfield;
             }
@@ -495,15 +502,17 @@ namespace Bssom.Serializer.Internal
         public FieldInfo StoreMemberFormatterInstances()
         {
             if (_memberFormatterInstances != null)
+            {
                 return _memberFormatterInstances;
+            }
 
             int count = SerializeMemberInfos.Count(e => e.FormatterAttribute != null);
             if (count > 0)
             {
                 ArrayPack<IBssomFormatter> array = new ArrayPack<IBssomFormatter>(count);
-                foreach (var item in SerializeMemberInfos.Where(e => e.FormatterAttribute != null))
+                foreach (SerializeMemberInfo item in SerializeMemberInfos.Where(e => e.FormatterAttribute != null))
                 {
-                    var formatter = (IBssomFormatter)Activator.CreateInstance(item.FormatterAttribute.FormatterType, item.FormatterAttribute.Arguments);
+                    IBssomFormatter formatter = (IBssomFormatter)Activator.CreateInstance(item.FormatterAttribute.FormatterType, item.FormatterAttribute.Arguments);
 
                     item.SetFormatterAttributeIndex(array.NextPos);
                     array.Add(formatter);
@@ -558,7 +567,7 @@ namespace Bssom.Serializer.Internal
                 Type[] interfaces = type.GetInterfaces();
                 if (interfaces.Length > 0)
                 {
-                    foreach (var item in interfaces)
+                    foreach (Type item in interfaces)
                     {
                         pors.AddRange(item.GetProperties());
                     }
@@ -569,7 +578,7 @@ namespace Bssom.Serializer.Internal
             {
                 //alias
                 AliasAttribute alias = item.GetCustomAttribute<AliasAttribute>(false);
-                var name = alias != null ? alias.Name : item.Name;
+                string name = alias != null ? alias.Name : item.Name;
 
                 //formatter
                 BssomFormatterAttribute formatter = item.GetCustomAttribute<BssomFormatterAttribute>();
@@ -582,55 +591,80 @@ namespace Bssom.Serializer.Internal
                     }
 
                     if (!formatter.FormatterType.GetInterfaces().Contains(typeof(IBssomFormatter<>).MakeGenericType(itemType)))
+                    {
                         throw BssomSerializationTypeFormatterException.AttributeFormatterTypeMismatch(formatter.FormatterType, itemType);
+                    }
                 }
 
                 //OnlyIncludeAttribute
                 OnlyIncludeAttribute include = item.GetCustomAttribute<OnlyIncludeAttribute>(false);
                 if (include != null)
+                {
                     includes.Add(new SerializeMemberInfo(name, itemType, item, formatter));
+                }
                 else
+                {
                     list.Add(new SerializeMemberInfo(name, itemType, item, formatter));
+                }
             }
 
-            foreach (var item in pors)
+            foreach (PropertyInfo item in pors)
             {
                 if (item.IsDefined(ignoreAttribute, false))
+                {
                     continue;
+                }
+
                 if (item.GetIndexParameters().Length > 0)
+                {
                     continue;
+                }
+
                 if (!item.CanRead)
+                {
                     continue;
+                }
+
                 if (!item.CanWrite)
+                {
                     continue;
+                }
 
                 AddItem(item, item.PropertyType);
             }
             FieldInfo[] fils = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
-            foreach (var item in fils)
+            foreach (FieldInfo item in fils)
             {
                 if (item.IsDefined(ignoreAttribute, false))
+                {
                     continue;
+                }
 
                 AddItem(item, item.FieldType);
             }
 
             if (includes.Count > 0)
+            {
                 return includes;
+            }
+
             return list;
         }
 
         private static ConstructorInfo GetValueTypeCtor(Type type, out object[] paras)
         {
-            var constructors = type.GetConstructors(BindingFlags.Public | BindingFlags.Instance);
-            foreach (var constructor in constructors)
+            ConstructorInfo[] constructors = type.GetConstructors(BindingFlags.Public | BindingFlags.Instance);
+            foreach (ConstructorInfo constructor in constructors)
             {
-                var parInfos = constructor.GetParameters();
+                ParameterInfo[] parInfos = constructor.GetParameters();
                 SerializationConstructorAttribute sca = constructor.GetCustomAttribute<SerializationConstructorAttribute>();
                 if (sca != null)
                 {
                     if (sca._paras != null && !VertyConstructorParams(parInfos, sca._paras))
+                    {
                         throw BssomSerializationTypeFormatterException.CtorParasMismatch(type);
+                    }
+
                     paras = sca._paras;
                     return constructor;
                 }
@@ -641,16 +675,19 @@ namespace Bssom.Serializer.Internal
 
         private static ConstructorInfo GetClassCtor(Type type, out object[] paras)
         {
-            var constructors = type.GetConstructors(BindingFlags.Public | BindingFlags.Instance);
+            ConstructorInfo[] constructors = type.GetConstructors(BindingFlags.Public | BindingFlags.Instance);
             ConstructorInfo publicNoArgsCtor = null, publicArgsCtor = null;
-            foreach (var constructor in constructors)
+            foreach (ConstructorInfo constructor in constructors)
             {
-                var parInfos = constructor.GetParameters();
+                ParameterInfo[] parInfos = constructor.GetParameters();
                 SerializationConstructorAttribute sca = constructor.GetCustomAttribute<SerializationConstructorAttribute>();
                 if (sca != null)
                 {
                     if (sca._paras != null && !VertyConstructorParams(parInfos, sca._paras))
+                    {
                         throw BssomSerializationTypeFormatterException.CtorParasMismatch(type);
+                    }
+
                     paras = sca._paras;
                     return constructor;
                 }
@@ -684,17 +721,23 @@ namespace Bssom.Serializer.Internal
         private static bool VertyConstructorParams(ParameterInfo[] parInfos, object[] paras)
         {
             if (parInfos.Length != paras.Length)
+            {
                 return false;
+            }
 
             for (int i = 0; i < parInfos.Length; i++)
             {
                 if (paras[i] == null)
                 {
                     if (parInfos[i].ParameterType.IsValueType)
+                    {
                         return false;
+                    }
                 }
                 else if (parInfos[i].ParameterType != paras[i].GetType())
+                {
                     return false;
+                }
             }
 
             return true;
@@ -729,7 +772,7 @@ namespace Bssom.Serializer.Internal
     }
     internal class MapCodeGenInlineTypes
     {
-        struct InlineTypeEntry
+        private struct InlineTypeEntry
         {
             public string TypeName;
             public int Size;
@@ -766,7 +809,7 @@ namespace Bssom.Serializer.Internal
 
         public static bool TryGetInlineTryGetValueMethod(Type type, out MethodInfo tryGetValueMethod)
         {
-            if (InlineTypes.TryGetValue(type, out var entry))
+            if (InlineTypes.TryGetValue(type, out InlineTypeEntry entry))
             {
                 tryGetValueMethod = entry.TryGetValueMethodInfo;
                 return true;
@@ -777,7 +820,7 @@ namespace Bssom.Serializer.Internal
 
         public static bool TryGetInlineTryGetValueSlowMethod(Type type, out MethodInfo tryGetValueSlowMethod)
         {
-            if (InlineTypes.TryGetValue(type, out var entry))
+            if (InlineTypes.TryGetValue(type, out InlineTypeEntry entry))
             {
                 tryGetValueSlowMethod = entry.TryGetValueSlowMethodInfo;
                 return true;
@@ -788,12 +831,17 @@ namespace Bssom.Serializer.Internal
 
         public static bool TryGetSerializeWriteExpression(Expression element, Type type, out Expression writeExpression)
         {
-            if (InlineTypes.TryGetValue(type, out var entry))
+            if (InlineTypes.TryGetValue(type, out InlineTypeEntry entry))
             {
                 if (type == typeof(DateTime))
+                {
                     writeExpression = CommonExpressionMeta.Call_WriteDateTime(element);
+                }
                 else
+                {
                     writeExpression = CommonExpressionMeta.Call_Write(element);
+                }
+
                 return true;
             }
             writeExpression = default;
@@ -802,7 +850,7 @@ namespace Bssom.Serializer.Internal
 
         public static bool TryGetDeserializeReadExpression(Type type, out Expression writeExpression)
         {
-            if (InlineTypes.TryGetValue(type, out var entry))
+            if (InlineTypes.TryGetValue(type, out InlineTypeEntry entry))
             {
                 writeExpression = CommonExpressionMeta.Call_Read(entry.TypeName);
                 return true;
@@ -813,12 +861,17 @@ namespace Bssom.Serializer.Internal
 
         public static bool TryGetSizeExpression(Expression element, Type type, out Expression sizeExpression)
         {
-            if (InlineTypes.TryGetValue(type, out var entry))
+            if (InlineTypes.TryGetValue(type, out InlineTypeEntry entry))
             {
                 if (type == typeof(DateTime))
+                {
                     sizeExpression = CommonExpressionMeta.Call_DateTimeSize();
+                }
                 else
+                {
                     sizeExpression = Expression.Constant(entry.Size);
+                }
+
                 return true;
             }
             sizeExpression = default;
@@ -837,9 +890,9 @@ namespace Bssom.Serializer.Internal
 
         private static Expression BuildSerializeCore(Type type, ObjectSerializationInfo serializationInfo, ParameterExpression instance, Expression mapBufferField, out byte[] mapBuffer)
         {
-            var bw = ExpandableBufferWriter.CreateTemporary();
-            var cw = new BssomWriter(bw);
-            var valueMapOffsets = new BssMapObjMarshal<SerializeMemberInfo>(serializationInfo.GetLittle64MemberInfoRows()).WriteHeader(ref cw);
+            ExpandableBufferWriter bw = ExpandableBufferWriter.CreateTemporary();
+            BssomWriter cw = new BssomWriter(bw);
+            Queue<KeyValuePair<int, SerializeMemberInfo>> valueMapOffsets = new BssMapObjMarshal<SerializeMemberInfo>(serializationInfo.GetLittle64MemberInfoRows()).WriteHeader(ref cw);
             mapBuffer = bw.GetBufferedArray();
 
             List<Expression> ary = new List<Expression>();
@@ -877,11 +930,11 @@ namespace Bssom.Serializer.Internal
                 //startPos = writer.Pos - mapBuffer.Length;
                 ary.Add(Expression.Assign(startPos, Expression.Subtract(CommonExpressionMeta.Field_WriterPos, Expression.Constant((long)mapBuffer.Length))));
 
-                var memFormatters = serializationInfo.StoreMemberFormatterInstances();
+                FieldInfo memFormatters = serializationInfo.StoreMemberFormatterInstances();
                 int n = 0;
                 while (valueMapOffsets.Count > 0)
                 {
-                    var mem = valueMapOffsets.Dequeue();
+                    KeyValuePair<int, SerializeMemberInfo> mem = valueMapOffsets.Dequeue();
 
                     //entry{n}.ValueOffset = (uint)(writer.Pos - startPos);
                     ary.Add(Expression.Assign(Expression.Field(variables[n], BssMapWriteBackEntry._ValueOffset), Expression.Convert(Expression.Subtract(CommonExpressionMeta.Field_WriterPos, startPos), typeof(uint))));
@@ -891,9 +944,13 @@ namespace Bssom.Serializer.Internal
 
                     MemberExpression ele;
                     if (mem.Value.Member is FieldInfo f)
+                    {
                         ele = Expression.Field(instance, f);
+                    }
                     else
+                    {
                         ele = Expression.Property(instance, (PropertyInfo)mem.Value.Member);
+                    }
 
                     if (mem.Value.FormatterAttribute != null)
                     {
@@ -945,7 +1002,7 @@ namespace Bssom.Serializer.Internal
 
         public static Expression<Map1FormatterDeserialize<T>> BuildMap1FormatterDeserializeLambda<T>(ObjectSerializationInfo serializationInfo)
         {
-            var instance = Expression.Parameter(typeof(T).MakeByRefType(), "instance");
+            ParameterExpression instance = Expression.Parameter(typeof(T).MakeByRefType(), "instance");
             return Expression.Lambda<Map1FormatterDeserialize<T>>(BuildMap1FormatterDeserializeCore(serializationInfo, instance), CommonExpressionMeta.Par_DeserializeContext, CommonExpressionMeta.Par_Reader, instance);
         }
 
@@ -954,13 +1011,13 @@ namespace Bssom.Serializer.Internal
             List<Expression> ary = new List<Expression>();
 
             //ulong key;
-            var key = Expression.Variable(typeof(ulong), "key");
+            ParameterExpression key = Expression.Variable(typeof(ulong), "key");
             //int num;
-            var num = Expression.Variable(typeof(int), "num");
+            ParameterExpression num = Expression.Variable(typeof(int), "num");
             //int len;
-            var len = Expression.Variable(typeof(int), "len");
+            ParameterExpression len = Expression.Variable(typeof(int), "len");
             //int for-i;
-            var forVariable = Expression.Variable(typeof(int), "i");
+            ParameterExpression forVariable = Expression.Variable(typeof(int), "i");
 
             //reader.SkipVariableNumber()
             ary.Add(CommonExpressionMeta.Call_Reader_SkipVariableNumber);
@@ -980,12 +1037,12 @@ namespace Bssom.Serializer.Internal
             //          reader.SeekAndSkipObject(len);
             //          goto Incre;
             //    }
-            var seekLabel = Expression.Label("seekAndSkip");
-            var increLabel = Expression.Label("increment");
-            var breakLabel = Expression.Label("LoopBreak");
-            var continueLabel = Expression.Label("continue");
-            var ap = new BssMapObjMarshal<SerializeMemberInfo>(serializationInfo.GetRaw64MemberInfoRows());
-            var body = Expression.IfThenElse(
+            LabelTarget seekLabel = Expression.Label("seekAndSkip");
+            LabelTarget increLabel = Expression.Label("increment");
+            LabelTarget breakLabel = Expression.Label("LoopBreak");
+            LabelTarget continueLabel = Expression.Label("continue");
+            BssMapObjMarshal<SerializeMemberInfo> ap = new BssMapObjMarshal<SerializeMemberInfo>(serializationInfo.GetRaw64MemberInfoRows());
+            ConditionalExpression body = Expression.IfThenElse(
                 Expression.LessThan(forVariable, num),
                 Expression.Block(
                     Expression.Assign(len, CommonExpressionMeta.Call_ReaderGetMapStringKeyLength),
@@ -1005,19 +1062,19 @@ namespace Bssom.Serializer.Internal
         private static Expression BuildMap1FormatterDeserializeCore_ReadBranch(ParameterExpression instance, ParameterExpression len, ParameterExpression key, LabelTarget skip, ObjectSerializationInfo serializationInfo, BssMapObjMarshal<SerializeMemberInfo>.Entry[] entries, int start, int entryLength)
         {
             //key = reader.ReadRaw64(ref len);
-            var readRaw = Expression.Assign(key, CommonExpressionMeta.Call_Reader_ReadRaw64Ref(len));
+            BinaryExpression readRaw = Expression.Assign(key, CommonExpressionMeta.Call_Reader_ReadRaw64Ref(len));
             if (entryLength == 0)
             {
                 return Expression.Block(readRaw, Expression.Goto(skip));
             }
 
             Expression combin;
-            var zeroGroup = entries.Skip(start).Take(entryLength).GroupBy(e => e.IsKey);
-            var childrenGroup = entries.Skip(start).Take(entryLength).GroupBy(e => e.Chidlerns == null);
+            IEnumerable<IGrouping<bool, BssMapObjMarshal<SerializeMemberInfo>.Entry>> zeroGroup = entries.Skip(start).Take(entryLength).GroupBy(e => e.IsKey);
+            IEnumerable<IGrouping<bool, BssMapObjMarshal<SerializeMemberInfo>.Entry>> childrenGroup = entries.Skip(start).Take(entryLength).GroupBy(e => e.Chidlerns == null);
 
             if (zeroGroup.Where(e => e.Key).Any())
             {
-                var up = zeroGroup.Where(e => e.Key).First().ToArray();
+                BssMapObjMarshal<SerializeMemberInfo>.Entry[] up = zeroGroup.Where(e => e.Key).First().ToArray();
                 bool isMoveDown = up.Where(e => e.Chidlerns != null).Count() > 0;
                 /*
                     (false) -  (true)  -  (true)
@@ -1041,7 +1098,7 @@ namespace Bssom.Serializer.Internal
                     up[i] = up[i].Clone().WithNotChildren();
                 }
 
-                var ifZero = BuildMap1FormatterDeserializeCore_SwtichCase(instance, len, key, skip, serializationInfo, up, 0, up.Length);
+                Expression ifZero = BuildMap1FormatterDeserializeCore_SwtichCase(instance, len, key, skip, serializationInfo, up, 0, up.Length);
 
                 if (up.Length == entryLength && !isMoveDown)
                 {
@@ -1058,7 +1115,7 @@ namespace Bssom.Serializer.Internal
                     //else
                     //   switch()
                     //      case...
-                    var childrens = childrenGroup.Where(e => !e.Key).First().ToArray();
+                    BssMapObjMarshal<SerializeMemberInfo>.Entry[] childrens = childrenGroup.Where(e => !e.Key).First().ToArray();
                     for (int i = 0; i < childrens.Length; i++)
                     {
                         childrens[i] = childrens[i].Clone().WithNotKey();
@@ -1072,7 +1129,7 @@ namespace Bssom.Serializer.Internal
                 //swtich
                 //  case ...
                 //  default...
-                var down = zeroGroup.Where(e => !e.Key).First().ToArray();
+                BssMapObjMarshal<SerializeMemberInfo>.Entry[] down = zeroGroup.Where(e => !e.Key).First().ToArray();
                 combin = BuildMap1FormatterDeserializeCore_SwtichCase(instance, len, key, skip, serializationInfo, down, 0, down.Length);
             }
 
@@ -1106,12 +1163,16 @@ namespace Bssom.Serializer.Internal
 
             if (entry.IsKey)
             {
-                var memFormatters = serializationInfo.StoreMemberFormatterInstances();
+                FieldInfo memFormatters = serializationInfo.StoreMemberFormatterInstances();
                 MemberExpression ele;
                 if (entry.Value.Member is FieldInfo f)
+                {
                     ele = Expression.Field(instance, f);
+                }
                 else
+                {
                     ele = Expression.Property(instance, (PropertyInfo)entry.Value.Member);
+                }
 
                 if (entry.Value.FormatterAttribute != null)
                 {
@@ -1161,17 +1222,21 @@ namespace Bssom.Serializer.Internal
                 ary.Add(CommonExpressionMeta.Block_IfNullSize(instance, type, returnTarget));
             }
 
-            var size = Expression.Variable(typeof(int));
-            var memFormatters = serializationInfo.StoreMemberFormatterInstances();
-            var mems = serializationInfo.SerializeMemberInfos;
+            ParameterExpression size = Expression.Variable(typeof(int));
+            FieldInfo memFormatters = serializationInfo.StoreMemberFormatterInstances();
+            SerializeMemberInfo[] mems = serializationInfo.SerializeMemberInfos;
             for (int i = 0; i < mems.Length; i++)
             {
-                var mem = mems[i];
+                SerializeMemberInfo mem = mems[i];
                 MemberExpression ele;
                 if (mem.Member is FieldInfo f)
+                {
                     ele = Expression.Field(instance, f);
+                }
                 else
+                {
                     ele = Expression.Property(instance, (PropertyInfo)mem.Member);
+                }
 
                 if (mem.FormatterAttribute != null)
                 {

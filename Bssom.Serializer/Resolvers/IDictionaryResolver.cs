@@ -1,19 +1,13 @@
-﻿using Bssom.Serializer.Binary;
-using Bssom.Serializer.BssomBuffer;
-using Bssom.Serializer.Resolvers;
-using System;
-using System.Collections;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Threading;
-using System.Linq.Expressions;
-using Bssom.Serializer.BssMap;
+﻿using Bssom.Serializer.BssMap;
 using Bssom.Serializer.BssMap.KeyResolvers;
 using Bssom.Serializer.Formatters;
 using Bssom.Serializer.Internal;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Reflection.Emit;
 
 namespace Bssom.Serializer.Resolvers
 {
@@ -58,16 +52,22 @@ namespace Bssom.Serializer.Resolvers
 
                 if (TypeIsDictionary(t, out ConstructorInfo constructor, out bool typeIsGeneric, out Type genericTypeDefinition, out Type genericKeyType, out Type genericValueType))
                 {
-                    if (typeIsGeneric && genericKeyType != typeof(object) && !BssMapKeyResolverProvider.TryGetBssMapKeyResolver(genericKeyType, out var keyConvert))
+                    if (typeIsGeneric && genericKeyType != typeof(object) && !BssMapKeyResolverProvider.TryGetBssMapKeyResolver(genericKeyType, out IBssMapKeyResolver keyConvert))
+                    {
                         return;// throw BssomSerializationException.MapKeyTypeError();
+                    }
 
                     TypeInfo buildType;
                     if (typeIsGeneric)
                     {
                         if (t.IsInterface)
+                        {
                             buildType = IDictionaryFormatterTypeBuilder.BuildGenericIDictionaryInterfaceType(DynamicAssembly, t, genericTypeDefinition, genericKeyType, genericValueType);
+                        }
                         else
+                        {
                             buildType = IDictionaryFormatterTypeBuilder.BuildGenericIDictionaryImplementationType(DynamicAssembly, constructor, t, genericKeyType, genericValueType);
+                        }
                     }
                     else
                     {
@@ -124,7 +124,7 @@ namespace Bssom.Serializer.Resolvers
                 {
                     constructor = t.GetAppointTypeCtor(typeof(int));
                     typeIsGeneric = true;
-                    var args = t.GetGenericArguments();
+                    Type[] args = t.GetGenericArguments();
                     genericKeyType = args[0];
                     genericValueType = args[1];
                     return true;
@@ -132,7 +132,7 @@ namespace Bssom.Serializer.Resolvers
             }
 
             IEnumerable<Type> intserfaces = t.GetInterfaces();
-            foreach (var item in intserfaces)
+            foreach (Type item in intserfaces)
             {
                 if (item.IsGenericType)
                 {
@@ -141,7 +141,7 @@ namespace Bssom.Serializer.Resolvers
                         genericTypeDefinition == typeof(IReadOnlyDictionary<,>))
                     {
                         genericType = item;
-                        var args = item.GetGenericArguments();
+                        Type[] args = item.GetGenericArguments();
                         genericKeyType = args[0];
                         genericValueType = args[1];
                         hasIDictionaryGeneric = true;
@@ -149,7 +149,9 @@ namespace Bssom.Serializer.Resolvers
                     }
                 }
                 else if (item == typeof(IDictionary))
+                {
                     hasIDictionary = true;
+                }
             }
 
             if (hasIDictionaryGeneric)
@@ -168,7 +170,9 @@ namespace Bssom.Serializer.Resolvers
             {
                 constructor = t.GetDefaultNoArgCtorOrAppointTypeCtor(typeof(IDictionary));
                 if (constructor != null)
+                {
                     return true;
+                }
             }
 
             return false;
@@ -177,9 +181,9 @@ namespace Bssom.Serializer.Resolvers
         private static bool TryGetConstructorInfo(Type targetType, Type genericKeyType, Type genericValueType, bool isFindEmptyCtor, out ConstructorInfo constructor)
         {
             constructor = null;
-            foreach (var item in targetType.GetConstructors())
+            foreach (ConstructorInfo item in targetType.GetConstructors())
             {
-                var paras = item.GetParameters();
+                ParameterInfo[] paras = item.GetParameters();
 
                 if (isFindEmptyCtor)
                 {
@@ -191,14 +195,17 @@ namespace Bssom.Serializer.Resolvers
                 }
 
                 if (constructor != null)
+                {
                     continue;
+                }
 
                 if (paras.Length == 1)
                 {
-                    var ctorArgType = paras[0].ParameterType;
+                    Type ctorArgType = paras[0].ParameterType;
                     if (targetType == ctorArgType)
+                    {
                         continue;
-
+                    }
 
                     if (TypeIsDictionary(ctorArgType, out ConstructorInfo cons, out bool tIsGener, out Type generTypeDefine, out Type generKeyType, out Type generValueType))
                     {
@@ -207,7 +214,9 @@ namespace Bssom.Serializer.Resolvers
                         {
                             constructor = item;
                             if (!isFindEmptyCtor)
+                            {
                                 return true;
+                            }
                         }
                     }
                 }
@@ -243,7 +252,7 @@ namespace Bssom.Serializer.Internal
             }
 
             MethodBuilder sizeMethod = TypeBuildHelper.DefineSizeMethod(typeBuilder, type);
-            TypeBuildHelper.CallOneMethodInSize(sizeMethod, typeof(MapFormatterHelper).GetMethod(nameof(MapFormatterHelper.SizeGenericDictionary), BindingFlags.Public | BindingFlags.Static).MakeGenericMethod(genericKeyType,genericValueType));
+            TypeBuildHelper.CallOneMethodInSize(sizeMethod, typeof(MapFormatterHelper).GetMethod(nameof(MapFormatterHelper.SizeGenericDictionary), BindingFlags.Public | BindingFlags.Static).MakeGenericMethod(genericKeyType, genericValueType));
 
 
             return typeBuilder.CreateTypeInfo();
@@ -258,11 +267,11 @@ namespace Bssom.Serializer.Internal
             TypeBuildHelper.CallOneMethodInSerialize(serializeMethod, typeof(MapFormatterHelper).GetMethod(nameof(MapFormatterHelper.SerializeGenericDictionary), BindingFlags.Public | BindingFlags.Static).MakeGenericMethod(new Type[] { genericKeyType, genericValueType }));
 
             MethodBuilder deserializeMethod = TypeBuildHelper.DefineDeserializeMethod(typeBuilder, type);
-            var args = constructor.GetParameters();
+            ParameterInfo[] args = constructor.GetParameters();
             Type dynamicCacheType = typeof(IDictionaryDynamicDelegateCache<>).MakeGenericType(type);
             if (args.Length == 0)
             {
-                var methodinfo = dynamicCacheType.GetMethod(nameof(IDictionaryDynamicDelegateCache<int>.GenerateDeserializeWithGenericDictEmptyCtor));
+                MethodInfo methodinfo = dynamicCacheType.GetMethod(nameof(IDictionaryDynamicDelegateCache<int>.GenerateDeserializeWithGenericDictEmptyCtor));
                 methodinfo.Invoke(null, new object[] { constructor, genericKeyType, genericValueType });
             }
             else
@@ -270,12 +279,12 @@ namespace Bssom.Serializer.Internal
                 DEBUG.Assert(args.Length == 1);
                 if (args[0].ParameterType == typeof(int))
                 {
-                    var methodinfo = dynamicCacheType.GetMethod(nameof(IDictionaryDynamicDelegateCache<int>.GenerateDeserializeWithGenericDictCapacityCtor));
+                    MethodInfo methodinfo = dynamicCacheType.GetMethod(nameof(IDictionaryDynamicDelegateCache<int>.GenerateDeserializeWithGenericDictCapacityCtor));
                     methodinfo.Invoke(null, new object[] { constructor, genericKeyType, genericValueType });
                 }
                 else
                 {
-                    var methodinfo = dynamicCacheType.GetMethod(nameof(IDictionaryDynamicDelegateCache<int>.GenerateInjectCtor));
+                    MethodInfo methodinfo = dynamicCacheType.GetMethod(nameof(IDictionaryDynamicDelegateCache<int>.GenerateInjectCtor));
                     methodinfo.Invoke(null, new object[] { constructor, args[0].ParameterType });
                 }
             }
@@ -296,7 +305,7 @@ namespace Bssom.Serializer.Internal
             TypeBuildHelper.CallOneMethodInSerialize(serializeMethod, typeof(MapFormatterHelper).GetMethod(nameof(MapFormatterHelper.SerializeIDictionary), BindingFlags.Public | BindingFlags.Static));
 
             MethodBuilder deserializeMethod = TypeBuildHelper.DefineDeserializeMethod(typeBuilder, type);
-            var args = constructor.GetParameters();
+            ParameterInfo[] args = constructor.GetParameters();
             Type dynamicCacheType = typeof(IDictionaryDynamicDelegateCache<>).MakeGenericType(type);
 
             if (args.Length == 1)
@@ -304,12 +313,12 @@ namespace Bssom.Serializer.Internal
                 DEBUG.Assert(args[0].ParameterType == typeof(IDictionary));
 
                 //return new T(IDictionaryFormatter.Deserialize)
-                var methodinfo = dynamicCacheType.GetMethod(nameof(IDictionaryDynamicDelegateCache<int>.GenerateInjectCtor));
+                MethodInfo methodinfo = dynamicCacheType.GetMethod(nameof(IDictionaryDynamicDelegateCache<int>.GenerateInjectCtor));
                 methodinfo.Invoke(null, new object[] { constructor, args[0].ParameterType });
             }
             else
             {
-                var methodinfo = dynamicCacheType.GetMethod(nameof(IDictionaryDynamicDelegateCache<int>.GenerateDeserializeWithIDictionaryEmptyCtor));
+                MethodInfo methodinfo = dynamicCacheType.GetMethod(nameof(IDictionaryDynamicDelegateCache<int>.GenerateDeserializeWithIDictionaryEmptyCtor));
                 methodinfo.Invoke(null, new object[] { });
             }
             TypeBuildHelper.CallDeserializeDelegate(deserializeMethod, type, dynamicCacheType.GetField(nameof(IDictionaryDynamicDelegateCache<int>.Deserialize), BindingFlags.Public | BindingFlags.Static));
@@ -351,9 +360,9 @@ namespace Bssom.Serializer.Internal
             */
 
             ArrayPack<Expression> ary = new ArrayPack<Expression>(10);
-            var t = typeof(T);
+            Type t = typeof(T);
             LabelTarget returnTarget = Expression.Label(t, "returnLable");
-            var map = Expression.Variable(typeof(IMapDataSource<,>).MakeGenericType(keyType, valueType));
+            ParameterExpression map = Expression.Variable(typeof(IMapDataSource<,>).MakeGenericType(keyType, valueType));
             //map = MapFormatterHelper.Deserialize(ref reader,ref context);
             ary.Add(Expression.Assign(map, CommonExpressionMeta.Call_MapFormatterHelper_Deserialize(keyType, valueType)));
             //if (map == null)
@@ -378,7 +387,7 @@ namespace Bssom.Serializer.Internal
             //label default(T)
             ary.Add(Expression.Label(returnTarget, instance));
 
-            var block = Expression.Block(new ParameterExpression[] { map, instance }, ary.GetArray());
+            BlockExpression block = Expression.Block(new ParameterExpression[] { map, instance }, ary.GetArray());
             Deserialize = Expression.Lambda<Deserialize<T>>(block, CommonExpressionMeta.Par_Reader, CommonExpressionMeta.Par_DeserializeContext).Compile();
         }
 
@@ -398,9 +407,9 @@ namespace Bssom.Serializer.Internal
            */
 
             ArrayPack<Expression> ary = new ArrayPack<Expression>(10);
-            var t = typeof(T);
+            Type t = typeof(T);
             LabelTarget returnTarget = Expression.Label(t, "returnLable");
-            var map = Expression.Variable(typeof(IMapDataSource<,>).MakeGenericType(typeof(object), typeof(object)));
+            ParameterExpression map = Expression.Variable(typeof(IMapDataSource<,>).MakeGenericType(typeof(object), typeof(object)));
             //map = MapFormatterHelper.Deserialize(ref reader,ref context);
             ary.Add(Expression.Assign(map, CommonExpressionMeta.Call_MapFormatterHelper_Deserialize(typeof(object), typeof(object))));
             //if (map == null)
@@ -425,7 +434,7 @@ namespace Bssom.Serializer.Internal
             //label default(T)
             ary.Add(Expression.Label(returnTarget, instance));
 
-            var block = Expression.Block(new ParameterExpression[] { map, instance }, ary.GetArray());
+            BlockExpression block = Expression.Block(new ParameterExpression[] { map, instance }, ary.GetArray());
             Deserialize = Expression.Lambda<Deserialize<T>>(block, CommonExpressionMeta.Par_Reader, CommonExpressionMeta.Par_DeserializeContext).Compile();
         }
 

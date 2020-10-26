@@ -1,14 +1,8 @@
-﻿using Bssom.Serializer.BssMap.KeyResolvers;
-using Bssom.Serializer.Internal;
-using Bssom.Serializer.BssomBuffer;
-using Bssom.Serializer.Resolvers;
+﻿using Bssom.Serializer.Binary;
+using Bssom.Serializer.BssMap;
 using System;
-using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using Bssom.Serializer.Binary;
-using Bssom.Serializer.BssMap;
 
 
 namespace Bssom.Serializer.Internal
@@ -16,48 +10,48 @@ namespace Bssom.Serializer.Internal
     internal static class CommonExpressionMeta
     {
         //Parameter: ref BssomReader reader
-        public readonly static ParameterExpression Par_Reader;
+        public static readonly ParameterExpression Par_Reader;
         //Parameter: ref BssomWriter writer
-        public readonly static ParameterExpression Par_Writer;
+        public static readonly ParameterExpression Par_Writer;
 
-        public readonly static MethodInfo Type_Buffer_Seek;
-        public readonly static PropertyInfo Type_Reader_Buffer;
+        public static readonly MethodInfo Type_Buffer_Seek;
+        public static readonly PropertyInfo Type_Reader_Buffer;
         //Field: reader.Buffer
-        public readonly static Expression Field_ReaderBuffer;
+        public static readonly Expression Field_ReaderBuffer;
         //Field: writer.BufferWriter
-        public readonly static Expression Field_WriterBufferWriter;
+        public static readonly Expression Field_WriterBufferWriter;
 
         //Parameter: ref BssomSerializeContext context
-        public readonly static ParameterExpression Par_SerializeContext;
+        public static readonly ParameterExpression Par_SerializeContext;
         //Parameter: ref BssomDeserializeContext context
-        public readonly static ParameterExpression Par_DeserializeContext;
+        public static readonly ParameterExpression Par_DeserializeContext;
         //Parameter: ref BssomSizeContext context
-        public readonly static ParameterExpression Par_SizeContext;
+        public static readonly ParameterExpression Par_SizeContext;
 
-        public readonly static PropertyInfo Type_SerializeContext_Option;
-        public readonly static PropertyInfo Type_DeserializeContext_Option;
-        public readonly static PropertyInfo Type_SizeContext_Option;
+        public static readonly PropertyInfo Type_SerializeContext_Option;
+        public static readonly PropertyInfo Type_DeserializeContext_Option;
+        public static readonly PropertyInfo Type_SizeContext_Option;
 
         //Field: serializeContext.Option
-        public readonly static Expression Field_SerializeContext_Option;
+        public static readonly Expression Field_SerializeContext_Option;
         //Field: dserializeContext.Option
-        public readonly static Expression Field_DeserializeContext_Option;
+        public static readonly Expression Field_DeserializeContext_Option;
         //Field: sizeContext.Option
-        public readonly static Expression Field_SizeContext_Option;
+        public static readonly Expression Field_SizeContext_Option;
 
         //Type: option.Security
-        public readonly static PropertyInfo Type_OptionSecurity;
+        public static readonly PropertyInfo Type_OptionSecurity;
         //Type: option.Security.DepthStep
-        public readonly static MethodInfo Type_OptionSecurity_DepthStep;
+        public static readonly MethodInfo Type_OptionSecurity_DepthStep;
         //Field: dserializeContext.Option.Security
-        public readonly static MemberExpression Field_DeserializeContext_Option_Security;
+        public static readonly MemberExpression Field_DeserializeContext_Option_Security;
         //Call: deserContext.option.Security.DepthStep(ref reader)
-        public readonly static Expression Call_DeserializeContext_Option_Security_DepthStep;
+        public static readonly Expression Call_DeserializeContext_Option_Security_DepthStep;
 
         //Type: dserializeContext.Depth
-        public readonly static PropertyInfo Type_DeserializeContext_Depth;
+        public static readonly PropertyInfo Type_DeserializeContext_Depth;
         //Call: context.Depth--;
-        public readonly static Expression Call_DeserializeContext_Depth_DecrementAssign;
+        public static readonly Expression Call_DeserializeContext_Depth_DecrementAssign;
 
         //Field: deserializeContext.Option.Resolver
         public static readonly Expression DeserializeContextOptionResolver;
@@ -67,43 +61,43 @@ namespace Bssom.Serializer.Internal
         public static readonly Expression SizeContextOptionResolver;
 
         //Field: serializeContext.option.IsUseStandardDateTime
-        public readonly static Expression Field_SerializeOption_IsUseStandardDateTime;
+        public static readonly Expression Field_SerializeOption_IsUseStandardDateTime;
         //Field: sizeContext.option.IsUseStandardDateTime
-        public readonly static Expression Field_SizeOption_IsUseStandardDateTime;
+        public static readonly Expression Field_SizeOption_IsUseStandardDateTime;
 
         //Filed: writer.Posting
-        public readonly static MemberExpression Field_WriterPos;
+        public static readonly MemberExpression Field_WriterPos;
         //Type: reader.TryReadNull
-        public readonly static MethodInfo Type_TryReadNull;
+        public static readonly MethodInfo Type_TryReadNull;
         //Type: reader.SkipBlankCharacterAndReadBssomType()
-        public readonly static MethodInfo Type_SkipBlankCharacterAndReadBssomType;
+        public static readonly MethodInfo Type_SkipBlankCharacterAndReadBssomType;
         //Call: reader.TryReadNull()
-        public readonly static Expression Call_Reader_TryReadNull;
+        public static readonly Expression Call_Reader_TryReadNull;
 
         //Call: reader.ReadVariableNumber()
-        public readonly static Expression Call_Reader_ReadVariableNumber;
+        public static readonly Expression Call_Reader_ReadVariableNumber;
         //Call: reader.SkipVariableNumber()
-        public readonly static Expression Call_Reader_SkipVariableNumber;
+        public static readonly Expression Call_Reader_SkipVariableNumber;
         //Call: writer.WriteNull();
-        public readonly static Expression Call_Writer_WriteNull;
+        public static readonly Expression Call_Writer_WriteNull;
 
         //Type: MapHeadPackInfo.Create()
-        public readonly static MethodInfo Type_MapHeadPackInfo_Create;
+        public static readonly MethodInfo Type_MapHeadPackInfo_Create;
         //Type: MapHeadPackInfo.DataEndPosition
-        public readonly static PropertyInfo Type_MapHeadPackInfo_DataEndPosition;
+        public static readonly PropertyInfo Type_MapHeadPackInfo_DataEndPosition;
         //Type: MapHeadPackInfo.MapHead
-        public readonly static FieldInfo Type_MapHeadPackInfo_MapHead;
+        public static readonly FieldInfo Type_MapHeadPackInfo_MapHead;
         //Type: MapHead.Count
-        public readonly static FieldInfo Type_MapHead_Count;
+        public static readonly FieldInfo Type_MapHead_Count;
         //Type: MapHead.RouteLength
-        public readonly static FieldInfo Type_MapHead_RouteLength;
+        public static readonly FieldInfo Type_MapHead_RouteLength;
         //Type: Buffer.TryReadFixedRef()
-        public readonly static MethodInfo Type_Buffer_TryReadFixedRef;
+        public static readonly MethodInfo Type_Buffer_TryReadFixedRef;
         //Type: Buffer.UnFixed()
-        public readonly static MethodInfo Type_Buffer_UnFixed;
+        public static readonly MethodInfo Type_Buffer_UnFixed;
 
         //Call: reader.GetMapStringKeyLength();
-        public readonly static Expression Call_ReaderGetMapStringKeyLength;
+        public static readonly Expression Call_ReaderGetMapStringKeyLength;
 
 
 
@@ -118,7 +112,7 @@ namespace Bssom.Serializer.Internal
             Type_Buffer_Seek = typeof(IBssomBuffer).GetMethod(nameof(IBssomBuffer.Seek));
             Type_Reader_Buffer = typeof(BssomReader).GetProperty(nameof(BssomReader.BssomBuffer));
             Field_ReaderBuffer = Expression.Property(Par_Reader, Type_Reader_Buffer);
-            var Type_Writer_Buffer = typeof(BssomWriter).GetProperty(nameof(BssomWriter.BufferWriter));
+            PropertyInfo Type_Writer_Buffer = typeof(BssomWriter).GetProperty(nameof(BssomWriter.BufferWriter));
             Field_WriterBufferWriter = Expression.Property(Par_Writer, Type_Writer_Buffer);
 
             Par_SerializeContext = Expression.Parameter(typeof(BssomSerializeContext).MakeByRefType());
@@ -144,7 +138,7 @@ namespace Bssom.Serializer.Internal
             Type_DeserializeContext_Depth = typeof(BssomDeserializeContext).GetProperty(nameof(BssomDeserializeContext.Depth));
             Call_DeserializeContext_Depth_DecrementAssign = Expression.PreDecrementAssign(Expression.Property(Par_DeserializeContext, Type_DeserializeContext_Depth));
 
-            var optionResolverType = typeof(BssomSerializerOptions).GetProperty(nameof(BssomSerializerOptions.FormatterResolver));
+            PropertyInfo optionResolverType = typeof(BssomSerializerOptions).GetProperty(nameof(BssomSerializerOptions.FormatterResolver));
             DeserializeContextOptionResolver = Expression.Property(Field_DeserializeContext_Option, optionResolverType);
             SerializeContextOptionResolver = Expression.Property(Field_SerializeContext_Option, optionResolverType);
             SizeContextOptionResolver = Expression.Property(Field_SizeContext_Option, optionResolverType);
@@ -271,7 +265,7 @@ namespace Bssom.Serializer.Internal
         //Call: BssomBinaryPrimitives.DateTimeSize(val);
         public static Expression Call_DateTimeSize()
         {
-            return Expression.Call(null, typeof(BssomBinaryPrimitives).GetMethod(nameof(BssomBinaryPrimitives.DateTimeSize)),  Field_SizeOption_IsUseStandardDateTime);
+            return Expression.Call(null, typeof(BssomBinaryPrimitives).GetMethod(nameof(BssomBinaryPrimitives.DateTimeSize)), Field_SizeOption_IsUseStandardDateTime);
         }
 
         //Call: reader.Read{TypeName}(val);
@@ -296,7 +290,7 @@ namespace Bssom.Serializer.Internal
         //Call: writer.WriteBuildInType(val);
         public static Expression Call_WriteBuildInType(Expression value)
         {
-            return Expression.Call(Par_Writer, typeof(BssomWriter).GetMethod(nameof(BssomWriter.WriteBuildInType),new Type[] { value.Type }), value);
+            return Expression.Call(Par_Writer, typeof(BssomWriter).GetMethod(nameof(BssomWriter.WriteBuildInType), new Type[] { value.Type }), value);
             //return Expression.Call(Par_Writer, typeof(BssomWriter).GetMethod(nameof(BssomWriter.WriteBuildInType), instanceAndInternalFlag, null, new Type[] { value.Type }, null), value);
         }
 

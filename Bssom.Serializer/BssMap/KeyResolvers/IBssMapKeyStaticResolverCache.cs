@@ -8,10 +8,14 @@ namespace Bssom.Serializer.BssMap.KeyResolvers
 
         static IBssMapKeyStaticResolverCache()
         {
-            if (BssMapKeyResolverProvider.TryGetBssMapKeyResolver(typeof(T), out var convertor))
+            if (BssMapKeyResolverProvider.TryGetBssMapKeyResolver(typeof(T), out IBssMapKeyResolver convertor))
+            {
                 Instance = (IBssMapKeyResolver<T>)convertor;
+            }
             else
+            {
                 BssomSerializationTypeFormatterException.BssomMapKeyUnsupportedType(typeof(T));
+            }
         }
     }
 }

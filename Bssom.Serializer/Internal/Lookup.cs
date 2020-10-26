@@ -12,42 +12,30 @@ namespace Bssom.Serializer.Internal
 
         public Lookup(IEnumerable<IGrouping<TKey, TElement>> elements)
         {
-            this.groupings = new Dictionary<TKey, IGrouping<TKey, TElement>>();
-            foreach (var item in elements)
+            groupings = new Dictionary<TKey, IGrouping<TKey, TElement>>();
+            foreach (IGrouping<TKey, TElement> item in elements)
             {
                 groupings.Add(item.Key, item);
             }
         }
 
-        public IEnumerable<TElement> this[TKey key]
-        {
-            get
-            {
-                return this.groupings[key];
-            }
-        }
+        public IEnumerable<TElement> this[TKey key] => groupings[key];
 
-        public int Count
-        {
-            get
-            {
-                return this.groupings.Count;
-            }
-        }
+        public int Count => groupings.Count;
 
         public bool Contains(TKey key)
         {
-            return this.groupings.ContainsKey(key);
+            return groupings.ContainsKey(key);
         }
 
         public IEnumerator<IGrouping<TKey, TElement>> GetEnumerator()
         {
-            return this.groupings.Values.GetEnumerator();
+            return groupings.Values.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.groupings.Values.GetEnumerator();
+            return groupings.Values.GetEnumerator();
         }
     }
 }

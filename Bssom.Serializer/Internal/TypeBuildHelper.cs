@@ -14,7 +14,7 @@ namespace Bssom.Serializer.Internal
               methodName ?? nameof(IBssomFormatter<int>.Serialize),
                MethodAttributes.Public | MethodAttributes.Final | MethodAttributes.Virtual,
                returnType: null,
-               parameterTypes: new Type[] { typeof(BssomWriter).MakeByRefType(),  typeof(BssomSerializeContext).MakeByRefType(), type });
+               parameterTypes: new Type[] { typeof(BssomWriter).MakeByRefType(), typeof(BssomSerializeContext).MakeByRefType(), type });
             method.DefineParameter(1, ParameterAttributes.None, "writer");
             method.DefineParameter(2, ParameterAttributes.None, "context");
             method.DefineParameter(3, ParameterAttributes.None, "value");
@@ -27,7 +27,7 @@ namespace Bssom.Serializer.Internal
               methodName ?? nameof(IBssomFormatter<int>.Serialize),
                MethodAttributes.Public | MethodAttributes.Static,
                returnType: null,
-               parameterTypes: new Type[] { typeof(BssomWriter).MakeByRefType(), typeof(BssomSerializeContext).MakeByRefType(), type  });
+               parameterTypes: new Type[] { typeof(BssomWriter).MakeByRefType(), typeof(BssomSerializeContext).MakeByRefType(), type });
             method.DefineParameter(1, ParameterAttributes.None, "writer");
             method.DefineParameter(2, ParameterAttributes.None, "context");
             method.DefineParameter(3, ParameterAttributes.None, "value");
@@ -112,7 +112,7 @@ namespace Bssom.Serializer.Internal
               nameof(IBssomFormatter<int>.Size),
               MethodAttributes.Public | MethodAttributes.Final | MethodAttributes.Virtual,
               returnType: typeof(int),
-              parameterTypes: new Type[] { typeof(BssomSizeContext).MakeByRefType(),type  });
+              parameterTypes: new Type[] { typeof(BssomSizeContext).MakeByRefType(), type });
             method.DefineParameter(1, ParameterAttributes.None, "context");
             method.DefineParameter(2, ParameterAttributes.None, "value");
             return method;
@@ -136,7 +136,7 @@ namespace Bssom.Serializer.Internal
               nameof(Map1FormatterDeserialize<int>),
                 MethodAttributes.Public | MethodAttributes.Static,
               returnType: typeof(void),
-              parameterTypes: new Type[] { typeof(BssomSerializeContext).MakeByRefType(), typeof(BssomReader).MakeByRefType(), type.MakeByRefType()  });
+              parameterTypes: new Type[] { typeof(BssomSerializeContext).MakeByRefType(), typeof(BssomReader).MakeByRefType(), type.MakeByRefType() });
             method.DefineParameter(1, ParameterAttributes.None, "context");
             method.DefineParameter(2, ParameterAttributes.None, "reader");
             method.DefineParameter(3, ParameterAttributes.None, "value");

@@ -1,9 +1,8 @@
 ﻿
+using Bssom.Serializer.Internal;
 using System;
 using System.Runtime.CompilerServices;
 using System.Text;
-using Bssom.Serializer.Internal;
-using Bssom.Serializer.Formatters;
 
 namespace Bssom.Serializer.Binary
 {
@@ -186,7 +185,10 @@ namespace Bssom.Serializer.Binary
         public static void WriteDateTime(IBssomBufferWriter writer, DateTime value)
         {
             if (value.Kind == DateTimeKind.Local)
+            {
                 value = value.ToUniversalTime();
+            }
+
             long utcTicks = value.Ticks - DateTimeConstants.UnixSeconds;
             long utcSeconds = utcTicks / TimeSpan.TicksPerSecond;
             long utcNanoseconds = utcTicks % TimeSpan.TicksPerSecond;
@@ -247,15 +249,25 @@ namespace Bssom.Serializer.Binary
             byte code = reader.ReadRef(1);
             reader.SeekWithOutVerify(1, BssomSeekOrgin.Current);
             if (code <= VariableUInt8Max)
+            {
                 return;
+            }
             else if (code == VariableUInt9 || code == FixUInt8)
+            {
                 reader.Seek(1, BssomSeekOrgin.Current);
+            }
             else if (code == FixUInt16)
+            {
                 reader.Seek(2, BssomSeekOrgin.Current);
+            }
             else if (code == FixUInt32)
+            {
                 reader.Seek(4, BssomSeekOrgin.Current);
+            }
             else /*if (code == FixUInt64)*/
+            {
                 reader.Seek(8, BssomSeekOrgin.Current);
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -264,7 +276,10 @@ namespace Bssom.Serializer.Binary
             byte code = reader.ReadRef(1);
             reader.SeekWithOutVerify(1, BssomSeekOrgin.Current);
             if (code <= VariableUInt8Max)
+            {
                 return code;
+            }
+
             return ReadVariableNumberCore(code, reader);
         }
 
@@ -348,14 +363,17 @@ namespace Bssom.Serializer.Binary
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe string ReadString(IBssomBuffer reader)
         {
-            var len = ReadVariableNumber(reader);
+            ulong len = ReadVariableNumber(reader);
             if (len == 0)
+            {
                 return string.Empty;
+            }
+
             ref byte refb = ref reader.ReadRef((int)len);
             fixed (byte* pRefb = &refb)
             {
 #if NET45
-                var str = new string((sbyte*)pRefb, 0, (int)len, UTF8Encoding.UTF8);
+                string str = new string((sbyte*)pRefb, 0, (int)len, UTF8Encoding.UTF8);
 #else
                 var str = UTF8Encoding.UTF8.GetString(pRefb, (int)len);
 #endif
@@ -401,13 +419,22 @@ namespace Bssom.Serializer.Binary
     public static partial class BssomBinaryPrimitives
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static short ReverseEndianness(short value) => (short)ReverseEndianness((ushort)value);
+        public static short ReverseEndianness(short value)
+        {
+            return (short)ReverseEndianness((ushort)value);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int ReverseEndianness(int value) => (int)ReverseEndianness((uint)value);
+        public static int ReverseEndianness(int value)
+        {
+            return (int)ReverseEndianness((uint)value);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static long ReverseEndianness(long value) => (long)ReverseEndianness((ulong)value);
+        public static long ReverseEndianness(long value)
+        {
+            return (long)ReverseEndianness((ulong)value);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ushort ReverseEndianness(ushort value)
@@ -498,7 +525,10 @@ namespace Bssom.Serializer.Binary
         public static void WriteInt16LittleEndian(ref byte destination, short value)
         {
             if (!BitConverter.IsLittleEndian)
+            {
                 value = ReverseEndianness(value);
+            }
+
             Unsafe.WriteUnaligned(ref destination, value);
         }
 
@@ -506,7 +536,10 @@ namespace Bssom.Serializer.Binary
         public static void WriteInt32LittleEndian(ref byte destination, int value)
         {
             if (!BitConverter.IsLittleEndian)
+            {
                 value = ReverseEndianness(value);
+            }
+
             Unsafe.WriteUnaligned(ref destination, value);
         }
 
@@ -514,7 +547,10 @@ namespace Bssom.Serializer.Binary
         public static void WriteInt64LittleEndian(ref byte destination, long value)
         {
             if (!BitConverter.IsLittleEndian)
+            {
                 value = ReverseEndianness(value);
+            }
+
             Unsafe.WriteUnaligned(ref destination, value);
         }
 
@@ -698,7 +734,10 @@ namespace Bssom.Serializer.Binary
         public static ulong ReadRawUInt64LittleEndian(ulong rawUlong)
         {
             if (!BitConverter.IsLittleEndian)
+            {
                 return ReverseEndianness(rawUlong);
+            }
+
             return rawUlong;
         }
 
@@ -785,28 +824,46 @@ namespace Bssom.Serializer.Binary
         public static int VariableNumberSize(ulong value)
         {
             if (value <= VariableUInt8Max)
+            {
                 return 1;
+            }
             else if (value <= VariableUInt9Max)
+            {
                 return 2;
+            }
             else if (value <= ushort.MaxValue)
+            {
                 return 3;
+            }
             else if (value <= uint.MaxValue)
+            {
                 return 5;
+            }
             else
+            {
                 return 9;
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int FixNumberSize(ulong value)
         {
             if (value <= byte.MaxValue)
+            {
                 return 2;
+            }
             else if (value <= ushort.MaxValue)
+            {
                 return 3;
+            }
             else if (value <= uint.MaxValue)
+            {
                 return 5;
+            }
             else
+            {
                 return 9;
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -907,7 +964,7 @@ namespace Bssom.Serializer.Binary
             return Array1NativeTypeCodeSize + Array1TypeSizeWithOutTypeHead(elementSize, count);
         }
 
-        private readonly static int[] StaticPrimitiveTypeSizes = new int[] { BssomBinaryPrimitives.NullSize, BssomBinaryPrimitives.Int8Size, BssomBinaryPrimitives.Int16Size, BssomBinaryPrimitives.Int32Size, BssomBinaryPrimitives.Int64Size, BssomBinaryPrimitives.UInt8Size, BssomBinaryPrimitives.UInt16Size, BssomBinaryPrimitives.UInt32Size, BssomBinaryPrimitives.UInt64Size, BssomBinaryPrimitives.Float32Size, BssomBinaryPrimitives.Float64Size, BssomBinaryPrimitives.BooleanSize, BssomBinaryPrimitives.StandardDateTimeSize, };
+        private static readonly int[] StaticPrimitiveTypeSizes = new int[] { BssomBinaryPrimitives.NullSize, BssomBinaryPrimitives.Int8Size, BssomBinaryPrimitives.Int16Size, BssomBinaryPrimitives.Int32Size, BssomBinaryPrimitives.Int64Size, BssomBinaryPrimitives.UInt8Size, BssomBinaryPrimitives.UInt16Size, BssomBinaryPrimitives.UInt32Size, BssomBinaryPrimitives.UInt64Size, BssomBinaryPrimitives.Float32Size, BssomBinaryPrimitives.Float64Size, BssomBinaryPrimitives.BooleanSize, BssomBinaryPrimitives.StandardDateTimeSize, };
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryGetPrimitiveTypeSizeFromStaticTypeSizes(byte type, out int size)
@@ -921,7 +978,7 @@ namespace Bssom.Serializer.Binary
             return false;
         }
 
-        private readonly static sbyte[] StaticNativeTypeSizes;
+        private static readonly sbyte[] StaticNativeTypeSizes;
 
         static BssomBinaryPrimitives()
         {
@@ -958,7 +1015,9 @@ namespace Bssom.Serializer.Binary
             {
                 size = StaticNativeTypeSizes[type];
                 if (size != 0)
+                {
                     return true;
+                }
             }
             size = default;
             return false;

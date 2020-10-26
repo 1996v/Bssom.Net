@@ -1,13 +1,9 @@
 ﻿//using System.Runtime.CompilerServices;
 
+using Bssom.Serializer.Binary;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Threading;
-using Bssom.Serializer.Binary;
-using Bssom.Serializer.BssMap.KeyResolvers;
-using Bssom.Serializer.Internal;
-using Bssom.Serializer.BssomBuffer;
 namespace Bssom.Serializer.Internal
 {
     //Array2
@@ -24,7 +20,7 @@ namespace Bssom.Serializer.Internal
             else
             {
                 DEBUG.Assert(value is IList<TElement> || value is IReadOnlyList<TElement>);
-                var formatter = context.Option.FormatterResolver.GetFormatterWithVerify<TElement>();
+                IBssomFormatter<TElement> formatter = context.Option.FormatterResolver.GetFormatterWithVerify<TElement>();
 
                 writer.WriteArray2Type();
                 long pos = writer.FillUInt32FixNumber();
@@ -60,7 +56,7 @@ namespace Bssom.Serializer.Internal
                 return;
             }
 
-            var formatter = context.Option.FormatterResolver.GetFormatterWithVerify<object>();
+            IBssomFormatter<object> formatter = context.Option.FormatterResolver.GetFormatterWithVerify<object>();
 
             writer.WriteArray2Type();
             long pos = writer.FillUInt32FixNumber();
@@ -83,14 +79,14 @@ namespace Bssom.Serializer.Internal
                 return;
             }
 
-            var formatter = context.Option.FormatterResolver.GetFormatterWithVerify<TElement>();
+            IBssomFormatter<TElement> formatter = context.Option.FormatterResolver.GetFormatterWithVerify<TElement>();
 
             writer.WriteArray2Type();
             long pos = writer.FillUInt32FixNumber();
             if (value.TryGetICollectionCount(out int count))
             {
                 writer.WriteVariableNumber(count);
-                foreach (var item in value)
+                foreach (TElement item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     formatter.Serialize(ref writer, ref context, item);
@@ -101,7 +97,7 @@ namespace Bssom.Serializer.Internal
             {
                 count = 0;
                 long posCount = writer.FillUInt32FixNumber();
-                foreach (var item in value)
+                foreach (TElement item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     count++;
@@ -125,14 +121,14 @@ namespace Bssom.Serializer.Internal
                 return;
             }
 
-            var formatter = context.Option.FormatterResolver.GetFormatterWithVerify<object>();
+            IBssomFormatter<object> formatter = context.Option.FormatterResolver.GetFormatterWithVerify<object>();
 
             writer.WriteArray2Type();
             long pos = writer.FillUInt32FixNumber();
             if (value is ICollection coll)
             {
                 writer.WriteVariableNumber(coll.Count);
-                foreach (var item in value)
+                foreach (object item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     formatter.Serialize(ref writer, ref context, item);
@@ -143,7 +139,7 @@ namespace Bssom.Serializer.Internal
             {
                 int count = 0;
                 long posCount = writer.FillUInt32FixNumber();
-                foreach (var item in value)
+                foreach (object item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     count++;
@@ -165,18 +161,22 @@ namespace Bssom.Serializer.Internal
                 return BssomBinaryPrimitives.NullSize;
             }
 
-            var formatter = context.Option.FormatterResolver.GetFormatterWithVerify<object>();
+            IBssomFormatter<object> formatter = context.Option.FormatterResolver.GetFormatterWithVerify<object>();
 
             long dataLen = 0;
-            foreach (var item in value)
+            foreach (object item in value)
             {
                 dataLen += formatter.Size(ref context, item);
             }
 
             if (value is ICollection coll)
+            {
                 return BssomBinaryPrimitives.Array2TypeSize(coll.Count, dataLen);
+            }
             else
+            {
                 return BssomBinaryPrimitives.Array2TypeSizeWithFixU32Count(dataLen);
+            }
         }
 
         //Size IEnumerable<>
@@ -187,26 +187,32 @@ namespace Bssom.Serializer.Internal
                 return BssomBinaryPrimitives.NullSize;
             }
 
-            var formatter = context.Option.FormatterResolver.GetFormatterWithVerify<TElement>();
+            IBssomFormatter<TElement> formatter = context.Option.FormatterResolver.GetFormatterWithVerify<TElement>();
             long dataLen = 0;
-            foreach (var item in value)
+            foreach (TElement item in value)
             {
                 dataLen += formatter.Size(ref context, item);
             }
 
             if (value.TryGetICollectionCount(out int count))
+            {
                 return BssomBinaryPrimitives.Array2TypeSize(count, dataLen);
+            }
             else
+            {
                 return BssomBinaryPrimitives.Array2TypeSizeWithFixU32Count(dataLen);
+            }
         }
 
         //Deserialize :  IEnumerable ICollection IList,IEnumerable<> IList<> ICollection<> IReadOnlyList<> IReadOnlyCollection<>
-        public static List<TElement> DeserializeList<TElement>(ref BssomReader reader,ref BssomDeserializeContext context)
+        public static List<TElement> DeserializeList<TElement>(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureBuildInType(BssomType.Array2))
+            {
                 return default;
+            }
 
-            var formatter = context.Option.FormatterResolver.GetFormatterWithVerify<TElement>();
+            IBssomFormatter<TElement> formatter = context.Option.FormatterResolver.GetFormatterWithVerify<TElement>();
 
             reader.SkipVariableNumber();
             int count = reader.ReadVariableNumber();
@@ -223,9 +229,11 @@ namespace Bssom.Serializer.Internal
         public static HashSet<TElement> DeserializeSet<TElement>(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureBuildInType(BssomType.Array2))
+            {
                 return default;
+            }
 
-            var formatter = context.Option.FormatterResolver.GetFormatterWithVerify<TElement>();
+            IBssomFormatter<TElement> formatter = context.Option.FormatterResolver.GetFormatterWithVerify<TElement>();
 
             reader.SkipVariableNumber();
             int count = reader.ReadVariableNumber();
@@ -240,8 +248,8 @@ namespace Bssom.Serializer.Internal
 
         public static void Fill_ImplICollection<T, TElement>(ref T t, ref BssomReader reader, ref BssomDeserializeContext context, int count) where T : ICollection<TElement>
         {
-            var formatter = context.Option.FormatterResolver.GetFormatterWithVerify<TElement>();
-            var coll = (ICollection<TElement>)t;
+            IBssomFormatter<TElement> formatter = context.Option.FormatterResolver.GetFormatterWithVerify<TElement>();
+            ICollection<TElement> coll = (ICollection<TElement>)t;
             for (int i = 0; i < count; i++)
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
@@ -251,8 +259,8 @@ namespace Bssom.Serializer.Internal
 
         public static void Fill_ImplIList<T>(ref T t, ref BssomReader reader, ref BssomDeserializeContext context, int count) where T : IList
         {
-            var formatter = context.Option.FormatterResolver.GetFormatterWithVerify<object>();
-            var coll = (IList)t;
+            IBssomFormatter<object> formatter = context.Option.FormatterResolver.GetFormatterWithVerify<object>();
+            IList coll = (IList)t;
             for (int i = 0; i < count; i++)
             {
                 context.CancellationToken.ThrowIfCancellationRequested();

@@ -1,6 +1,5 @@
 ﻿//using System.Runtime.CompilerServices;
 
-using Bssom.Serializer.Resolvers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -93,15 +92,20 @@ namespace Bssom.Serializer.Internal
 
         public static ConstructorInfo GetDefaultNoArgCtorOrAppointTypeCtor(this Type type, Type ctorParaTypes = null)
         {
-            foreach (var ctor in type.GetConstructors())
+            foreach (ConstructorInfo ctor in type.GetConstructors())
             {
-                var ctorParas = ctor.GetParameters();
+                ParameterInfo[] ctorParas = ctor.GetParameters();
                 if (ctorParas.Length == 0)
+                {
                     return ctor;//no args
+                }
+
                 if (ctorParaTypes != null && ctorParas.Length == 1)
                 {
                     if (ctorParas[0].ParameterType == ctorParaTypes)
+                    {
                         return ctor;
+                    }
                 }
             }
             return null;
@@ -109,13 +113,15 @@ namespace Bssom.Serializer.Internal
 
         public static ConstructorInfo GetAppointTypeCtor(this Type type, Type ctorParaType)
         {
-            foreach (var ctor in type.GetConstructors())
+            foreach (ConstructorInfo ctor in type.GetConstructors())
             {
-                var ctorParas = ctor.GetParameters();
+                ParameterInfo[] ctorParas = ctor.GetParameters();
                 if (ctorParas.Length == 1)
                 {
                     if (ctorParas[0].ParameterType == ctorParaType)
+                    {
                         return ctor;
+                    }
                 }
             }
             return null;
@@ -123,12 +129,12 @@ namespace Bssom.Serializer.Internal
 
         public static List<MemberInfo> GetAllInterfaceMembers(this Type type)
         {
-            var pending = new Stack<Type>();
+            Stack<Type> pending = new Stack<Type>();
             pending.Push(type);
-            var ret = new List<MemberInfo>();
+            List<MemberInfo> ret = new List<MemberInfo>();
             while (pending.Count > 0)
             {
-                var current = pending.Pop();
+                Type current = pending.Pop();
 
                 ret.AddRange(current.GetMembers());
 
@@ -137,7 +143,7 @@ namespace Bssom.Serializer.Internal
                     pending.Push(current.BaseType);
                 }
 
-                foreach (var x in current.GetInterfaces())
+                foreach (Type x in current.GetInterfaces())
                 {
                     pending.Push(x);
                 }
@@ -149,14 +155,16 @@ namespace Bssom.Serializer.Internal
         {
             DEBUG.Assert(value != null);
             Type t = value.GetType();
-            foreach (var p in t.GetFields(BindingFlags.Public | BindingFlags.Instance))
+            foreach (FieldInfo p in t.GetFields(BindingFlags.Public | BindingFlags.Instance))
             {
                 yield return new KeyValuePair<string, object>(p.Name, p.GetValue(value));
             }
-            foreach (var p in t.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            foreach (PropertyInfo p in t.GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
                 if (p.GetIndexParameters().Length == 0 && p.CanRead && p.CanWrite)
+                {
                     yield return new KeyValuePair<string, object>(p.Name, p.GetValue(value));
+                }
             }
         }
 

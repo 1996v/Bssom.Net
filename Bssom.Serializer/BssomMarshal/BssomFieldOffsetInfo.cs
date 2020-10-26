@@ -12,7 +12,7 @@ namespace Bssom.Serializer
         /// <para>Offset为0的默认实例</para>
         /// <para>Default instance with Offset of 0</para>
         /// </summary>
-        public readonly static BssomFieldOffsetInfo Zero = new BssomFieldOffsetInfo(0);
+        public static readonly BssomFieldOffsetInfo Zero = new BssomFieldOffsetInfo(0);
 
         internal bool IsArray1Type;
         internal byte Array1ElementType;

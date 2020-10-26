@@ -1,10 +1,10 @@
 ﻿//using System.Runtime.CompilerServices;
 
+using Bssom.Serializer.Binary;
+using Bssom.Serializer.Internal;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using Bssom.Serializer.Binary;
-using Bssom.Serializer.Internal;
 
 namespace Bssom.Serializer.BssMap
 {
@@ -35,7 +35,9 @@ namespace Bssom.Serializer.BssMap
             get
             {
                 if (i != _uint64Count - 1 || _lastUInt64ByteCount == 8)
+                {
                     return BssomBinaryPrimitives.ReadUInt64LittleEndian(ref _us[i * 8]);
+                }
 
                 int startPos = (_uint64Count - 1) * 8;
                 ulong value1 = 0;
@@ -68,7 +70,7 @@ namespace Bssom.Serializer.BssMap
 
         internal int Len => _len;
         internal int UInt64Count => _uint64Count;
-     
+
     }
 
 

@@ -1,12 +1,8 @@
 ﻿//using System.Runtime.CompilerServices;
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace Bssom.Serializer.BssMap.KeyResolvers
 {
@@ -55,7 +51,7 @@ namespace Bssom.Serializer.BssMap.KeyResolvers
             {  BssomType.BooleanCode,BssMapBooleanKeyResolver.Insance},
         };
 
-        public readonly static IBssMapKeyResolver<string> StringBssMapKeyResolver = BssMapStringKeyResolver.Insance;
+        public static readonly IBssMapKeyResolver<string> StringBssMapKeyResolver = BssMapStringKeyResolver.Insance;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryGetBssMapKeyResolver(Type keyType, out IBssMapKeyResolver mapKeyConvertor)
@@ -66,8 +62,11 @@ namespace Bssom.Serializer.BssMap.KeyResolvers
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IBssMapKeyResolver GetAndVertiyBssMapKeyResolver(Type keyType)
         {
-            if (!TryGetBssMapKeyResolver(keyType, out var mapKeyConvertor))
+            if (!TryGetBssMapKeyResolver(keyType, out IBssMapKeyResolver mapKeyConvertor))
+            {
                 return BssomSerializationTypeFormatterException.BssomMapKeyUnsupportedType<IBssMapKeyResolver>(keyType);
+            }
+
             return mapKeyConvertor;
         }
 
@@ -78,12 +77,16 @@ namespace Bssom.Serializer.BssMap.KeyResolvers
             if (isNativeType)
             {
                 if (bssMapNativeTypeKeys.TryGetValue(keyType, out keyConvertor))
+                {
                     return keyConvertor;
+                }
             }
             else
             {
                 if (bssMapbuildInTypeKeys.TryGetValue(keyType, out keyConvertor))
+                {
                     return keyConvertor;
+                }
             }
 
             return BssomSerializationOperationException.UnexpectedCodeRead<IBssMapKeyResolver>();
@@ -99,21 +102,29 @@ namespace Bssom.Serializer.BssMap.KeyResolvers
         public static void VertyBssMapKeyType(object key)
         {
             if (key == null)
+            {
                 ThrowArgumentNullException(key);
+            }
 
-            var keyType = key.GetType();
-            if (!TryGetBssMapKeyResolver(keyType, out var mapKeyConvertor))
+            Type keyType = key.GetType();
+            if (!TryGetBssMapKeyResolver(keyType, out IBssMapKeyResolver mapKeyConvertor))
+            {
                 BssomSerializationTypeFormatterException.BssomMapKeyUnsupportedType<IBssMapKeyResolver>(keyType);
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void VertyBssMapStringKey(object key)
         {
             if (key == null)
+            {
                 ThrowArgumentNullException(key);
+            }
 
             if (((string)key) == string.Empty)
+            {
                 BssomSerializationArgumentException.BssomMapStringKeyIsEmpty();
+            }
         }
 
         private static void ThrowArgumentNullException(object key)

@@ -1,9 +1,4 @@
-﻿using Bssom.Serializer.Binary;
-using Bssom.Serializer.BssMap.KeyResolvers;
-using Bssom.Serializer.Internal;
-using Bssom.Serializer.BssomBuffer;
-
-namespace Bssom.Serializer
+﻿namespace Bssom.Serializer
 {
     /// <summary>
     /// A base interface for <see cref="IBssomFormatter{T}"/> so that all generic implementations can be detected by a common base type.

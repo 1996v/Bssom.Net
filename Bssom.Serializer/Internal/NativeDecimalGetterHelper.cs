@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -7,7 +6,7 @@ namespace Bssom.Serializer.Internal
 {
     internal static class NativeDecimalGetterHelper
     {
-        private readonly static Func<Decimal, DecimalBinaryBits> _func;
+        private static readonly Func<Decimal, DecimalBinaryBits> _func;
 
         static NativeDecimalGetterHelper()
         {
@@ -18,7 +17,7 @@ namespace Bssom.Serializer.Internal
 
                 _func = (de) =>
                 {
-                    var ints = Decimal.GetBits(de);
+                    int[] ints = Decimal.GetBits(de);
                     return new DecimalBinaryBits(ints[0], ints[1], ints[2], ints[3]);
                 };
             }
@@ -26,7 +25,7 @@ namespace Bssom.Serializer.Internal
 
         private static Func<Decimal, DecimalBinaryBits> Build()
         {
-            var de = Expression.Parameter(typeof(Decimal));
+            ParameterExpression de = Expression.Parameter(typeof(Decimal));
             Expression low, mid, high, flags;
             try
             {
@@ -51,7 +50,7 @@ namespace Bssom.Serializer.Internal
                 }
             }
 
-            var body = Expression.New(typeof(DecimalBinaryBits).GetConstructor(new Type[] { typeof(int), typeof(int), typeof(int), typeof(int) }), low, mid, high, flags);
+            NewExpression body = Expression.New(typeof(DecimalBinaryBits).GetConstructor(new Type[] { typeof(int), typeof(int), typeof(int), typeof(int) }), low, mid, high, flags);
             return Expression.Lambda<Func<Decimal, DecimalBinaryBits>>(body, de).Compile();
         }
 

@@ -1,15 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using Bssom.Serializer.Binary;
-using Bssom.Serializer.BssMap.KeyResolvers;
-using Bssom.Serializer.Internal;
-using Bssom.Serializer.BssomBuffer;
-using Bssom.Serializer.BssMap;
-using Bssom.Serializer.Resolvers;
-using System.Collections.Concurrent;
 using System.Runtime.ExceptionServices;
 
 namespace Bssom.Serializer
@@ -53,7 +46,9 @@ namespace Bssom.Serializer
             }
 
             if (formatter == null)
+            {
                 Throw(typeof(T), resolver);
+            }
 
             return formatter;
         }
@@ -84,10 +79,10 @@ namespace Bssom.Serializer
                 throw new ArgumentNullException(nameof(type));
             }
 
-            if (!FormatterGetters.TryGetValue(type, out var formatterGetter))
+            if (!FormatterGetters.TryGetValue(type, out Func<IFormatterResolver, IBssomFormatter> formatterGetter))
             {
-                var genericMethod = GetFormatterMethodInfo.MakeGenericMethod(type);
-                var inputResolver = Expression.Parameter(typeof(IFormatterResolver), "inputResolver");
+                MethodInfo genericMethod = GetFormatterMethodInfo.MakeGenericMethod(type);
+                ParameterExpression inputResolver = Expression.Parameter(typeof(IFormatterResolver), "inputResolver");
                 formatterGetter = Expression.Lambda<Func<IFormatterResolver, IBssomFormatter>>(
                     Expression.Call(inputResolver, genericMethod), inputResolver).Compile();
                 FormatterGetters.TryAdd(type, formatterGetter);

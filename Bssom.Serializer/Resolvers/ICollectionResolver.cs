@@ -1,21 +1,13 @@
 ﻿//using System.Runtime.CompilerServices;
 
-using Bssom.Serializer.Binary;
-using Bssom.Serializer.BssMap.KeyResolvers;
-using Bssom.Serializer.BssMap;
-using Bssom.Serializer.Resolvers;
+using Bssom.Serializer.Formatters;
+using Bssom.Serializer.Internal;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
-using System.Threading;
-using Bssom.Serializer.Formatters;
-using Bssom.Serializer.Internal;
 
 namespace Bssom.Serializer.Resolvers
 {
@@ -52,7 +44,7 @@ namespace Bssom.Serializer.Resolvers
             {
                 Type t = typeof(T);
 
-                if (Array1ResolverGetFormatterHelper.TryGetFormatter(t, out var formatter))
+                if (Array1ResolverGetFormatterHelper.TryGetFormatter(t, out IBssomFormatter formatter))
                 {
                     Formatter = (IBssomFormatter<T>)formatter;
                     return;
@@ -96,16 +88,21 @@ namespace Bssom.Serializer.Resolvers
                 {
                     TypeInfo buildType;
                     if (t.IsInterface)
+                    {
                         buildType = ICollectionFormatterTypeBuilder.BuildICollectionInterfaceType(DynamicAssembly, t, itemType);
+                    }
                     else
-                        buildType = ICollectionFormatterTypeBuilder.BuildICollectionImplementationType(DynamicAssembly, t, constructor,  itemType, isImplGenerIList, IsImplIList, isImplGenerICollec, isImplIReadOnlyList);
+                    {
+                        buildType = ICollectionFormatterTypeBuilder.BuildICollectionImplementationType(DynamicAssembly, t, constructor, itemType, isImplGenerIList, IsImplIList, isImplGenerICollec, isImplIReadOnlyList);
+                    }
+
                     Formatter = (IBssomFormatter<T>)Activator.CreateInstance(buildType);
                 }
             }
         }
 
 
-        internal static bool TypeIsCollection(Type t, out ConstructorInfo constructor,  out Type itemType, out bool isImplGenerIList, out bool IsImplIList, out bool isImplGenerICollec, out bool isImplIReadOnlyList)
+        internal static bool TypeIsCollection(Type t, out ConstructorInfo constructor, out Type itemType, out bool isImplGenerIList, out bool IsImplIList, out bool isImplGenerICollec, out bool isImplIReadOnlyList)
         {
             constructor = null;
             itemType = null;
@@ -120,14 +117,16 @@ namespace Bssom.Serializer.Resolvers
                 {
                     itemType = typeof(object);
                     if (t == typeof(IList))
+                    {
                         IsImplIList = true;
+                    }
 
                     return true;
                 }
 
                 if (t.IsGenericType)
                 {
-                    var genericType = t.GetGenericTypeDefinition();
+                    Type genericType = t.GetGenericTypeDefinition();
                     if (genericType == typeof(IEnumerable<>) || genericType == typeof(IList<>) || genericType == typeof(ICollection<>) || genericType == typeof(ISet<>) || genericType == typeof(IReadOnlyList<>) || genericType == typeof(IReadOnlyCollection<>))
                     {
                         if (genericType == typeof(IList<>))
@@ -154,7 +153,7 @@ namespace Bssom.Serializer.Resolvers
 
             if (t.IsGenericType)
             {
-                var genericType = t.GetGenericTypeDefinition();
+                Type genericType = t.GetGenericTypeDefinition();
                 if (genericType == typeof(List<>))
                 {
                     itemType = t.GetGenericArguments()[0];
@@ -173,12 +172,12 @@ namespace Bssom.Serializer.Resolvers
             Type generIListItemType = null;
             Type generICollectionItemType = null;
 
-            var intserfaces = t.GetInterfaces();
-            foreach (var item in intserfaces)
+            Type[] intserfaces = t.GetInterfaces();
+            foreach (Type item in intserfaces)
             {
                 if (item.IsGenericType)
                 {
-                    var genericTypeDefinition = item.GetGenericTypeDefinition();
+                    Type genericTypeDefinition = item.GetGenericTypeDefinition();
 
                     if (genericTypeDefinition == typeof(IEnumerable<>))
                     {
@@ -197,9 +196,13 @@ namespace Bssom.Serializer.Resolvers
                     }
                 }
                 else if (item == typeof(ICollection))
+                {
                     isImplICollection = true;
+                }
                 else if (item == typeof(IList))
+                {
                     IsImplIList = true;
+                }
             }
 
             if (isImplGenerIList)
@@ -266,9 +269,9 @@ namespace Bssom.Serializer.Resolvers
         private static bool TryGetConstructorInfo(Type targetType, Type itemType, bool isFindEmptyCtor, out ConstructorInfo constructor)
         {
             constructor = null;
-            foreach (var item in targetType.GetConstructors())
+            foreach (ConstructorInfo item in targetType.GetConstructors())
             {
-                var paras = item.GetParameters();
+                ParameterInfo[] paras = item.GetParameters();
 
                 if (isFindEmptyCtor)
                 {
@@ -280,25 +283,31 @@ namespace Bssom.Serializer.Resolvers
                 }
 
                 if (constructor != null)
+                {
                     continue;
+                }
 
                 if (paras.Length == 1)
                 {
-                    var ctorArgType = paras[0].ParameterType;
+                    Type ctorArgType = paras[0].ParameterType;
                     if (targetType == ctorArgType)
+                    {
                         continue;
+                    }
 
                     if (
                         (TypeIsArray(ctorArgType, out int rank, out Type eleType) &&
                         rank == 1 && eleType == itemType
                         ) ||
-                       (TypeIsCollection(ctorArgType, out var a,  out eleType, out var c, out var d, out var e, out var f) &&
+                       (TypeIsCollection(ctorArgType, out ConstructorInfo a, out eleType, out bool c, out bool d, out bool e, out bool f) &&
                        eleType == itemType)
                         )
                     {
                         constructor = item;
                         if (!isFindEmptyCtor)
+                        {
                             return true;
+                        }
                     }
                 }
             }
@@ -374,7 +383,7 @@ namespace Bssom.Serializer.Internal
 
         internal static Type GetListFormatterType(Type itemType)
         {
-            var listT = typeof(List<>).MakeGenericType(itemType);
+            Type listT = typeof(List<>).MakeGenericType(itemType);
             return FormatterMap[listT].GetType();
         }
     }
@@ -394,9 +403,13 @@ namespace Bssom.Serializer.Internal
                 DEBUG.Assert(type == typeof(IEnumerable) || type == typeof(IList) || type == typeof(ICollection));
                 //itemType is Object, Array2
                 if (type == typeof(IList))
+                {
                     TypeBuildHelper.CallOneMethodInSerialize(serializeMethod, typeof(Array2FormatterHelper).GetMethod(nameof(Array2FormatterHelper.SerializeIList), BindingFlags.Public | BindingFlags.Static));
+                }
                 else
+                {
                     TypeBuildHelper.CallOneMethodInSerialize(serializeMethod, typeof(Array2FormatterHelper).GetMethod(nameof(Array2FormatterHelper.SerializeIEnumerable), BindingFlags.Public | BindingFlags.Static));
+                }
 
                 TypeBuildHelper.CallOneMethodInDeserialize(deserializeMethod, typeof(Array2FormatterHelper).GetMethod(nameof(Array2FormatterHelper.DeserializeList), BindingFlags.Public | BindingFlags.Static).MakeGenericMethod(typeof(object)));
 
@@ -413,28 +426,38 @@ namespace Bssom.Serializer.Internal
                     TypeBuildHelper.CallOneMethodInSerialize(serializeMethod, typeof(Array1FormatterHelper).GetMethod(nameof(Array1FormatterHelper.SerializeIEnumerable), new Type[] { typeof(BssomWriter).MakeByRefType(), typeof(BssomSerializeContext).MakeByRefType(), typeof(IEnumerable<>).MakeGenericType(elementType) }));
 
                     if (genericTypeDefine == typeof(ISet<>))
+                    {
                         TypeBuildHelper.CallOneMethodInDeserialize(deserializeMethod, typeof(Array1FormatterHelper).GetMethod(Array1FormatterHelper.DeserializeSetPrefix + elementType.Name, BindingFlags.Public | BindingFlags.Static));
+                    }
                     else
                     {
-                        var listFormatterType = Array1ResolverGetFormatterHelper.GetListFormatterType(elementType);
-                        var field = listFormatterType.GetField(nameof(DateTimeListFormatter.Instance), BindingFlags.Static | BindingFlags.Public);
-                        var method = listFormatterType.GetMethod(nameof(DateTimeListFormatter.Deserialize));
+                        Type listFormatterType = Array1ResolverGetFormatterHelper.GetListFormatterType(elementType);
+                        FieldInfo field = listFormatterType.GetField(nameof(DateTimeListFormatter.Instance), BindingFlags.Static | BindingFlags.Public);
+                        MethodInfo method = listFormatterType.GetMethod(nameof(DateTimeListFormatter.Deserialize));
                         TypeBuildHelper.CallOneStaticFieldMethodInDeserialize(deserializeMethod, field, method);
                     }
 
-                    TypeBuildHelper.CallOneMethodInSize(sizeMethod, typeof(Array1FormatterHelper).GetMethod(nameof(Array1FormatterHelper.SizeIEnumerable),new Type[] { typeof(BssomSizeContext).MakeByRefType(), typeof(IEnumerable<>).MakeGenericType(elementType) }));
+                    TypeBuildHelper.CallOneMethodInSize(sizeMethod, typeof(Array1FormatterHelper).GetMethod(nameof(Array1FormatterHelper.SizeIEnumerable), new Type[] { typeof(BssomSizeContext).MakeByRefType(), typeof(IEnumerable<>).MakeGenericType(elementType) }));
                 }
                 else
                 {
                     if (genericTypeDefine == typeof(IList<>) || genericTypeDefine == typeof(IReadOnlyList<>))
+                    {
                         TypeBuildHelper.CallOneMethodInSerialize(serializeMethod, typeof(Array2FormatterHelper).GetMethod(nameof(Array2FormatterHelper.SerializeGenerIList), BindingFlags.Public | BindingFlags.Static).MakeGenericMethod(elementType));
+                    }
                     else
+                    {
                         TypeBuildHelper.CallOneMethodInSerialize(serializeMethod, typeof(Array2FormatterHelper).GetMethod(nameof(Array2FormatterHelper.SerializeGenericIEnumerable), BindingFlags.Public | BindingFlags.Static).MakeGenericMethod(elementType));
+                    }
 
                     if (genericTypeDefine == typeof(ISet<>))
+                    {
                         TypeBuildHelper.CallOneMethodInDeserialize(deserializeMethod, typeof(Array2FormatterHelper).GetMethod(nameof(Array2FormatterHelper.DeserializeSet), BindingFlags.Public | BindingFlags.Static).MakeGenericMethod(elementType));
+                    }
                     else
+                    {
                         TypeBuildHelper.CallOneMethodInDeserialize(deserializeMethod, typeof(Array2FormatterHelper).GetMethod(nameof(Array2FormatterHelper.DeserializeList), BindingFlags.Public | BindingFlags.Static).MakeGenericMethod(elementType));
+                    }
 
                     TypeBuildHelper.CallOneMethodInSize(sizeMethod, typeof(Array2FormatterHelper).GetMethod(nameof(Array2FormatterHelper.SizeGenericIEnumerable), BindingFlags.Public | BindingFlags.Static).MakeGenericMethod(elementType));
                 }
@@ -455,9 +478,13 @@ namespace Bssom.Serializer.Internal
             {
                 //itemType is Object, Array2
                 if (IsImplIList)
+                {
                     TypeBuildHelper.CallOneMethodInSerialize(serializeMethod, typeof(Array2FormatterHelper).GetMethod(nameof(Array2FormatterHelper.SerializeIList), BindingFlags.Public | BindingFlags.Static));
+                }
                 else
+                {
                     TypeBuildHelper.CallOneMethodInSerialize(serializeMethod, typeof(Array2FormatterHelper).GetMethod(nameof(Array2FormatterHelper.SerializeIEnumerable), BindingFlags.Public | BindingFlags.Static));
+                }
 
                 TypeBuildHelper.CallOneMethodInSize(sizeMethod, typeof(Array2FormatterHelper).GetMethod(nameof(Array2FormatterHelper.SizeIEnumerable), BindingFlags.Public | BindingFlags.Static));
             }
@@ -468,26 +495,30 @@ namespace Bssom.Serializer.Internal
                     //Array1
                     TypeBuildHelper.CallOneMethodInSerialize(serializeMethod, typeof(Array1FormatterHelper).GetMethod(nameof(Array1FormatterHelper.SerializeIEnumerable), new Type[] { typeof(BssomWriter).MakeByRefType(), typeof(BssomSerializeContext).MakeByRefType(), typeof(IEnumerable<>).MakeGenericType(itemType) }));
 
-                    TypeBuildHelper.CallOneMethodInSize(sizeMethod, typeof(Array1FormatterHelper).GetMethod(nameof(Array1FormatterHelper.SizeIEnumerable), new Type[] { typeof(BssomSizeContext).MakeByRefType(),typeof(IEnumerable<>).MakeGenericType(itemType) }));
+                    TypeBuildHelper.CallOneMethodInSize(sizeMethod, typeof(Array1FormatterHelper).GetMethod(nameof(Array1FormatterHelper.SizeIEnumerable), new Type[] { typeof(BssomSizeContext).MakeByRefType(), typeof(IEnumerable<>).MakeGenericType(itemType) }));
                 }
                 else
                 {
                     if (isImplGenerIList || isImplIReadOnlyList)
+                    {
                         TypeBuildHelper.CallOneMethodInSerialize(serializeMethod, typeof(Array2FormatterHelper).GetMethod(nameof(Array2FormatterHelper.SerializeGenerIList), BindingFlags.Public | BindingFlags.Static).MakeGenericMethod(itemType));
+                    }
                     else
+                    {
                         TypeBuildHelper.CallOneMethodInSerialize(serializeMethod, typeof(Array2FormatterHelper).GetMethod(nameof(Array2FormatterHelper.SerializeGenericIEnumerable), BindingFlags.Public | BindingFlags.Static).MakeGenericMethod(itemType));
+                    }
 
                     TypeBuildHelper.CallOneMethodInSize(sizeMethod, typeof(Array2FormatterHelper).GetMethod(nameof(Array2FormatterHelper.SizeGenericIEnumerable), BindingFlags.Public | BindingFlags.Static).MakeGenericMethod(itemType));
                 }
             }
 
             MethodBuilder deserializeMethod = TypeBuildHelper.DefineDeserializeMethod(typeBuilder, type);
-            var args = constructor.GetParameters();
+            ParameterInfo[] args = constructor.GetParameters();
             if (args.Length == 1 && args[0].ParameterType != typeof(int))
             {
                 //new T(IEnumerable t)
                 Type dynamicCacheType = typeof(CollectionDynamicDelegateCache<>).MakeGenericType(type);
-                var methodinfo = dynamicCacheType.GetMethod(nameof(CollectionDynamicDelegateCache<int>.GenerateInjectCtor));
+                MethodInfo methodinfo = dynamicCacheType.GetMethod(nameof(CollectionDynamicDelegateCache<int>.GenerateInjectCtor));
                 methodinfo.Invoke(null, new object[] { constructor, args[0].ParameterType });
                 TypeBuildHelper.CallDeserializeDelegate(deserializeMethod, type, dynamicCacheType.GetField(nameof(CollectionDynamicDelegateCache<int>.Deserialize), BindingFlags.Public | BindingFlags.Static));
             }
@@ -495,8 +526,8 @@ namespace Bssom.Serializer.Internal
             {
                 if (itemType == typeof(DateTime))//DateTime需要特殊处理，因为要处理Standrand和Native
                 {
-                    var dtCollBuilder = typeof(DateTimeCollectionDeserializeBuilder<>).MakeGenericType(type);
-                    var methodinfo = dtCollBuilder.GetMethod(nameof(DateTimeCollectionDeserializeBuilder<ICollection<DateTime>>.ConstructorInit));
+                    Type dtCollBuilder = typeof(DateTimeCollectionDeserializeBuilder<>).MakeGenericType(type);
+                    MethodInfo methodinfo = dtCollBuilder.GetMethod(nameof(DateTimeCollectionDeserializeBuilder<ICollection<DateTime>>.ConstructorInit));
                     methodinfo.Invoke(null, new object[] { constructor });
 
                     TypeBuildHelper.CallOneMethodInDeserialize(deserializeMethod, dtCollBuilder.GetMethod(nameof(DateTimeCollectionDeserializeBuilder<ICollection<DateTime>>.Deserialize)));
@@ -506,14 +537,14 @@ namespace Bssom.Serializer.Internal
                     Type dynamicCacheType = typeof(CollectionDynamicDelegateCache<>).MakeGenericType(type);
                     if (args.Length == 0)
                     {
-                        var methodinfo = dynamicCacheType.GetMethod(nameof(CollectionDynamicDelegateCache<int>.GenerateDeserializeWithEmptyCtor));
+                        MethodInfo methodinfo = dynamicCacheType.GetMethod(nameof(CollectionDynamicDelegateCache<int>.GenerateDeserializeWithEmptyCtor));
                         methodinfo.Invoke(null, new object[] { constructor, isImplGenerICollec, itemType });
                     }
                     else
                     {
                         DEBUG.Assert(args.Length == 1 && args[0].ParameterType == typeof(int));
 
-                        var methodinfo = dynamicCacheType.GetMethod(nameof(CollectionDynamicDelegateCache<int>.GenerateDeserializeWithCapacityCtor));
+                        MethodInfo methodinfo = dynamicCacheType.GetMethod(nameof(CollectionDynamicDelegateCache<int>.GenerateDeserializeWithCapacityCtor));
                         methodinfo.Invoke(null, new object[] { constructor, isImplGenerICollec, itemType });
                     }
                     TypeBuildHelper.CallDeserializeDelegate(deserializeMethod, type, dynamicCacheType.GetField(nameof(CollectionDynamicDelegateCache<int>.Deserialize), BindingFlags.Public | BindingFlags.Static));
@@ -531,9 +562,11 @@ namespace Bssom.Serializer.Internal
         public static T Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureBuildInType(BssomType.Array1))
+            {
                 return default;
+            }
 
-            var type = reader.ReadBssomType();
+            byte type = reader.ReadBssomType();
             switch (type)
             {
                 case BssomType.TimestampCode:
@@ -568,13 +601,18 @@ namespace Bssom.Serializer.Internal
 
         public static void ConstructorInit(ConstructorInfo ctor)
         {
-            var paras = ctor.GetParameters();
+            ParameterInfo[] paras = ctor.GetParameters();
             ParameterExpression count = Expression.Parameter(typeof(int));
             Expression body;
             if (paras.Length == 0)
+            {
                 body = Expression.New(ctor);
+            }
             else
+            {
                 body = Expression.New(ctor, count);
+            }
+
             constructor = Expression.Lambda<Ctor>(body, CommonExpressionMeta.Par_Reader, count).Compile();
         }
     }
@@ -607,8 +645,8 @@ namespace Bssom.Serializer.Internal
                return t;  
             */
 
-            bool isArray1Type = Array1FormatterHelper.IsArray1Type(itemType, out bool isNativeType, out byte typeCode, out var typeCodeName);
-            var t = typeof(T);
+            bool isArray1Type = Array1FormatterHelper.IsArray1Type(itemType, out bool isNativeType, out byte typeCode, out string typeCodeName);
+            Type t = typeof(T);
             List<Expression> ary = new List<Expression>(7);
             LabelTarget returnTarget = Expression.Label(t, "returnLable");
 
@@ -641,7 +679,7 @@ namespace Bssom.Serializer.Internal
             ary.Add(CommonExpressionMeta.Call_Reader_SkipVariableNumber);
 
             //int len = reader.ReadVariableNumber();
-            var len = Expression.Variable(typeof(int));
+            ParameterExpression len = Expression.Variable(typeof(int));
             ary.Add(Expression.Assign(len, CommonExpressionMeta.Call_Reader_ReadVariableNumber));
 
             //T t = ctor(len);
@@ -675,7 +713,7 @@ namespace Bssom.Serializer.Internal
             //label default(T)
             ary.Add(Expression.Label(returnTarget, instance));
 
-            var block = Expression.Block(new ParameterExpression[] { instance, len }, ary);
+            BlockExpression block = Expression.Block(new ParameterExpression[] { instance, len }, ary);
             Deserialize = Expression.Lambda<Deserialize<T>>(block, CommonExpressionMeta.Par_Reader, CommonExpressionMeta.Par_DeserializeContext).Compile();
 
 
@@ -683,7 +721,7 @@ namespace Bssom.Serializer.Internal
 
         public static void GenerateInjectCtor(ConstructorInfo constructor, Type injectType)
         {
-            Deserialize = Expression.Lambda<Deserialize<T>>(CommonExpressionMeta.GenerateInjectCtor(typeof(T), constructor, injectType), CommonExpressionMeta.Par_Reader,  CommonExpressionMeta.Par_DeserializeContext).Compile();
+            Deserialize = Expression.Lambda<Deserialize<T>>(CommonExpressionMeta.GenerateInjectCtor(typeof(T), constructor, injectType), CommonExpressionMeta.Par_Reader, CommonExpressionMeta.Par_DeserializeContext).Compile();
         }
     }
 }

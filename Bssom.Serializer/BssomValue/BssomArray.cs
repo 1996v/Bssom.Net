@@ -2,11 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using Bssom.Serializer.Binary;
-using Bssom.Serializer.BssMap.KeyResolvers;
-using Bssom.Serializer.Internal;
-using Bssom.Serializer.BssomBuffer;
-using System.Linq;
 
 namespace Bssom.Serializer
 {
@@ -44,7 +39,9 @@ namespace Bssom.Serializer
         private BssomArray(IEnumerable value, BssomArrayElementType elementType)
         {
             if (value is null)
+            {
                 throw new ArgumentNullException();
+            }
 
             _rawValue = value;
             ElementType = elementType;
@@ -56,10 +53,12 @@ namespace Bssom.Serializer
         public BssomArray(IEnumerable value)
         {
             if (value is null)
+            {
                 throw new ArgumentNullException();
+            }
 
             List<object> list = new List<object>();
-            foreach (var item in value)
+            foreach (object item in value)
             {
                 list.Add(item);
             }
@@ -310,9 +309,11 @@ namespace Bssom.Serializer
         {
             get
             {
-                var raw = GetRawValue(index);
+                object raw = GetRawValue(index);
                 if (raw is BssomValue val)
+                {
                     return val;
+                }
 
                 return BssomValue.Create(raw);
             }
@@ -325,7 +326,10 @@ namespace Bssom.Serializer
         public Int32 GetInt32(int index)
         {
             if (ElementType == BssomArrayElementType.Int32)
-                return Unsafe.As<IEnumerable, List<Int32>>(ref this._rawValue)[index];
+            {
+                return Unsafe.As<IEnumerable, List<Int32>>(ref _rawValue)[index];
+            }
+
             return (Int32)GetRawValue(index);
         }
 
@@ -336,7 +340,10 @@ namespace Bssom.Serializer
         public Int64 GetInt64(int index)
         {
             if (ElementType == BssomArrayElementType.Int64)
-                return Unsafe.As<IEnumerable, List<Int64>>(ref this._rawValue)[index];
+            {
+                return Unsafe.As<IEnumerable, List<Int64>>(ref _rawValue)[index];
+            }
+
             return (Int64)GetRawValue(index);
         }
 
@@ -347,7 +354,10 @@ namespace Bssom.Serializer
         public Int16 GetInt16(int index)
         {
             if (ElementType == BssomArrayElementType.Int16)
-                return Unsafe.As<IEnumerable, List<Int16>>(ref this._rawValue)[index];
+            {
+                return Unsafe.As<IEnumerable, List<Int16>>(ref _rawValue)[index];
+            }
+
             return (Int16)GetRawValue(index);
         }
 
@@ -358,7 +368,10 @@ namespace Bssom.Serializer
         public UInt32 GetUInt32(int index)
         {
             if (ElementType == BssomArrayElementType.UInt32)
-                return Unsafe.As<IEnumerable, List<UInt32>>(ref this._rawValue)[index];
+            {
+                return Unsafe.As<IEnumerable, List<UInt32>>(ref _rawValue)[index];
+            }
+
             return (UInt32)GetRawValue(index);
         }
 
@@ -369,7 +382,10 @@ namespace Bssom.Serializer
         public UInt16 GetUInt16(int index)
         {
             if (ElementType == BssomArrayElementType.UInt16)
-                return Unsafe.As<IEnumerable, List<UInt16>>(ref this._rawValue)[index];
+            {
+                return Unsafe.As<IEnumerable, List<UInt16>>(ref _rawValue)[index];
+            }
+
             return (UInt16)GetRawValue(index);
         }
 
@@ -380,7 +396,10 @@ namespace Bssom.Serializer
         public UInt64 GetUInt64(int index)
         {
             if (ElementType == BssomArrayElementType.UInt64)
-                return Unsafe.As<IEnumerable, List<UInt64>>(ref this._rawValue)[index];
+            {
+                return Unsafe.As<IEnumerable, List<UInt64>>(ref _rawValue)[index];
+            }
+
             return (UInt64)GetRawValue(index);
         }
 
@@ -391,7 +410,10 @@ namespace Bssom.Serializer
         public Byte GetByte(int index)
         {
             if (ElementType == BssomArrayElementType.Byte)
-                return Unsafe.As<IEnumerable, List<Byte>>(ref this._rawValue)[index];
+            {
+                return Unsafe.As<IEnumerable, List<Byte>>(ref _rawValue)[index];
+            }
+
             return (Byte)GetRawValue(index);
         }
 
@@ -402,7 +424,10 @@ namespace Bssom.Serializer
         public SByte GetSByte(int index)
         {
             if (ElementType == BssomArrayElementType.SByte)
-                return Unsafe.As<IEnumerable, List<SByte>>(ref this._rawValue)[index];
+            {
+                return Unsafe.As<IEnumerable, List<SByte>>(ref _rawValue)[index];
+            }
+
             return (SByte)GetRawValue(index);
         }
 
@@ -413,7 +438,10 @@ namespace Bssom.Serializer
         public Char GetChar(int index)
         {
             if (ElementType == BssomArrayElementType.Char)
-                return Unsafe.As<IEnumerable, List<Char>>(ref this._rawValue)[index];
+            {
+                return Unsafe.As<IEnumerable, List<Char>>(ref _rawValue)[index];
+            }
+
             return (Char)GetRawValue(index);
         }
 
@@ -424,7 +452,10 @@ namespace Bssom.Serializer
         public Single GetSingle(int index)
         {
             if (ElementType == BssomArrayElementType.Single)
-                return Unsafe.As<IEnumerable, List<Single>>(ref this._rawValue)[index];
+            {
+                return Unsafe.As<IEnumerable, List<Single>>(ref _rawValue)[index];
+            }
+
             return (Single)GetRawValue(index);
         }
 
@@ -435,7 +466,10 @@ namespace Bssom.Serializer
         public Double GetDouble(int index)
         {
             if (ElementType == BssomArrayElementType.Double)
-                return Unsafe.As<IEnumerable, List<Double>>(ref this._rawValue)[index];
+            {
+                return Unsafe.As<IEnumerable, List<Double>>(ref _rawValue)[index];
+            }
+
             return (Double)GetRawValue(index);
         }
 
@@ -446,7 +480,10 @@ namespace Bssom.Serializer
         public Decimal GetDecimal(int index)
         {
             if (ElementType == BssomArrayElementType.Decimal)
-                return Unsafe.As<IEnumerable, List<Decimal>>(ref this._rawValue)[index];
+            {
+                return Unsafe.As<IEnumerable, List<Decimal>>(ref _rawValue)[index];
+            }
+
             return (Decimal)GetRawValue(index);
         }
 
@@ -457,7 +494,10 @@ namespace Bssom.Serializer
         public Guid GetGuid(int index)
         {
             if (ElementType == BssomArrayElementType.Guid)
-                return Unsafe.As<IEnumerable, List<Guid>>(ref this._rawValue)[index];
+            {
+                return Unsafe.As<IEnumerable, List<Guid>>(ref _rawValue)[index];
+            }
+
             return (Guid)GetRawValue(index);
         }
 
@@ -468,7 +508,10 @@ namespace Bssom.Serializer
         public DateTime GetDateTime(int index)
         {
             if (ElementType == BssomArrayElementType.DateTime)
-                return Unsafe.As<IEnumerable, List<DateTime>>(ref this._rawValue)[index];
+            {
+                return Unsafe.As<IEnumerable, List<DateTime>>(ref _rawValue)[index];
+            }
+
             return (DateTime)GetRawValue(index);
         }
 
@@ -479,7 +522,10 @@ namespace Bssom.Serializer
         public Boolean GetBoolean(int index)
         {
             if (ElementType == BssomArrayElementType.Boolean)
-                return Unsafe.As<IEnumerable, List<Boolean>>(ref this._rawValue)[index];
+            {
+                return Unsafe.As<IEnumerable, List<Boolean>>(ref _rawValue)[index];
+            }
+
             return (Boolean)GetRawValue(index);
         }
 
@@ -493,38 +539,38 @@ namespace Bssom.Serializer
             switch (ElementType)
             {
                 case BssomArrayElementType.Int32:
-                    return Unsafe.As<IEnumerable, List<Int32>>(ref this._rawValue).IndexOf((Int32)item);
+                    return Unsafe.As<IEnumerable, List<Int32>>(ref _rawValue).IndexOf((Int32)item);
                 case BssomArrayElementType.Int16:
-                    return Unsafe.As<IEnumerable, List<Int16>>(ref this._rawValue).IndexOf((Int16)item);
+                    return Unsafe.As<IEnumerable, List<Int16>>(ref _rawValue).IndexOf((Int16)item);
                 case BssomArrayElementType.Int64:
-                    return Unsafe.As<IEnumerable, List<Int64>>(ref this._rawValue).IndexOf((Int64)item);
+                    return Unsafe.As<IEnumerable, List<Int64>>(ref _rawValue).IndexOf((Int64)item);
                 case BssomArrayElementType.UInt64:
-                    return Unsafe.As<IEnumerable, List<UInt64>>(ref this._rawValue).IndexOf((UInt64)item);
+                    return Unsafe.As<IEnumerable, List<UInt64>>(ref _rawValue).IndexOf((UInt64)item);
                 case BssomArrayElementType.UInt32:
-                    return Unsafe.As<IEnumerable, List<UInt32>>(ref this._rawValue).IndexOf((UInt32)item);
+                    return Unsafe.As<IEnumerable, List<UInt32>>(ref _rawValue).IndexOf((UInt32)item);
                 case BssomArrayElementType.UInt16:
-                    return Unsafe.As<IEnumerable, List<UInt16>>(ref this._rawValue).IndexOf((UInt16)item);
+                    return Unsafe.As<IEnumerable, List<UInt16>>(ref _rawValue).IndexOf((UInt16)item);
                 case BssomArrayElementType.Byte:
-                    return Unsafe.As<IEnumerable, List<Byte>>(ref this._rawValue).IndexOf((Byte)item);
+                    return Unsafe.As<IEnumerable, List<Byte>>(ref _rawValue).IndexOf((Byte)item);
                 case BssomArrayElementType.SByte:
-                    return Unsafe.As<IEnumerable, List<SByte>>(ref this._rawValue).IndexOf((SByte)item);
+                    return Unsafe.As<IEnumerable, List<SByte>>(ref _rawValue).IndexOf((SByte)item);
                 case BssomArrayElementType.Char:
-                    return Unsafe.As<IEnumerable, List<Char>>(ref this._rawValue).IndexOf((Char)item);
+                    return Unsafe.As<IEnumerable, List<Char>>(ref _rawValue).IndexOf((Char)item);
                 case BssomArrayElementType.Single:
-                    return Unsafe.As<IEnumerable, List<Single>>(ref this._rawValue).IndexOf((Single)item);
+                    return Unsafe.As<IEnumerable, List<Single>>(ref _rawValue).IndexOf((Single)item);
                 case BssomArrayElementType.Double:
-                    return Unsafe.As<IEnumerable, List<Double>>(ref this._rawValue).IndexOf((Double)item);
+                    return Unsafe.As<IEnumerable, List<Double>>(ref _rawValue).IndexOf((Double)item);
                 case BssomArrayElementType.Decimal:
-                    return Unsafe.As<IEnumerable, List<Decimal>>(ref this._rawValue).IndexOf((Decimal)item);
+                    return Unsafe.As<IEnumerable, List<Decimal>>(ref _rawValue).IndexOf((Decimal)item);
                 case BssomArrayElementType.Guid:
-                    return Unsafe.As<IEnumerable, List<Guid>>(ref this._rawValue).IndexOf((Guid)item);
+                    return Unsafe.As<IEnumerable, List<Guid>>(ref _rawValue).IndexOf((Guid)item);
                 case BssomArrayElementType.DateTime:
-                    return Unsafe.As<IEnumerable, List<DateTime>>(ref this._rawValue).IndexOf((DateTime)item);
+                    return Unsafe.As<IEnumerable, List<DateTime>>(ref _rawValue).IndexOf((DateTime)item);
                 case BssomArrayElementType.Boolean:
-                    return Unsafe.As<IEnumerable, List<Boolean>>(ref this._rawValue).IndexOf((Boolean)item);
+                    return Unsafe.As<IEnumerable, List<Boolean>>(ref _rawValue).IndexOf((Boolean)item);
                 default://BssomValue
                     {
-                        return Unsafe.As<IEnumerable, List<BssomValue>>(ref this._rawValue).IndexOf((BssomValue)item);
+                        return Unsafe.As<IEnumerable, List<BssomValue>>(ref _rawValue).IndexOf((BssomValue)item);
                     }
             }
         }
@@ -538,38 +584,38 @@ namespace Bssom.Serializer
             switch (ElementType)
             {
                 case BssomArrayElementType.Int32:
-                    Unsafe.As<IEnumerable, List<Int32>>(ref this._rawValue).Insert(index, (Int32)item); break;
+                    Unsafe.As<IEnumerable, List<Int32>>(ref _rawValue).Insert(index, (Int32)item); break;
                 case BssomArrayElementType.Int16:
-                    Unsafe.As<IEnumerable, List<Int16>>(ref this._rawValue).Insert(index, (Int16)item); break;
+                    Unsafe.As<IEnumerable, List<Int16>>(ref _rawValue).Insert(index, (Int16)item); break;
                 case BssomArrayElementType.Int64:
-                    Unsafe.As<IEnumerable, List<Int64>>(ref this._rawValue).Insert(index, (Int64)item); break;
+                    Unsafe.As<IEnumerable, List<Int64>>(ref _rawValue).Insert(index, (Int64)item); break;
                 case BssomArrayElementType.UInt64:
-                    Unsafe.As<IEnumerable, List<UInt64>>(ref this._rawValue).Insert(index, (UInt64)item); break;
+                    Unsafe.As<IEnumerable, List<UInt64>>(ref _rawValue).Insert(index, (UInt64)item); break;
                 case BssomArrayElementType.UInt32:
-                    Unsafe.As<IEnumerable, List<UInt32>>(ref this._rawValue).Insert(index, (UInt32)item); break;
+                    Unsafe.As<IEnumerable, List<UInt32>>(ref _rawValue).Insert(index, (UInt32)item); break;
                 case BssomArrayElementType.UInt16:
-                    Unsafe.As<IEnumerable, List<UInt16>>(ref this._rawValue).Insert(index, (UInt16)item); break;
+                    Unsafe.As<IEnumerable, List<UInt16>>(ref _rawValue).Insert(index, (UInt16)item); break;
                 case BssomArrayElementType.Byte:
-                    Unsafe.As<IEnumerable, List<Byte>>(ref this._rawValue).Insert(index, (Byte)item); break;
+                    Unsafe.As<IEnumerable, List<Byte>>(ref _rawValue).Insert(index, (Byte)item); break;
                 case BssomArrayElementType.SByte:
-                    Unsafe.As<IEnumerable, List<SByte>>(ref this._rawValue).Insert(index, (SByte)item); break;
+                    Unsafe.As<IEnumerable, List<SByte>>(ref _rawValue).Insert(index, (SByte)item); break;
                 case BssomArrayElementType.Char:
-                    Unsafe.As<IEnumerable, List<Char>>(ref this._rawValue).Insert(index, (Char)item); break;
+                    Unsafe.As<IEnumerable, List<Char>>(ref _rawValue).Insert(index, (Char)item); break;
                 case BssomArrayElementType.Single:
-                    Unsafe.As<IEnumerable, List<Single>>(ref this._rawValue).Insert(index, (Single)item); break;
+                    Unsafe.As<IEnumerable, List<Single>>(ref _rawValue).Insert(index, (Single)item); break;
                 case BssomArrayElementType.Double:
-                    Unsafe.As<IEnumerable, List<Double>>(ref this._rawValue).Insert(index, (Double)item); break;
+                    Unsafe.As<IEnumerable, List<Double>>(ref _rawValue).Insert(index, (Double)item); break;
                 case BssomArrayElementType.Decimal:
-                    Unsafe.As<IEnumerable, List<Decimal>>(ref this._rawValue).Insert(index, (Decimal)item); break;
+                    Unsafe.As<IEnumerable, List<Decimal>>(ref _rawValue).Insert(index, (Decimal)item); break;
                 case BssomArrayElementType.Guid:
-                    Unsafe.As<IEnumerable, List<Guid>>(ref this._rawValue).Insert(index, (Guid)item); break;
+                    Unsafe.As<IEnumerable, List<Guid>>(ref _rawValue).Insert(index, (Guid)item); break;
                 case BssomArrayElementType.DateTime:
-                    Unsafe.As<IEnumerable, List<DateTime>>(ref this._rawValue).Insert(index, (DateTime)item); break;
+                    Unsafe.As<IEnumerable, List<DateTime>>(ref _rawValue).Insert(index, (DateTime)item); break;
                 case BssomArrayElementType.Boolean:
-                    Unsafe.As<IEnumerable, List<Boolean>>(ref this._rawValue).Insert(index, (Boolean)item); break;
+                    Unsafe.As<IEnumerable, List<Boolean>>(ref _rawValue).Insert(index, (Boolean)item); break;
                 default://BssomValue
                     {
-                        Unsafe.As<IEnumerable, List<BssomValue>>(ref this._rawValue).Insert(index, (BssomValue)item);
+                        Unsafe.As<IEnumerable, List<BssomValue>>(ref _rawValue).Insert(index, (BssomValue)item);
                         break;
                     }
             }
@@ -584,37 +630,37 @@ namespace Bssom.Serializer
             switch (ElementType)
             {
                 case BssomArrayElementType.Int32:
-                    Unsafe.As<IEnumerable, List<Int32>>(ref this._rawValue).RemoveAt(index); break;
+                    Unsafe.As<IEnumerable, List<Int32>>(ref _rawValue).RemoveAt(index); break;
                 case BssomArrayElementType.Int16:
-                    Unsafe.As<IEnumerable, List<Int16>>(ref this._rawValue).RemoveAt(index); break;
+                    Unsafe.As<IEnumerable, List<Int16>>(ref _rawValue).RemoveAt(index); break;
                 case BssomArrayElementType.Int64:
-                    Unsafe.As<IEnumerable, List<Int64>>(ref this._rawValue).RemoveAt(index); break;
+                    Unsafe.As<IEnumerable, List<Int64>>(ref _rawValue).RemoveAt(index); break;
                 case BssomArrayElementType.UInt64:
-                    Unsafe.As<IEnumerable, List<UInt64>>(ref this._rawValue).RemoveAt(index); break;
+                    Unsafe.As<IEnumerable, List<UInt64>>(ref _rawValue).RemoveAt(index); break;
                 case BssomArrayElementType.UInt32:
-                    Unsafe.As<IEnumerable, List<UInt32>>(ref this._rawValue).RemoveAt(index); break;
+                    Unsafe.As<IEnumerable, List<UInt32>>(ref _rawValue).RemoveAt(index); break;
                 case BssomArrayElementType.UInt16:
-                    Unsafe.As<IEnumerable, List<UInt16>>(ref this._rawValue).RemoveAt(index); break;
+                    Unsafe.As<IEnumerable, List<UInt16>>(ref _rawValue).RemoveAt(index); break;
                 case BssomArrayElementType.Byte:
-                    Unsafe.As<IEnumerable, List<Byte>>(ref this._rawValue).RemoveAt(index); break;
+                    Unsafe.As<IEnumerable, List<Byte>>(ref _rawValue).RemoveAt(index); break;
                 case BssomArrayElementType.SByte:
-                    Unsafe.As<IEnumerable, List<SByte>>(ref this._rawValue).RemoveAt(index); break;
+                    Unsafe.As<IEnumerable, List<SByte>>(ref _rawValue).RemoveAt(index); break;
                 case BssomArrayElementType.Char:
-                    Unsafe.As<IEnumerable, List<Char>>(ref this._rawValue).RemoveAt(index); break;
+                    Unsafe.As<IEnumerable, List<Char>>(ref _rawValue).RemoveAt(index); break;
                 case BssomArrayElementType.Single:
-                    Unsafe.As<IEnumerable, List<Single>>(ref this._rawValue).RemoveAt(index); break;
+                    Unsafe.As<IEnumerable, List<Single>>(ref _rawValue).RemoveAt(index); break;
                 case BssomArrayElementType.Double:
-                    Unsafe.As<IEnumerable, List<Double>>(ref this._rawValue).RemoveAt(index); break;
+                    Unsafe.As<IEnumerable, List<Double>>(ref _rawValue).RemoveAt(index); break;
                 case BssomArrayElementType.Decimal:
-                    Unsafe.As<IEnumerable, List<Decimal>>(ref this._rawValue).RemoveAt(index); break;
+                    Unsafe.As<IEnumerable, List<Decimal>>(ref _rawValue).RemoveAt(index); break;
                 case BssomArrayElementType.Guid:
-                    Unsafe.As<IEnumerable, List<Guid>>(ref this._rawValue).RemoveAt(index); break;
+                    Unsafe.As<IEnumerable, List<Guid>>(ref _rawValue).RemoveAt(index); break;
                 case BssomArrayElementType.DateTime:
-                    Unsafe.As<IEnumerable, List<DateTime>>(ref this._rawValue).RemoveAt(index); break;
+                    Unsafe.As<IEnumerable, List<DateTime>>(ref _rawValue).RemoveAt(index); break;
                 case BssomArrayElementType.Boolean:
-                    Unsafe.As<IEnumerable, List<Boolean>>(ref this._rawValue).RemoveAt(index); break;
+                    Unsafe.As<IEnumerable, List<Boolean>>(ref _rawValue).RemoveAt(index); break;
                 default://BssomValue
-                    Unsafe.As<IEnumerable, List<BssomValue>>(ref this._rawValue).RemoveAt(index);
+                    Unsafe.As<IEnumerable, List<BssomValue>>(ref _rawValue).RemoveAt(index);
                     break;
             }
         }
@@ -626,7 +672,7 @@ namespace Bssom.Serializer
         /// <param name="item"></param>
         public void Add(object item)
         {
-            this.Insert(Count, item);
+            Insert(Count, item);
         }
 
         /// <summary>
@@ -644,7 +690,7 @@ namespace Bssom.Serializer
         /// </summary>
         public bool Contains(object item)
         {
-            return this.IndexOf(item) != -1;
+            return IndexOf(item) != -1;
         }
 
         /// <summary>
@@ -653,7 +699,7 @@ namespace Bssom.Serializer
         /// </summary>
         public bool Remove(object item)
         {
-            var index = IndexOf(item);
+            int index = IndexOf(item);
             if (index != -1)
             {
                 RemoveAt(index);
@@ -665,12 +711,16 @@ namespace Bssom.Serializer
         void ICollection<object>.CopyTo(object[] array, int arrayIndex)
         {
             if (array is null)
+            {
                 throw new ArgumentNullException();
+            }
 
             if (array.Length - arrayIndex < Count)
+            {
                 throw new Exception();//目标长度不够
+            }
 
-            foreach (var item in _rawValue)
+            foreach (object item in _rawValue)
             {
                 array[arrayIndex] = item;
                 arrayIndex++;
@@ -679,7 +729,7 @@ namespace Bssom.Serializer
 
         public IEnumerator<object> GetEnumerator()
         {
-            foreach (var item in _rawValue)
+            foreach (object item in _rawValue)
             {
                 yield return item;
             }
@@ -692,12 +742,16 @@ namespace Bssom.Serializer
 
         IEnumerator<BssomValue> IEnumerable<BssomValue>.GetEnumerator()
         {
-            foreach (var item in _rawValue)
+            foreach (object item in _rawValue)
             {
                 if (item is BssomValue bsVal)
+                {
                     yield return bsVal;
+                }
                 else
+                {
                     yield return BssomValue.Create(item);
+                }
             }
         }
 
@@ -706,37 +760,37 @@ namespace Bssom.Serializer
             switch (ElementType)
             {
                 case BssomArrayElementType.Int32:
-                    return Unsafe.As<IEnumerable, List<Int32>>(ref this._rawValue)[index];
+                    return Unsafe.As<IEnumerable, List<Int32>>(ref _rawValue)[index];
                 case BssomArrayElementType.Int16:
-                    return Unsafe.As<IEnumerable, List<Int16>>(ref this._rawValue)[index];
+                    return Unsafe.As<IEnumerable, List<Int16>>(ref _rawValue)[index];
                 case BssomArrayElementType.Int64:
-                    return Unsafe.As<IEnumerable, List<Int64>>(ref this._rawValue)[index];
+                    return Unsafe.As<IEnumerable, List<Int64>>(ref _rawValue)[index];
                 case BssomArrayElementType.UInt64:
-                    return Unsafe.As<IEnumerable, List<UInt64>>(ref this._rawValue)[index];
+                    return Unsafe.As<IEnumerable, List<UInt64>>(ref _rawValue)[index];
                 case BssomArrayElementType.UInt32:
-                    return Unsafe.As<IEnumerable, List<UInt32>>(ref this._rawValue)[index];
+                    return Unsafe.As<IEnumerable, List<UInt32>>(ref _rawValue)[index];
                 case BssomArrayElementType.UInt16:
-                    return Unsafe.As<IEnumerable, List<UInt16>>(ref this._rawValue)[index];
+                    return Unsafe.As<IEnumerable, List<UInt16>>(ref _rawValue)[index];
                 case BssomArrayElementType.Byte:
-                    return Unsafe.As<IEnumerable, List<Byte>>(ref this._rawValue)[index];
+                    return Unsafe.As<IEnumerable, List<Byte>>(ref _rawValue)[index];
                 case BssomArrayElementType.SByte:
-                    return Unsafe.As<IEnumerable, List<SByte>>(ref this._rawValue)[index];
+                    return Unsafe.As<IEnumerable, List<SByte>>(ref _rawValue)[index];
                 case BssomArrayElementType.Char:
-                    return Unsafe.As<IEnumerable, List<Char>>(ref this._rawValue)[index];
+                    return Unsafe.As<IEnumerable, List<Char>>(ref _rawValue)[index];
                 case BssomArrayElementType.Single:
-                    return Unsafe.As<IEnumerable, List<Single>>(ref this._rawValue)[index];
+                    return Unsafe.As<IEnumerable, List<Single>>(ref _rawValue)[index];
                 case BssomArrayElementType.Double:
-                    return Unsafe.As<IEnumerable, List<Double>>(ref this._rawValue)[index];
+                    return Unsafe.As<IEnumerable, List<Double>>(ref _rawValue)[index];
                 case BssomArrayElementType.Decimal:
-                    return Unsafe.As<IEnumerable, List<Decimal>>(ref this._rawValue)[index];
+                    return Unsafe.As<IEnumerable, List<Decimal>>(ref _rawValue)[index];
                 case BssomArrayElementType.Guid:
-                    return Unsafe.As<IEnumerable, List<Guid>>(ref this._rawValue)[index];
+                    return Unsafe.As<IEnumerable, List<Guid>>(ref _rawValue)[index];
                 case BssomArrayElementType.DateTime:
-                    return Unsafe.As<IEnumerable, List<DateTime>>(ref this._rawValue)[index];
+                    return Unsafe.As<IEnumerable, List<DateTime>>(ref _rawValue)[index];
                 case BssomArrayElementType.Boolean:
-                    return Unsafe.As<IEnumerable, List<Boolean>>(ref this._rawValue)[index];
+                    return Unsafe.As<IEnumerable, List<Boolean>>(ref _rawValue)[index];
                 default://BssomValue
-                    return Unsafe.As<IEnumerable, List<BssomValue>>(ref this._rawValue)[index];
+                    return Unsafe.As<IEnumerable, List<BssomValue>>(ref _rawValue)[index];
             }
         }
 
@@ -745,37 +799,37 @@ namespace Bssom.Serializer
             switch (ElementType)
             {
                 case BssomArrayElementType.Int32:
-                    Unsafe.As<IEnumerable, List<Int32>>(ref this._rawValue)[index] = (int)value; break;
+                    Unsafe.As<IEnumerable, List<Int32>>(ref _rawValue)[index] = (int)value; break;
                 case BssomArrayElementType.Int16:
-                    Unsafe.As<IEnumerable, List<Int16>>(ref this._rawValue)[index] = (Int16)value; break;
+                    Unsafe.As<IEnumerable, List<Int16>>(ref _rawValue)[index] = (Int16)value; break;
                 case BssomArrayElementType.Int64:
-                    Unsafe.As<IEnumerable, List<Int64>>(ref this._rawValue)[index] = (Int64)value; break;
+                    Unsafe.As<IEnumerable, List<Int64>>(ref _rawValue)[index] = (Int64)value; break;
                 case BssomArrayElementType.UInt64:
-                    Unsafe.As<IEnumerable, List<UInt64>>(ref this._rawValue)[index] = (UInt64)value; break;
+                    Unsafe.As<IEnumerable, List<UInt64>>(ref _rawValue)[index] = (UInt64)value; break;
                 case BssomArrayElementType.UInt32:
-                    Unsafe.As<IEnumerable, List<UInt32>>(ref this._rawValue)[index] = (UInt32)value; break;
+                    Unsafe.As<IEnumerable, List<UInt32>>(ref _rawValue)[index] = (UInt32)value; break;
                 case BssomArrayElementType.UInt16:
-                    Unsafe.As<IEnumerable, List<UInt16>>(ref this._rawValue)[index] = (UInt16)value; break;
+                    Unsafe.As<IEnumerable, List<UInt16>>(ref _rawValue)[index] = (UInt16)value; break;
                 case BssomArrayElementType.Byte:
-                    Unsafe.As<IEnumerable, List<Byte>>(ref this._rawValue)[index] = (Byte)value; break;
+                    Unsafe.As<IEnumerable, List<Byte>>(ref _rawValue)[index] = (Byte)value; break;
                 case BssomArrayElementType.SByte:
-                    Unsafe.As<IEnumerable, List<SByte>>(ref this._rawValue)[index] = (SByte)value; break;
+                    Unsafe.As<IEnumerable, List<SByte>>(ref _rawValue)[index] = (SByte)value; break;
                 case BssomArrayElementType.Char:
-                    Unsafe.As<IEnumerable, List<Char>>(ref this._rawValue)[index] = (Char)value; break;
+                    Unsafe.As<IEnumerable, List<Char>>(ref _rawValue)[index] = (Char)value; break;
                 case BssomArrayElementType.Single:
-                    Unsafe.As<IEnumerable, List<Single>>(ref this._rawValue)[index] = (Single)value; break;
+                    Unsafe.As<IEnumerable, List<Single>>(ref _rawValue)[index] = (Single)value; break;
                 case BssomArrayElementType.Double:
-                    Unsafe.As<IEnumerable, List<Double>>(ref this._rawValue)[index] = (Double)value; break;
+                    Unsafe.As<IEnumerable, List<Double>>(ref _rawValue)[index] = (Double)value; break;
                 case BssomArrayElementType.Decimal:
-                    Unsafe.As<IEnumerable, List<Decimal>>(ref this._rawValue)[index] = (Decimal)value; break;
+                    Unsafe.As<IEnumerable, List<Decimal>>(ref _rawValue)[index] = (Decimal)value; break;
                 case BssomArrayElementType.Guid:
-                    Unsafe.As<IEnumerable, List<Guid>>(ref this._rawValue)[index] = (Guid)value; break;
+                    Unsafe.As<IEnumerable, List<Guid>>(ref _rawValue)[index] = (Guid)value; break;
                 case BssomArrayElementType.DateTime:
-                    Unsafe.As<IEnumerable, List<DateTime>>(ref this._rawValue)[index] = (DateTime)value; break;
+                    Unsafe.As<IEnumerable, List<DateTime>>(ref _rawValue)[index] = (DateTime)value; break;
                 case BssomArrayElementType.Boolean:
-                    Unsafe.As<IEnumerable, List<Boolean>>(ref this._rawValue)[index] = (Boolean)value; break;
+                    Unsafe.As<IEnumerable, List<Boolean>>(ref _rawValue)[index] = (Boolean)value; break;
                 default://BssomValue
-                    Unsafe.As<IEnumerable, List<BssomValue>>(ref this._rawValue)[index] = (BssomValue)value; break;
+                    Unsafe.As<IEnumerable, List<BssomValue>>(ref _rawValue)[index] = (BssomValue)value; break;
             }
         }
     }

@@ -37,7 +37,7 @@ namespace Bssom.Serializer
                 throw new ArgumentNullException(nameof(copyFrom));
             }
 
-            this.MaximumObjectGraphDepth = copyFrom.MaximumObjectGraphDepth;
+            MaximumObjectGraphDepth = copyFrom.MaximumObjectGraphDepth;
         }
 
         /// <summary>
@@ -54,12 +54,12 @@ namespace Bssom.Serializer
         /// <returns></returns>
         public BssomSecurity WithMaximumObjectGraphDepth(int maximumObjectGraphDepth)
         {
-            if (this.MaximumObjectGraphDepth == maximumObjectGraphDepth)
+            if (MaximumObjectGraphDepth == maximumObjectGraphDepth)
             {
                 return this;
             }
 
-            var clone = this.Clone();
+            BssomSecurity clone = Clone();
             clone.MaximumObjectGraphDepth = maximumObjectGraphDepth;
             return clone;
         }
@@ -73,12 +73,17 @@ namespace Bssom.Serializer
         public void DepthStep(ref BssomDeserializeContext context)
         {
             if (context.Depth >= MaximumObjectGraphDepth)
+            {
                 ThrowInsufficientExecutionStackException();
+            }
 
             context.Depth++;
         }
 
-        protected virtual BssomSecurity Clone() => new BssomSecurity(this);
+        protected virtual BssomSecurity Clone()
+        {
+            return new BssomSecurity(this);
+        }
 
         private void ThrowInsufficientExecutionStackException()
         {

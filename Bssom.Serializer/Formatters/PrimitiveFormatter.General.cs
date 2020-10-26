@@ -1,20 +1,10 @@
 ﻿
 using Bssom.Serializer.Binary;
-using Bssom.Serializer.BssMap.KeyResolvers;
-using Bssom.Serializer.Internal;
-using Bssom.Serializer.BssomBuffer;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Bssom.Serializer.Formatters
 {
-     /// <summary>
+    /// <summary>
     /// Format <see cref="SByte"/> as BssomType.Int8
     /// </summary>
     public sealed class Int8Formatter : IBssomFormatter<SByte>
@@ -301,7 +291,7 @@ namespace Bssom.Serializer.Formatters
         }
     }
 
-     /// <summary>
+    /// <summary>
     /// Format <see cref="Char"/> as NativeBssomType.Char
     /// </summary>
     public sealed class CharFormatter : IBssomFormatter<Char>

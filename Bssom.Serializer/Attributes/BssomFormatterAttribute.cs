@@ -1,7 +1,7 @@
 ﻿//using System.Runtime.CompilerServices;
 
-using System;
 using Bssom.Serializer.Resolvers;
+using System;
 
 namespace Bssom.Serializer
 {
@@ -18,13 +18,13 @@ namespace Bssom.Serializer
 
         public BssomFormatterAttribute(Type formatterType)
         {
-            this.FormatterType = formatterType;
+            FormatterType = formatterType;
         }
 
         public BssomFormatterAttribute(Type formatterType, params object[] arguments)
         {
-            this.FormatterType = formatterType;
-            this.Arguments = arguments;
+            FormatterType = formatterType;
+            Arguments = arguments;
         }
     }
 }

@@ -38,7 +38,9 @@ namespace Bssom.Serializer
         public void AllocateNamedDataSlot(string name, object data)
         {
             if (storeSlots == null)
+            {
                 storeSlots = new Dictionary<string, object>();
+            }
 
             storeSlots.Add(name, data);
         }
@@ -63,7 +65,10 @@ namespace Bssom.Serializer
         public bool RemoveNamedDataSlot(string name)
         {
             if (storeSlots != null)
+            {
                 return storeSlots.Remove(name);
+            }
+
             return false;
         }
 
@@ -74,7 +79,9 @@ namespace Bssom.Serializer
         public void ClearSlots()
         {
             if (storeSlots != null)
+            {
                 storeSlots.Clear();
+            }
         }
     }
 }

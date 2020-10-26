@@ -1,5 +1,4 @@
-﻿using Bssom.Serializer.Internal;
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
 
 namespace Bssom.Serializer.BssomBuffer
@@ -22,14 +21,17 @@ namespace Bssom.Serializer.BssomBuffer
         {
             this.buffer = buffer;
             this.start = start;
-            this.position = 0;
+            position = 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ref byte ReadRef(int sizeHint = 0)
         {
             if (position + sizeHint > Length)
+            {
                 return ref BssomSerializationOperationException.ReaderEndOfBufferException();
+            }
+
             return ref buffer[start + position];
         }
 
@@ -38,7 +40,9 @@ namespace Bssom.Serializer.BssomBuffer
         {
             SeekWithOutVerify(postion, orgin);
             if (position > Length)
+            {
                 BssomSerializationOperationException.ReaderEndOfBufferException();
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -59,7 +63,10 @@ namespace Bssom.Serializer.BssomBuffer
         {
             haveEnoughSizeAndCanBeFixed = true;
             if (position + size > Length)
+            {
                 return ref BssomSerializationOperationException.ReaderEndOfBufferException();
+            }
+
             return ref ReadRef(size);
         }
 
@@ -83,10 +90,12 @@ namespace Bssom.Serializer.BssomBuffer
             const string args = "buffer," + "start," + "len";
             if (buffer == null || checked((uint)start) >= (uint)buffer.Length ||
                 checked((uint)len) > (uint)(buffer.Length - start))
+            {
                 throw new ArgumentException(args);
+            }
 
             this.len = len;
-            this.buffered = 0;
+            buffered = 0;
         }
 
         public new long Length => len;
@@ -97,7 +106,9 @@ namespace Bssom.Serializer.BssomBuffer
         public void Advance(int count)
         {
             if (position == buffered)
+            {
                 buffered += count;
+            }
 
             position += count;
         }
@@ -110,7 +121,10 @@ namespace Bssom.Serializer.BssomBuffer
         public bool CanGetSizeRefForProvidePerformanceInTryWrite(int size)
         {
             if (position + size > len)
+            {
                 return false;
+            }
+
             return true;
         }
 
@@ -118,16 +132,21 @@ namespace Bssom.Serializer.BssomBuffer
         public ref byte GetRef(int sizeHint)
         {
             if (position + sizeHint > len)
+            {
                 return ref BssomSerializationOperationException.ReaderEndOfBufferException();
+            }
+
             return ref buffer[start + position];
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public new void  Seek(long postion, BssomSeekOrgin orgin = BssomSeekOrgin.Begin)
+        public new void Seek(long postion, BssomSeekOrgin orgin = BssomSeekOrgin.Begin)
         {
             SeekWithOutVerify(postion, orgin);
             if (position > len)
+            {
                 BssomSerializationOperationException.ReaderEndOfBufferException();
+            }
         }
 
     }

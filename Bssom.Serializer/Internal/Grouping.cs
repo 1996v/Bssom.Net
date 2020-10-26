@@ -17,22 +17,16 @@ namespace Bssom.Serializer.Internal
             this.elements = elements;
         }
 
-        public TKey Key
-        {
-            get
-            {
-                return this.key;
-            }
-        }
+        public TKey Key => key;
 
         public IEnumerator<TElement> GetEnumerator()
         {
-            return this.elements.GetEnumerator();
+            return elements.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.elements.GetEnumerator();
+            return elements.GetEnumerator();
         }
     }
 }

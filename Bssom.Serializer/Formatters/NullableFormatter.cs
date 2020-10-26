@@ -1,7 +1,4 @@
 ﻿using Bssom.Serializer.Binary;
-using Bssom.Serializer.BssMap.KeyResolvers;
-using Bssom.Serializer.Internal;
-using Bssom.Serializer.BssomBuffer;
 namespace Bssom.Serializer.Formatters
 {
     /// <summary>
@@ -12,13 +9,16 @@ namespace Bssom.Serializer.Formatters
     {
         public NullableFormatter()
         {
-            
+
         }
 
         public T? Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNull())
+            {
                 return default;
+            }
+
             return context.Option.FormatterResolver.GetFormatterWithVerify<T>().Deserialize(ref reader, ref context);
         }
 

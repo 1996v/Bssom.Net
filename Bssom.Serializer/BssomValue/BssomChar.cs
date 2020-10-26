@@ -29,12 +29,15 @@
         /// <summary>
         /// Get char
         /// </summary>
-        public char GetChar() => (char)_char;
+        public char GetChar()
+        {
+            return (char)_char;
+        }
 
         public override bool Equals(object obj)
         {
-            return obj is char raw && raw == GetChar() || 
-                obj is BssomChar bssom && bssom.GetChar() == this.GetChar();
+            return obj is char raw && raw == GetChar() ||
+                obj is BssomChar bssom && bssom.GetChar() == GetChar();
         }
 
         public override int GetHashCode()

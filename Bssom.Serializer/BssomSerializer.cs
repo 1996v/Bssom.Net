@@ -1,14 +1,8 @@
-﻿using Bssom.Serializer;
+﻿using Bssom.Serializer.BssomBuffer;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Bssom.Serializer.BssomBuffer;
-using Bssom.Serializer.Resolvers;
 
 
 namespace Bssom.Serializer
@@ -30,7 +24,9 @@ namespace Bssom.Serializer
         public static int Size<T>(T value, BssomSerializerOptions option = null)
         {
             if (option == null)
+            {
                 option = BssomSerializerOptions.Default;
+            }
 
             BssomSizeContext sizeContext = new BssomSizeContext(option);
             return option.FormatterResolver.GetFormatterWithVerify<T>().Size(ref sizeContext, value);
@@ -46,7 +42,9 @@ namespace Bssom.Serializer
         public static int Size<T>(ref BssomSizeContext context, T value)
         {
             if (context.Option == null)
+            {
                 context.Option = BssomSerializerOptions.Default;
+            }
 
             return context.Option.FormatterResolver.GetFormatterWithVerify<T>().Size(ref context, value);
         }
@@ -62,12 +60,14 @@ namespace Bssom.Serializer
         public static byte[] Serialize<T>(T value, BssomSerializerOptions option = null, CancellationToken cancellationToken = default)
         {
             if (option == null)
+            {
                 option = BssomSerializerOptions.Default;
+            }
 
             BssomSerializeContext context = new BssomSerializeContext(option, cancellationToken);
-            using (var buffer = ExpandableBufferWriter.CreateGlobar())
+            using (ExpandableBufferWriter buffer = ExpandableBufferWriter.CreateGlobar())
             {
-                var writer = new BssomWriter(buffer);
+                BssomWriter writer = new BssomWriter(buffer);
                 option.FormatterResolver.GetFormatterWithVerify<T>().Serialize(ref writer, ref context, value);
                 return buffer.GetBufferedArray();
             }
@@ -86,18 +86,24 @@ namespace Bssom.Serializer
         public static int Serialize<T>(ref byte[] buffer, int bufOffset, T value, BssomSerializerOptions option = null, CancellationToken cancellationToken = default)
         {
             if (buffer == null)
+            {
                 throw new ArgumentNullException(nameof(buffer));
+            }
 
             if (bufOffset > buffer.Length - 1)
+            {
                 throw new ArgumentException(nameof(bufOffset));
+            }
 
             if (option == null)
+            {
                 option = BssomSerializerOptions.Default;
+            }
 
             BssomSerializeContext context = new BssomSerializeContext(option, cancellationToken);
-            using (var exbuffer = new ExpandableBufferWriter(buffer, bufOffset))
+            using (ExpandableBufferWriter exbuffer = new ExpandableBufferWriter(buffer, bufOffset))
             {
-                var writer = new BssomWriter(exbuffer);
+                BssomWriter writer = new BssomWriter(exbuffer);
                 option.FormatterResolver.GetFormatterWithVerify<T>().Serialize(ref writer, ref context, value);
 
                 buffer = exbuffer.GetBufferedArrayWithKeepFirstBuffer();
@@ -117,17 +123,23 @@ namespace Bssom.Serializer
         public static int Serialize<T>(ref BssomSerializeContext context, ref byte[] buffer, int bufOffset, T value)
         {
             if (buffer == null)
+            {
                 throw new ArgumentNullException(nameof(buffer));
+            }
 
             if (bufOffset > buffer.Length - 1)
+            {
                 throw new ArgumentException(nameof(bufOffset));
+            }
 
             if (context.Option == null)
-                context.Option = BssomSerializerOptions.Default;
-
-            using (var exbuffer = new ExpandableBufferWriter(buffer, bufOffset))
             {
-                var writer = new BssomWriter(exbuffer);
+                context.Option = BssomSerializerOptions.Default;
+            }
+
+            using (ExpandableBufferWriter exbuffer = new ExpandableBufferWriter(buffer, bufOffset))
+            {
+                BssomWriter writer = new BssomWriter(exbuffer);
                 context.Option.FormatterResolver.GetFormatterWithVerify<T>().Serialize(ref writer, ref context, value);
 
                 buffer = exbuffer.GetBufferedArrayWithKeepFirstBuffer();
@@ -146,13 +158,17 @@ namespace Bssom.Serializer
         public static void Serialize<T>(T value, IBssomBufferWriter bufferWriter, BssomSerializerOptions option = null, CancellationToken cancellationToken = default)
         {
             if (bufferWriter == null)
+            {
                 throw new ArgumentNullException(nameof(bufferWriter));
+            }
 
             if (option == null)
+            {
                 option = BssomSerializerOptions.Default;
+            }
 
             BssomSerializeContext context = new BssomSerializeContext(option, cancellationToken);
-            var writer = new BssomWriter(bufferWriter);
+            BssomWriter writer = new BssomWriter(bufferWriter);
             option.FormatterResolver.GetFormatterWithVerify<T>().Serialize(ref writer, ref context, value);
         }
 
@@ -166,10 +182,12 @@ namespace Bssom.Serializer
         public static byte[] Serialize<T>(ref BssomSerializeContext context, T value)
         {
             if (context.Option == null)
+            {
                 context.Option = BssomSerializerOptions.Default;
+            }
 
-            var buffer = ExpandableBufferWriter.CreateGlobar();
-            var writer = new BssomWriter(buffer);
+            ExpandableBufferWriter buffer = ExpandableBufferWriter.CreateGlobar();
+            BssomWriter writer = new BssomWriter(buffer);
             context.Option.FormatterResolver.GetFormatterWithVerify<T>().Serialize(ref writer, ref context, value);
             return buffer.GetBufferedArray();
         }
@@ -184,9 +202,11 @@ namespace Bssom.Serializer
         public static void Serialize<T>(ref BssomSerializeContext context, T value, IBssomBufferWriter bufferWriter)
         {
             if (context.Option == null)
+            {
                 context.Option = BssomSerializerOptions.Default;
+            }
 
-            var writer = new BssomWriter(bufferWriter);
+            BssomWriter writer = new BssomWriter(bufferWriter);
             context.Option.FormatterResolver.GetFormatterWithVerify<T>().Serialize(ref writer, ref context, value);
         }
 
@@ -199,7 +219,7 @@ namespace Bssom.Serializer
         /// <param name="stream">要序列化的流. The stream to serialize with</param>
         public static void Serialize<T>(ref BssomSerializeContext context, T value, Stream stream)
         {
-            using (var buffer = ExpandableBufferWriter.CreateGlobar())
+            using (ExpandableBufferWriter buffer = ExpandableBufferWriter.CreateGlobar())
             {
                 Serialize(ref context, value, buffer);
                 try
@@ -225,7 +245,9 @@ namespace Bssom.Serializer
         public static void Serialize<T>(Stream stream, T value, BssomSerializerOptions option = null, CancellationToken cancellationToken = default)
         {
             if (option == null)
+            {
                 option = BssomSerializerOptions.Default;
+            }
 
             BssomSerializeContext context = new BssomSerializeContext(option, cancellationToken);
             Serialize(ref context, value, stream);
@@ -243,10 +265,12 @@ namespace Bssom.Serializer
         public static async Task SerializeAsync<T>(Stream stream, T value, BssomSerializerOptions option = null, CancellationToken cancellationToken = default)
         {
             if (option == null)
+            {
                 option = BssomSerializerOptions.Default;
+            }
 
             BssomSerializeContext context = new BssomSerializeContext(option, cancellationToken);
-            using (var buffer = ExpandableBufferWriter.CreateGlobar())
+            using (ExpandableBufferWriter buffer = ExpandableBufferWriter.CreateGlobar())
             {
                 Serialize(ref context, value, buffer);
                 try
@@ -319,7 +343,7 @@ namespace Bssom.Serializer
                 return result;
             }
 
-            var aux = new StreamDeserializeAux(stream);
+            StreamDeserializeAux aux = new StreamDeserializeAux(stream);
             result = Deserialize<T>(ref context, aux.GetBssomBuffer());
             aux.Dispose();
             return result;
@@ -342,8 +366,8 @@ namespace Bssom.Serializer
                 return result;
             }
 
-            var aux = new StreamDeserializeAux(stream);
-            var bssomBuf = await aux.GetBssomBufferAsync().ConfigureAwait(false);
+            StreamDeserializeAux aux = new StreamDeserializeAux(stream);
+            IBssomBuffer bssomBuf = await aux.GetBssomBufferAsync().ConfigureAwait(false);
             result = Deserialize<T>(ref context, bssomBuf);
             aux.Dispose();
             return result;
@@ -376,14 +400,16 @@ namespace Bssom.Serializer
         public static object Deserialize(ref BssomDeserializeContext context, Stream stream, Type type)
         {
             if (type == null)
+            {
                 throw new ArgumentNullException(nameof(type));
+            }
 
             if (TryDeserializeFromMemoryStream(ref context, stream, type, out object result))
             {
                 return result;
             }
 
-            var aux = new StreamDeserializeAux(stream);
+            StreamDeserializeAux aux = new StreamDeserializeAux(stream);
             result = Deserialize(ref context, aux.GetBssomBuffer(), type);
             aux.Dispose();
             return result;
@@ -402,7 +428,9 @@ namespace Bssom.Serializer
             CancellationToken cancellationToken = default)
         {
             if (type == null)
+            {
                 throw new ArgumentNullException(nameof(type));
+            }
 
             BssomDeserializeContext context = new BssomDeserializeContext(option, cancellationToken);
             if (TryDeserializeFromMemoryStream(ref context, stream, out object result))
@@ -410,8 +438,8 @@ namespace Bssom.Serializer
                 return result;
             }
 
-            var aux = new StreamDeserializeAux(stream);
-            var bssomBuf = await aux.GetBssomBufferAsync().ConfigureAwait(false);
+            StreamDeserializeAux aux = new StreamDeserializeAux(stream);
+            IBssomBuffer bssomBuf = await aux.GetBssomBufferAsync().ConfigureAwait(false);
             result = Deserialize(ref context, bssomBuf, type);
             aux.Dispose();
             return result;
@@ -441,9 +469,11 @@ namespace Bssom.Serializer
         public static T Deserialize<T>(ref BssomDeserializeContext context, IBssomBuffer buffer)
         {
             if (context.Option == null)
+            {
                 context.Option = BssomSerializerOptions.Default;
+            }
 
-            var reader = new BssomReader(buffer);
+            BssomReader reader = new BssomReader(buffer);
             return context.Option.FormatterResolver.GetFormatterWithVerify<T>().Deserialize(ref reader, ref context);
         }
 
@@ -475,12 +505,16 @@ namespace Bssom.Serializer
         public static T Deserialize<T>(ref BssomDeserializeContext context, byte[] buffer, int bufOffset, out int readSize)
         {
             if (buffer == null)
+            {
                 throw new ArgumentException(nameof(buffer));
+            }
 
             if (bufOffset > buffer.Length - 1)
+            {
                 throw new ArgumentException(nameof(bufOffset));
+            }
 
-            var buf = new SimpleBuffer(buffer, bufOffset);
+            SimpleBuffer buf = new SimpleBuffer(buffer, bufOffset);
             T value = Deserialize<T>(ref context, buf);
             readSize = (int)buf.Position;
             return value;
@@ -513,12 +547,16 @@ namespace Bssom.Serializer
         public static object Deserialize(byte[] buffer, int bufOffset, out int readSize, Type type, BssomSerializerOptions option = null, CancellationToken cancellationToken = default)
         {
             if (buffer == null)
+            {
                 throw new ArgumentException(nameof(buffer));
+            }
 
             if (bufOffset > buffer.Length - 1)
+            {
                 throw new ArgumentException(nameof(bufOffset));
+            }
 
-            var buf = new SimpleBuffer(buffer, bufOffset);
+            SimpleBuffer buf = new SimpleBuffer(buffer, bufOffset);
             object value = Deserialize(buf, type, option, cancellationToken);
             readSize = (int)buf.Position;
             return value;
@@ -537,12 +575,16 @@ namespace Bssom.Serializer
         public static object Deserialize(ref BssomDeserializeContext context, byte[] buffer, int bufOffset, out int readSize, Type type)
         {
             if (buffer == null)
+            {
                 throw new ArgumentException(nameof(buffer));
+            }
 
             if (bufOffset > buffer.Length - 1)
+            {
                 throw new ArgumentException(nameof(bufOffset));
+            }
 
-            var buf = new SimpleBuffer(buffer, bufOffset);
+            SimpleBuffer buf = new SimpleBuffer(buffer, bufOffset);
             object value = Deserialize(ref context, buf, type);
             readSize = (int)buf.Position;
             return value;
@@ -574,9 +616,11 @@ namespace Bssom.Serializer
         public static object Deserialize(ref BssomDeserializeContext context, IBssomBuffer buffer, Type type)
         {
             if (context.Option == null)
+            {
                 context.Option = BssomSerializerOptions.Default;
+            }
 
-            var reader = new BssomReader(buffer);
+            BssomReader reader = new BssomReader(buffer);
             return RawObjectDeserializer.Deserialize(type, ref reader, ref context);
         }
     }

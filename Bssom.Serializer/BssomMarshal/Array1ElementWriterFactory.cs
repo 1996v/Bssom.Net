@@ -3,25 +3,23 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using Bssom.Serializer.Binary;
-using Bssom.Serializer.BssMap.KeyResolvers;
-using Bssom.Serializer.Internal;
-using Bssom.Serializer.BssomBuffer;
-using Bssom.Serializer.BssMap;
-using Bssom.Serializer.Resolvers;
 namespace Bssom.Serializer.Internal
 {
     internal static class Array1ElementWriterFactory<T>
     {
-        private readonly static IArray1ElementWriter<T> _controller;
+        private static readonly IArray1ElementWriter<T> _controller;
 
         static Array1ElementWriterFactory()
         {
-            var t = typeof(T);
+            Type t = typeof(T);
             if (t == typeof(object) || t == typeof(BssomValue) || t == typeof(BssomChar) || t == typeof(BssomBoolean) || t == typeof(BssomDateTime) || t == typeof(BssomDecimal) || t == typeof(BssomFloat) || t == typeof(BssomGuid) || t == typeof(BssomNumber))
+            {
                 _controller = (IArray1ElementWriter<T>)(object)ObjectArray1ElementWriter.Instance;
+            }
             else
+            {
                 _controller = (IArray1ElementWriter<T>)Array1ElementWriterContainers.GetArray1ElementWriter(t);
+            }
         }
 
         public static void WriteElement(ref BssomWriter writer, BssomSerializerOptions option, BssomFieldOffsetInfo offsetInfo, T value)
@@ -37,7 +35,7 @@ namespace Bssom.Serializer.Internal
 
     internal static class Array1ElementWriterContainers
     {
-        private readonly static Dictionary<Type, IArray1ElementWriter> containers = new Dictionary<Type, IArray1ElementWriter>()
+        private static readonly Dictionary<Type, IArray1ElementWriter> containers = new Dictionary<Type, IArray1ElementWriter>()
         {
             {typeof(Int16),Int16Array1ElementWriter.Instance },
             {typeof(Int32), Int32Array1ElementWriter.Instance },
@@ -56,13 +54,13 @@ namespace Bssom.Serializer.Internal
             {typeof(DateTime), DateTimeArray1ElementWriter.Instance },
             {typeof(Decimal), DecimalArray1ElementWriter.Instance },
         };
-        private readonly static IArray1ElementWriter[] nativeTypeContainers = new IArray1ElementWriter[] {
+        private static readonly IArray1ElementWriter[] nativeTypeContainers = new IArray1ElementWriter[] {
             CharArray1ElementWriter.Instance,
             GuidArray1ElementWriter.Instance,
             DecimalArray1ElementWriter.Instance,
             DateTimeArray1ElementWriter.Instance
         };
-        private readonly static IArray1ElementWriter[] buildInTypeContainers = new IArray1ElementWriter[] {
+        private static readonly IArray1ElementWriter[] buildInTypeContainers = new IArray1ElementWriter[] {
             Int8Array1ElementWriter.Instance,
             Int16Array1ElementWriter.Instance,
             Int32Array1ElementWriter.Instance,
@@ -111,9 +109,11 @@ namespace Bssom.Serializer.Internal
             {
                 if (type <= NativeBssomType.MaxCode)
                 {
-                    var writer = nativeTypeContainers[type];
+                    IArray1ElementWriter writer = nativeTypeContainers[type];
                     if (writer != null)
+                    {
                         return writer;
+                    }
                 }
             }
             return BssomSerializationArgumentException.InvalidOffsetInfoFormat<IArray1ElementWriter>();

@@ -11,7 +11,7 @@ namespace Bssom.Serializer.Internal
 
         public StackArrayPack(T* ptr, int len)
         {
-            _stackArray = new StackArray<T>(ptr,len);
+            _stackArray = new StackArray<T>(ptr, len);
             _nextPos = 0;
         }
 

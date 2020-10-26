@@ -1,9 +1,6 @@
 ﻿//using System.Runtime.CompilerServices;
-using Bssom.Serializer.Binary;
-using Bssom.Serializer.BssMap.KeyResolvers;
-using Bssom.Serializer.BssomBuffer;
-using System.Runtime.CompilerServices;
 using Bssom.Serializer.Internal;
+using System.Runtime.CompilerServices;
 
 namespace Bssom.Serializer.BssMap
 {
@@ -52,7 +49,10 @@ namespace Bssom.Serializer.BssMap
 
             byte t = (byte)equalNext;
             if (t > 10)
+            {
                 return (byte)(t - 10);
+            }
+
             return t;
         }
 
@@ -63,7 +63,10 @@ namespace Bssom.Serializer.BssMap
 
             byte t = (byte)equalNext;
             if (t > 20)
+            {
                 return (byte)(t - 20);
+            }
+
             return t;
         }
     }

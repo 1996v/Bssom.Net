@@ -1,9 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
-//using System.Runtime.CompilerServices;
+﻿//using System.Runtime.CompilerServices;
 
 namespace Bssom.Serializer
 {
@@ -11,7 +6,7 @@ namespace Bssom.Serializer
     /// <para>IBssomBuffer的类型写入器</para>
     /// <para>A types writer for the IBssomBuffer.</para>
     /// </summary>
-    public interface IBssomBufferWriter 
+    public interface IBssomBufferWriter
     {
         /// <summary>
         /// <para>写入器的当前位置</para>

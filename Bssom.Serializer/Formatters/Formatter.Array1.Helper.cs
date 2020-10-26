@@ -1,22 +1,14 @@
 ﻿
+using Bssom.Serializer.Binary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using Bssom.Serializer.Binary;
-using Bssom.Serializer.BssMap.KeyResolvers;
-using Bssom.Serializer.Internal;
-using Bssom.Serializer.BssomBuffer;
 namespace Bssom.Serializer.Internal
 {
     internal static partial class Array1FormatterHelper
     {
-        public readonly static string DeserializeSetPrefix = "DeserializeSet";
-        public readonly static string FillPrefix = "Fill";
+        public static readonly string DeserializeSetPrefix = "DeserializeSet";
+        public static readonly string FillPrefix = "Fill";
 
         #region Serialize/Size IEnumerable<SByte> to Array1 . Deserialize to HashSet<SByte> /Fill to class:IColloction<SByte>
 
@@ -32,7 +24,7 @@ namespace Bssom.Serializer.Internal
             {
                 writer.WriteVariableNumber(BssomBinaryPrimitives.Array1TypeSizeWithOutTypeHeadAndLength(BssomBinaryPrimitives.Int8Size, count));
                 writer.WriteVariableNumber(count);
-                foreach (var item in value)
+                foreach (sbyte item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     writer.WriteWithOutTypeHead(item);
@@ -43,7 +35,7 @@ namespace Bssom.Serializer.Internal
                 count = 0;
                 long posLen = writer.FillUInt32FixNumber();//len
                 long posCount = writer.FillUInt32FixNumber();//count
-                foreach (var item in value)
+                foreach (sbyte item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     count++;
@@ -60,7 +52,9 @@ namespace Bssom.Serializer.Internal
         public static int SizeIEnumerable(ref BssomSizeContext context, IEnumerable<SByte> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             if (value.TryGetICollectionCount(out int count))
             {
@@ -73,7 +67,9 @@ namespace Bssom.Serializer.Internal
         public static HashSet<SByte> DeserializeSetInt8(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureArray1BuildInType(BssomType.Int8Code))
+            {
                 return default;
+            }
 
             reader.SkipVariableNumber();
             int count = reader.ReadVariableNumber();
@@ -88,7 +84,7 @@ namespace Bssom.Serializer.Internal
 
         public static void FillInt8<T>(ref T t, ref BssomReader reader, ref BssomDeserializeContext context, int count) where T : ICollection<SByte>
         {
-            var coll = (ICollection<SByte>)t;
+            ICollection<sbyte> coll = (ICollection<SByte>)t;
             for (int i = 0; i < count; i++)
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
@@ -112,7 +108,7 @@ namespace Bssom.Serializer.Internal
             {
                 writer.WriteVariableNumber(BssomBinaryPrimitives.Array1TypeSizeWithOutTypeHeadAndLength(BssomBinaryPrimitives.Int16Size, count));
                 writer.WriteVariableNumber(count);
-                foreach (var item in value)
+                foreach (short item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     writer.WriteWithOutTypeHead(item);
@@ -123,7 +119,7 @@ namespace Bssom.Serializer.Internal
                 count = 0;
                 long posLen = writer.FillUInt32FixNumber();//len
                 long posCount = writer.FillUInt32FixNumber();//count
-                foreach (var item in value)
+                foreach (short item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     count++;
@@ -140,7 +136,9 @@ namespace Bssom.Serializer.Internal
         public static int SizeIEnumerable(ref BssomSizeContext context, IEnumerable<Int16> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             if (value.TryGetICollectionCount(out int count))
             {
@@ -153,7 +151,9 @@ namespace Bssom.Serializer.Internal
         public static HashSet<Int16> DeserializeSetInt16(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureArray1BuildInType(BssomType.Int16Code))
+            {
                 return default;
+            }
 
             reader.SkipVariableNumber();
             int count = reader.ReadVariableNumber();
@@ -168,7 +168,7 @@ namespace Bssom.Serializer.Internal
 
         public static void FillInt16<T>(ref T t, ref BssomReader reader, ref BssomDeserializeContext context, int count) where T : ICollection<Int16>
         {
-            var coll = (ICollection<Int16>)t;
+            ICollection<short> coll = (ICollection<Int16>)t;
             for (int i = 0; i < count; i++)
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
@@ -192,7 +192,7 @@ namespace Bssom.Serializer.Internal
             {
                 writer.WriteVariableNumber(BssomBinaryPrimitives.Array1TypeSizeWithOutTypeHeadAndLength(BssomBinaryPrimitives.Int32Size, count));
                 writer.WriteVariableNumber(count);
-                foreach (var item in value)
+                foreach (int item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     writer.WriteWithOutTypeHead(item);
@@ -203,7 +203,7 @@ namespace Bssom.Serializer.Internal
                 count = 0;
                 long posLen = writer.FillUInt32FixNumber();//len
                 long posCount = writer.FillUInt32FixNumber();//count
-                foreach (var item in value)
+                foreach (int item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     count++;
@@ -220,7 +220,9 @@ namespace Bssom.Serializer.Internal
         public static int SizeIEnumerable(ref BssomSizeContext context, IEnumerable<Int32> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             if (value.TryGetICollectionCount(out int count))
             {
@@ -233,7 +235,9 @@ namespace Bssom.Serializer.Internal
         public static HashSet<Int32> DeserializeSetInt32(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureArray1BuildInType(BssomType.Int32Code))
+            {
                 return default;
+            }
 
             reader.SkipVariableNumber();
             int count = reader.ReadVariableNumber();
@@ -248,7 +252,7 @@ namespace Bssom.Serializer.Internal
 
         public static void FillInt32<T>(ref T t, ref BssomReader reader, ref BssomDeserializeContext context, int count) where T : ICollection<Int32>
         {
-            var coll = (ICollection<Int32>)t;
+            ICollection<int> coll = (ICollection<Int32>)t;
             for (int i = 0; i < count; i++)
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
@@ -272,7 +276,7 @@ namespace Bssom.Serializer.Internal
             {
                 writer.WriteVariableNumber(BssomBinaryPrimitives.Array1TypeSizeWithOutTypeHeadAndLength(BssomBinaryPrimitives.Int64Size, count));
                 writer.WriteVariableNumber(count);
-                foreach (var item in value)
+                foreach (long item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     writer.WriteWithOutTypeHead(item);
@@ -283,7 +287,7 @@ namespace Bssom.Serializer.Internal
                 count = 0;
                 long posLen = writer.FillUInt32FixNumber();//len
                 long posCount = writer.FillUInt32FixNumber();//count
-                foreach (var item in value)
+                foreach (long item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     count++;
@@ -300,7 +304,9 @@ namespace Bssom.Serializer.Internal
         public static int SizeIEnumerable(ref BssomSizeContext context, IEnumerable<Int64> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             if (value.TryGetICollectionCount(out int count))
             {
@@ -313,7 +319,9 @@ namespace Bssom.Serializer.Internal
         public static HashSet<Int64> DeserializeSetInt64(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureArray1BuildInType(BssomType.Int64Code))
+            {
                 return default;
+            }
 
             reader.SkipVariableNumber();
             int count = reader.ReadVariableNumber();
@@ -328,7 +336,7 @@ namespace Bssom.Serializer.Internal
 
         public static void FillInt64<T>(ref T t, ref BssomReader reader, ref BssomDeserializeContext context, int count) where T : ICollection<Int64>
         {
-            var coll = (ICollection<Int64>)t;
+            ICollection<long> coll = (ICollection<Int64>)t;
             for (int i = 0; i < count; i++)
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
@@ -352,7 +360,7 @@ namespace Bssom.Serializer.Internal
             {
                 writer.WriteVariableNumber(BssomBinaryPrimitives.Array1TypeSizeWithOutTypeHeadAndLength(BssomBinaryPrimitives.UInt8Size, count));
                 writer.WriteVariableNumber(count);
-                foreach (var item in value)
+                foreach (byte item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     writer.WriteWithOutTypeHead(item);
@@ -363,7 +371,7 @@ namespace Bssom.Serializer.Internal
                 count = 0;
                 long posLen = writer.FillUInt32FixNumber();//len
                 long posCount = writer.FillUInt32FixNumber();//count
-                foreach (var item in value)
+                foreach (byte item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     count++;
@@ -380,7 +388,9 @@ namespace Bssom.Serializer.Internal
         public static int SizeIEnumerable(ref BssomSizeContext context, IEnumerable<Byte> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             if (value.TryGetICollectionCount(out int count))
             {
@@ -393,7 +403,9 @@ namespace Bssom.Serializer.Internal
         public static HashSet<Byte> DeserializeSetUInt8(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureArray1BuildInType(BssomType.UInt8Code))
+            {
                 return default;
+            }
 
             reader.SkipVariableNumber();
             int count = reader.ReadVariableNumber();
@@ -408,7 +420,7 @@ namespace Bssom.Serializer.Internal
 
         public static void FillUInt8<T>(ref T t, ref BssomReader reader, ref BssomDeserializeContext context, int count) where T : ICollection<Byte>
         {
-            var coll = (ICollection<Byte>)t;
+            ICollection<byte> coll = (ICollection<Byte>)t;
             for (int i = 0; i < count; i++)
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
@@ -432,7 +444,7 @@ namespace Bssom.Serializer.Internal
             {
                 writer.WriteVariableNumber(BssomBinaryPrimitives.Array1TypeSizeWithOutTypeHeadAndLength(BssomBinaryPrimitives.UInt16Size, count));
                 writer.WriteVariableNumber(count);
-                foreach (var item in value)
+                foreach (ushort item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     writer.WriteWithOutTypeHead(item);
@@ -443,7 +455,7 @@ namespace Bssom.Serializer.Internal
                 count = 0;
                 long posLen = writer.FillUInt32FixNumber();//len
                 long posCount = writer.FillUInt32FixNumber();//count
-                foreach (var item in value)
+                foreach (ushort item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     count++;
@@ -460,7 +472,9 @@ namespace Bssom.Serializer.Internal
         public static int SizeIEnumerable(ref BssomSizeContext context, IEnumerable<UInt16> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             if (value.TryGetICollectionCount(out int count))
             {
@@ -473,7 +487,9 @@ namespace Bssom.Serializer.Internal
         public static HashSet<UInt16> DeserializeSetUInt16(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureArray1BuildInType(BssomType.UInt16Code))
+            {
                 return default;
+            }
 
             reader.SkipVariableNumber();
             int count = reader.ReadVariableNumber();
@@ -488,7 +504,7 @@ namespace Bssom.Serializer.Internal
 
         public static void FillUInt16<T>(ref T t, ref BssomReader reader, ref BssomDeserializeContext context, int count) where T : ICollection<UInt16>
         {
-            var coll = (ICollection<UInt16>)t;
+            ICollection<ushort> coll = (ICollection<UInt16>)t;
             for (int i = 0; i < count; i++)
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
@@ -512,7 +528,7 @@ namespace Bssom.Serializer.Internal
             {
                 writer.WriteVariableNumber(BssomBinaryPrimitives.Array1TypeSizeWithOutTypeHeadAndLength(BssomBinaryPrimitives.UInt32Size, count));
                 writer.WriteVariableNumber(count);
-                foreach (var item in value)
+                foreach (uint item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     writer.WriteWithOutTypeHead(item);
@@ -523,7 +539,7 @@ namespace Bssom.Serializer.Internal
                 count = 0;
                 long posLen = writer.FillUInt32FixNumber();//len
                 long posCount = writer.FillUInt32FixNumber();//count
-                foreach (var item in value)
+                foreach (uint item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     count++;
@@ -540,7 +556,9 @@ namespace Bssom.Serializer.Internal
         public static int SizeIEnumerable(ref BssomSizeContext context, IEnumerable<UInt32> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             if (value.TryGetICollectionCount(out int count))
             {
@@ -553,7 +571,9 @@ namespace Bssom.Serializer.Internal
         public static HashSet<UInt32> DeserializeSetUInt32(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureArray1BuildInType(BssomType.UInt32Code))
+            {
                 return default;
+            }
 
             reader.SkipVariableNumber();
             int count = reader.ReadVariableNumber();
@@ -568,7 +588,7 @@ namespace Bssom.Serializer.Internal
 
         public static void FillUInt32<T>(ref T t, ref BssomReader reader, ref BssomDeserializeContext context, int count) where T : ICollection<UInt32>
         {
-            var coll = (ICollection<UInt32>)t;
+            ICollection<uint> coll = (ICollection<UInt32>)t;
             for (int i = 0; i < count; i++)
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
@@ -592,7 +612,7 @@ namespace Bssom.Serializer.Internal
             {
                 writer.WriteVariableNumber(BssomBinaryPrimitives.Array1TypeSizeWithOutTypeHeadAndLength(BssomBinaryPrimitives.UInt64Size, count));
                 writer.WriteVariableNumber(count);
-                foreach (var item in value)
+                foreach (ulong item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     writer.WriteWithOutTypeHead(item);
@@ -603,7 +623,7 @@ namespace Bssom.Serializer.Internal
                 count = 0;
                 long posLen = writer.FillUInt32FixNumber();//len
                 long posCount = writer.FillUInt32FixNumber();//count
-                foreach (var item in value)
+                foreach (ulong item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     count++;
@@ -620,7 +640,9 @@ namespace Bssom.Serializer.Internal
         public static int SizeIEnumerable(ref BssomSizeContext context, IEnumerable<UInt64> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             if (value.TryGetICollectionCount(out int count))
             {
@@ -633,7 +655,9 @@ namespace Bssom.Serializer.Internal
         public static HashSet<UInt64> DeserializeSetUInt64(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureArray1BuildInType(BssomType.UInt64Code))
+            {
                 return default;
+            }
 
             reader.SkipVariableNumber();
             int count = reader.ReadVariableNumber();
@@ -648,7 +672,7 @@ namespace Bssom.Serializer.Internal
 
         public static void FillUInt64<T>(ref T t, ref BssomReader reader, ref BssomDeserializeContext context, int count) where T : ICollection<UInt64>
         {
-            var coll = (ICollection<UInt64>)t;
+            ICollection<ulong> coll = (ICollection<UInt64>)t;
             for (int i = 0; i < count; i++)
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
@@ -672,7 +696,7 @@ namespace Bssom.Serializer.Internal
             {
                 writer.WriteVariableNumber(BssomBinaryPrimitives.Array1TypeSizeWithOutTypeHeadAndLength(BssomBinaryPrimitives.Float32Size, count));
                 writer.WriteVariableNumber(count);
-                foreach (var item in value)
+                foreach (float item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     writer.WriteWithOutTypeHead(item);
@@ -683,7 +707,7 @@ namespace Bssom.Serializer.Internal
                 count = 0;
                 long posLen = writer.FillUInt32FixNumber();//len
                 long posCount = writer.FillUInt32FixNumber();//count
-                foreach (var item in value)
+                foreach (float item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     count++;
@@ -700,7 +724,9 @@ namespace Bssom.Serializer.Internal
         public static int SizeIEnumerable(ref BssomSizeContext context, IEnumerable<Single> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             if (value.TryGetICollectionCount(out int count))
             {
@@ -713,7 +739,9 @@ namespace Bssom.Serializer.Internal
         public static HashSet<Single> DeserializeSetFloat32(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureArray1BuildInType(BssomType.Float32Code))
+            {
                 return default;
+            }
 
             reader.SkipVariableNumber();
             int count = reader.ReadVariableNumber();
@@ -728,7 +756,7 @@ namespace Bssom.Serializer.Internal
 
         public static void FillFloat32<T>(ref T t, ref BssomReader reader, ref BssomDeserializeContext context, int count) where T : ICollection<Single>
         {
-            var coll = (ICollection<Single>)t;
+            ICollection<float> coll = (ICollection<Single>)t;
             for (int i = 0; i < count; i++)
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
@@ -752,7 +780,7 @@ namespace Bssom.Serializer.Internal
             {
                 writer.WriteVariableNumber(BssomBinaryPrimitives.Array1TypeSizeWithOutTypeHeadAndLength(BssomBinaryPrimitives.Float64Size, count));
                 writer.WriteVariableNumber(count);
-                foreach (var item in value)
+                foreach (double item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     writer.WriteWithOutTypeHead(item);
@@ -763,7 +791,7 @@ namespace Bssom.Serializer.Internal
                 count = 0;
                 long posLen = writer.FillUInt32FixNumber();//len
                 long posCount = writer.FillUInt32FixNumber();//count
-                foreach (var item in value)
+                foreach (double item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     count++;
@@ -780,7 +808,9 @@ namespace Bssom.Serializer.Internal
         public static int SizeIEnumerable(ref BssomSizeContext context, IEnumerable<Double> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             if (value.TryGetICollectionCount(out int count))
             {
@@ -793,7 +823,9 @@ namespace Bssom.Serializer.Internal
         public static HashSet<Double> DeserializeSetFloat64(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureArray1BuildInType(BssomType.Float64Code))
+            {
                 return default;
+            }
 
             reader.SkipVariableNumber();
             int count = reader.ReadVariableNumber();
@@ -808,7 +840,7 @@ namespace Bssom.Serializer.Internal
 
         public static void FillFloat64<T>(ref T t, ref BssomReader reader, ref BssomDeserializeContext context, int count) where T : ICollection<Double>
         {
-            var coll = (ICollection<Double>)t;
+            ICollection<double> coll = (ICollection<Double>)t;
             for (int i = 0; i < count; i++)
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
@@ -832,7 +864,7 @@ namespace Bssom.Serializer.Internal
             {
                 writer.WriteVariableNumber(BssomBinaryPrimitives.Array1TypeSizeWithOutTypeHeadAndLength(BssomBinaryPrimitives.BooleanSize, count));
                 writer.WriteVariableNumber(count);
-                foreach (var item in value)
+                foreach (bool item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     writer.WriteWithOutTypeHead(item);
@@ -843,7 +875,7 @@ namespace Bssom.Serializer.Internal
                 count = 0;
                 long posLen = writer.FillUInt32FixNumber();//len
                 long posCount = writer.FillUInt32FixNumber();//count
-                foreach (var item in value)
+                foreach (bool item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     count++;
@@ -860,7 +892,9 @@ namespace Bssom.Serializer.Internal
         public static int SizeIEnumerable(ref BssomSizeContext context, IEnumerable<Boolean> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             if (value.TryGetICollectionCount(out int count))
             {
@@ -873,7 +907,9 @@ namespace Bssom.Serializer.Internal
         public static HashSet<Boolean> DeserializeSetBoolean(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureArray1BuildInType(BssomType.BooleanCode))
+            {
                 return default;
+            }
 
             reader.SkipVariableNumber();
             int count = reader.ReadVariableNumber();
@@ -888,7 +924,7 @@ namespace Bssom.Serializer.Internal
 
         public static void FillBoolean<T>(ref T t, ref BssomReader reader, ref BssomDeserializeContext context, int count) where T : ICollection<Boolean>
         {
-            var coll = (ICollection<Boolean>)t;
+            ICollection<bool> coll = (ICollection<Boolean>)t;
             for (int i = 0; i < count; i++)
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
@@ -912,7 +948,7 @@ namespace Bssom.Serializer.Internal
             {
                 writer.WriteVariableNumber(BssomBinaryPrimitives.Array1TypeSizeWithOutTypeHeadAndLength(BssomBinaryPrimitives.CharSize, count));
                 writer.WriteVariableNumber(count);
-                foreach (var item in value)
+                foreach (char item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     writer.WriteWithOutTypeHead(item);
@@ -923,7 +959,7 @@ namespace Bssom.Serializer.Internal
                 count = 0;
                 long posLen = writer.FillUInt32FixNumber();//len
                 long posCount = writer.FillUInt32FixNumber();//count
-                foreach (var item in value)
+                foreach (char item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     count++;
@@ -940,7 +976,9 @@ namespace Bssom.Serializer.Internal
         public static int SizeIEnumerable(ref BssomSizeContext context, IEnumerable<Char> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             if (value.TryGetICollectionCount(out int count))
             {
@@ -953,7 +991,9 @@ namespace Bssom.Serializer.Internal
         public static HashSet<Char> DeserializeSetChar(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureArray1NativeType(NativeBssomType.CharCode))
+            {
                 return default;
+            }
 
             reader.SkipVariableNumber();
             int count = reader.ReadVariableNumber();
@@ -968,7 +1008,7 @@ namespace Bssom.Serializer.Internal
 
         public static void FillChar<T>(ref T t, ref BssomReader reader, ref BssomDeserializeContext context, int count) where T : ICollection<Char>
         {
-            var coll = (ICollection<Char>)t;
+            ICollection<char> coll = (ICollection<Char>)t;
             for (int i = 0; i < count; i++)
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
@@ -992,7 +1032,7 @@ namespace Bssom.Serializer.Internal
             {
                 writer.WriteVariableNumber(BssomBinaryPrimitives.Array1TypeSizeWithOutTypeHeadAndLength(BssomBinaryPrimitives.DecimalSize, count));
                 writer.WriteVariableNumber(count);
-                foreach (var item in value)
+                foreach (decimal item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     writer.WriteWithOutTypeHead(item);
@@ -1003,7 +1043,7 @@ namespace Bssom.Serializer.Internal
                 count = 0;
                 long posLen = writer.FillUInt32FixNumber();//len
                 long posCount = writer.FillUInt32FixNumber();//count
-                foreach (var item in value)
+                foreach (decimal item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     count++;
@@ -1020,7 +1060,9 @@ namespace Bssom.Serializer.Internal
         public static int SizeIEnumerable(ref BssomSizeContext context, IEnumerable<Decimal> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             if (value.TryGetICollectionCount(out int count))
             {
@@ -1033,7 +1075,9 @@ namespace Bssom.Serializer.Internal
         public static HashSet<Decimal> DeserializeSetDecimal(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureArray1NativeType(NativeBssomType.DecimalCode))
+            {
                 return default;
+            }
 
             reader.SkipVariableNumber();
             int count = reader.ReadVariableNumber();
@@ -1048,7 +1092,7 @@ namespace Bssom.Serializer.Internal
 
         public static void FillDecimal<T>(ref T t, ref BssomReader reader, ref BssomDeserializeContext context, int count) where T : ICollection<Decimal>
         {
-            var coll = (ICollection<Decimal>)t;
+            ICollection<decimal> coll = (ICollection<Decimal>)t;
             for (int i = 0; i < count; i++)
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
@@ -1072,7 +1116,7 @@ namespace Bssom.Serializer.Internal
             {
                 writer.WriteVariableNumber(BssomBinaryPrimitives.Array1TypeSizeWithOutTypeHeadAndLength(BssomBinaryPrimitives.GuidSize, count));
                 writer.WriteVariableNumber(count);
-                foreach (var item in value)
+                foreach (Guid item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     writer.WriteWithOutTypeHead(item);
@@ -1083,7 +1127,7 @@ namespace Bssom.Serializer.Internal
                 count = 0;
                 long posLen = writer.FillUInt32FixNumber();//len
                 long posCount = writer.FillUInt32FixNumber();//count
-                foreach (var item in value)
+                foreach (Guid item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     count++;
@@ -1100,7 +1144,9 @@ namespace Bssom.Serializer.Internal
         public static int SizeIEnumerable(ref BssomSizeContext context, IEnumerable<Guid> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             if (value.TryGetICollectionCount(out int count))
             {
@@ -1113,7 +1159,9 @@ namespace Bssom.Serializer.Internal
         public static HashSet<Guid> DeserializeSetGuid(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureArray1NativeType(NativeBssomType.GuidCode))
+            {
                 return default;
+            }
 
             reader.SkipVariableNumber();
             int count = reader.ReadVariableNumber();
@@ -1128,7 +1176,7 @@ namespace Bssom.Serializer.Internal
 
         public static void FillGuid<T>(ref T t, ref BssomReader reader, ref BssomDeserializeContext context, int count) where T : ICollection<Guid>
         {
-            var coll = (ICollection<Guid>)t;
+            ICollection<Guid> coll = (ICollection<Guid>)t;
             for (int i = 0; i < count; i++)
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
@@ -1146,17 +1194,21 @@ namespace Bssom.Serializer.Internal
                 writer.WriteNull();
                 return;
             }
-            
+
             if (value.TryGetICollectionCount(out int count))
             {
                 if (context.Option.IsUseStandardDateTime)
+                {
                     writer.WriteArray1BuildInType(BssomType.TimestampCode);
+                }
                 else
+                {
                     writer.WriteArray1NativeType(NativeBssomType.DateTimeCode);
+                }
 
                 long posLen = writer.FillUInt32FixNumber();//len
                 writer.WriteVariableNumber(count);
-                foreach (var item in value)
+                foreach (DateTime item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     writer.Write(item, context.Option.IsUseStandardDateTime, false);
@@ -1167,13 +1219,18 @@ namespace Bssom.Serializer.Internal
             else
             {
                 if (context.Option.IsUseStandardDateTime)
+                {
                     writer.WriteArray1BuildInType(BssomType.TimestampCode);
+                }
                 else
+                {
                     writer.WriteArray1NativeType(NativeBssomType.DateTimeCode);
+                }
+
                 count = 0;
                 long posLen = writer.FillUInt32FixNumber();
                 long posCount = writer.FillUInt32FixNumber();
-                foreach (var item in value)
+                foreach (DateTime item in value)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
                     count++;
@@ -1190,7 +1247,9 @@ namespace Bssom.Serializer.Internal
         public static int SizeIEnumerable(ref BssomSizeContext context, IEnumerable<DateTime> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             if (value.TryGetICollectionCount(out int count))
             {
@@ -1219,7 +1278,9 @@ namespace Bssom.Serializer.Internal
         public static HashSet<DateTime> DeserializeSetDateTime(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureBuildInType(BssomType.Array1))
+            {
                 return default;
+            }
 
             HashSet<DateTime> hash;
             int count;

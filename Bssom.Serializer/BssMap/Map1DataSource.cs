@@ -15,7 +15,10 @@ namespace Bssom.Serializer.BssMap
             _context = context;
             KeyFormatter = context.Option.FormatterResolver.GetFormatterWithVerify<TKey>();
             if (!isOnlyReadFieldOffset)
+            {
                 ValueFormatter = context.Option.FormatterResolver.GetFormatterWithVerify<TValue>();
+            }
+
             ReadPosition = reader.Position;
             int size = reader.ReadVariableNumber();
             EndPosition = reader.Position + size;
@@ -30,15 +33,15 @@ namespace Bssom.Serializer.BssMap
         public IBssomFormatter<TKey> KeyFormatter { get; }
         public IBssomFormatter<TValue> ValueFormatter { get; }
         public bool IsOnlyReadFieldOffset => ValueFormatter == null;
-   
+
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
             for (int i = 0; i < Count; i++)
             {
-                var key = KeyFormatter.Deserialize(ref _reader, ref _context);
+                TKey key = KeyFormatter.Deserialize(ref _reader, ref _context);
                 if (IsOnlyReadFieldOffset)
                 {
-                    var offset = new BssomFieldOffsetInfo(_reader.Position);
+                    BssomFieldOffsetInfo offset = new BssomFieldOffsetInfo(_reader.Position);
                     yield return new KeyValuePair<TKey, TValue>(key, Unsafe.As<BssomFieldOffsetInfo, TValue>(ref offset));
                 }
                 else

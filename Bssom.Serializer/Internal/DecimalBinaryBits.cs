@@ -1,11 +1,5 @@
-﻿using System;
+﻿using Bssom.Serializer.Binary;
 using System.Runtime.CompilerServices;
-using Bssom.Serializer.Binary;
-using Bssom.Serializer.BssMap.KeyResolvers;
-using Bssom.Serializer.Internal;
-using Bssom.Serializer.BssomBuffer;
-using Bssom.Serializer.BssMap;
-using Bssom.Serializer.Resolvers;
 namespace Bssom.Serializer.Internal
 {
     internal struct DecimalBinaryBits
@@ -40,8 +34,8 @@ namespace Bssom.Serializer.Internal
             int high = BssomBinaryPrimitives.ReadInt32LittleEndian(ref Unsafe.Add(ref refb, 8));
             int flags = BssomBinaryPrimitives.ReadInt32LittleEndian(ref Unsafe.Add(ref refb, 12));
 
-            var sign = (flags & 0x80000000) != 0;
-            var scale = (byte)((flags >> 16) & 0x7F);
+            bool sign = (flags & 0x80000000) != 0;
+            byte scale = (byte)((flags >> 16) & 0x7F);
             return new decimal(low, mid, high, sign, scale);
         }
     }

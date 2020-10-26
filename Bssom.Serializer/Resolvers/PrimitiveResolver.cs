@@ -1,14 +1,9 @@
 ﻿//using System.Runtime.CompilerServices;
 
-using Bssom.Serializer.Binary;
-using Bssom.Serializer.BssMap.KeyResolvers;
-using Bssom.Serializer.BssomBuffer;
-using Bssom.Serializer.BssMap;
-using Bssom.Serializer.Resolvers;
-using System;
-using System.Collections.Generic;
 using Bssom.Serializer.Formatters;
 using Bssom.Serializer.Internal;
+using System;
+using System.Collections.Generic;
 
 namespace Bssom.Serializer.Resolvers
 {
@@ -35,7 +30,7 @@ namespace Bssom.Serializer.Resolvers
             {
                 Type t = typeof(T);
 
-                if (PrimitiveResolverGetFormatterHelper.TryGetFormatter(t, out var formatter))
+                if (PrimitiveResolverGetFormatterHelper.TryGetFormatter(t, out IBssomFormatter formatter))
                 {
                     Formatter = (IBssomFormatter<T>)formatter;
                 }

@@ -33,7 +33,9 @@ namespace Bssom.Serializer.Internal
             get
             {
                 if (i != _raw64Count - 1 || _lastRaw64ByteCount == 8)
+                {
                     return Unsafe.ReadUnaligned<ulong>(ref _us[i * 8]);
+                }
 
                 int startPos = (_raw64Count - 1) * 8;
                 ulong value1 = 0;

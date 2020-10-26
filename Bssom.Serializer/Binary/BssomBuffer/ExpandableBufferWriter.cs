@@ -1,9 +1,6 @@
-﻿using Bssom.Serializer.Internal;
-using System;
+﻿using System;
 using System.Buffers;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,7 +21,7 @@ namespace Bssom.Serializer.BssomBuffer
         public ExpandableBufferWriter(BssomComplexBuffer complexBuffer)
         {
             this.complexBuffer = complexBuffer;
-            this.bufferedsRelativeSpan = new int[complexBuffer.Spans.Length];
+            bufferedsRelativeSpan = new int[complexBuffer.Spans.Length];
         }
 
         /// <summary>
@@ -95,7 +92,10 @@ namespace Bssom.Serializer.BssomBuffer
         public ref byte GetRef(int sizeHint = 0)
         {
             if (complexBuffer.CurrentSpanPosition + sizeHint > complexBuffer.CurrentSpan.Boundary)
+            {
                 MoveNextSpan(sizeHint);
+            }
+
             return ref complexBuffer.ReadRef(sizeHint);
         }
 
@@ -105,7 +105,10 @@ namespace Bssom.Serializer.BssomBuffer
         public bool CanGetSizeRefForProvidePerformanceInTryWrite(int size)
         {
             if (complexBuffer.CurrentSpanPosition + size > complexBuffer.CurrentSpan.Boundary)
+            {
                 return false;
+            }
+
             return true;
         }
 
@@ -120,7 +123,9 @@ namespace Bssom.Serializer.BssomBuffer
             {
                 array = new byte[Buffered];
                 if (array.Length != 0)
+                {
                     Unsafe.CopyBlock(ref array[0], ref complexBuffer.CurrentSpan.GetBufferStartRef(), (uint)Buffered);
+                }
             }
             else
             {
@@ -136,13 +141,15 @@ namespace Bssom.Serializer.BssomBuffer
         public byte[] GetBufferedArrayWithKeepFirstBuffer()
         {
             if (complexBuffer.Spans.Length == 1)
+            {
                 return complexBuffer.CurrentSpan.Buffer;
+            }
 
             FlushLastSpanBoundary();
             byte[] array = new byte[complexBuffer.Spans[0].Start + Buffered];
             //save first buffer start front port
             int copyLen = complexBuffer.Spans[0].Start + bufferedsRelativeSpan[0];
-            Array.Copy(complexBuffer.Spans[0].Buffer,array, copyLen);
+            Array.Copy(complexBuffer.Spans[0].Buffer, array, copyLen);
 
             int start = copyLen;
             for (int i = 1; i < complexBuffer.Spans.Length; i++)
@@ -230,10 +237,13 @@ namespace Bssom.Serializer.BssomBuffer
         private void CreateBufferSpan(int size)
         {
             if (size < MinimumBufferSize)
+            {
                 size = MinimumBufferSize;
-            var span = new BufferSpan(ArrayPool<byte>.Shared.Rent(size));
+            }
 
-            this.SpansResize(complexBuffer.Spans.Length + 1);
+            BufferSpan span = new BufferSpan(ArrayPool<byte>.Shared.Rent(size));
+
+            SpansResize(complexBuffer.Spans.Length + 1);
 
             complexBuffer.Spans[complexBuffer.Spans.Length - 1] = span;
             complexBuffer.SpansCumulativeBoundary[complexBuffer.SpansCumulativeBoundary.Length - 1] = complexBuffer.SpansCumulativeBoundary[complexBuffer.SpansCumulativeBoundary.Length - 2] + complexBuffer.Spans[complexBuffer.Spans.Length - 2].Boundary;

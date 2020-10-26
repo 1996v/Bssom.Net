@@ -1,7 +1,5 @@
 ﻿//using System.Runtime.CompilerServices;
 
-using System;
-
 namespace Bssom.Serializer
 {
     /// <summary>

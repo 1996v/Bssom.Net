@@ -25,7 +25,9 @@ namespace Bssom.Serializer.BssomBuffer
         public ref byte ReadRef(int len, int position)
         {
             if (position + len > Boundary)
+            {
                 BssomSerializationOperationException.CapacityOfBufferIsInsufficient(len);
+            }
 
             return ref Buffer[Start + position];
         }

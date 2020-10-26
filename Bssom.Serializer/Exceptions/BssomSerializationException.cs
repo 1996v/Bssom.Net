@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Bssom.Serializer
 {
@@ -32,8 +28,8 @@ namespace Bssom.Serializer
         /// </summary>
         /// <param name="message">The exception message.</param>
         /// <param name="inner"> The exception that is the cause of the current exception</param>
-        public BssomSerializationException(string message,Exception inner)
-            : base(message,inner)
+        public BssomSerializationException(string message, Exception inner)
+            : base(message, inner)
         {
         }
     }

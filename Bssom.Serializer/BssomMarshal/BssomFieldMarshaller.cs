@@ -1,17 +1,12 @@
 ﻿//using System.Runtime.CompilerServices;
 
-using System;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Collections.Generic;
-using System.Xml.Schema;
 using Bssom.Serializer.Binary;
 using Bssom.Serializer.BssMap;
 using Bssom.Serializer.BssMap.KeyResolvers;
 using Bssom.Serializer.BssomBuffer;
 using Bssom.Serializer.Internal;
-using Bssom.Serializer.Formatters;
-using Bssom.Serializer.Resolvers;
+using System;
+using System.Collections.Generic;
 
 namespace Bssom.Serializer
 {
@@ -52,7 +47,7 @@ namespace Bssom.Serializer
         public BssomFieldMarshaller(IBssomBufferWriter bufferWriter)
         {
             this.bufferWriter = bufferWriter;
-            this.basePos = bufferWriter.Position;
+            basePos = bufferWriter.Position;
         }
 
         /// <summary>
@@ -73,10 +68,14 @@ namespace Bssom.Serializer
         public BssomFieldOffsetInfo IndexOf(IIndexOfInputSource indexOfInputSource, long indexOfStartPosition = -1)
         {
             if (indexOfStartPosition == -1)
+            {
                 indexOfStartPosition = basePos;
+            }
 
             if (bufferWriter.Position != indexOfStartPosition)
+            {
                 bufferWriter.Seek(indexOfStartPosition, BssomSeekOrgin.Begin);
+            }
 
             return IndexOf(bufferWriter.GetBssomBuffer(), indexOfInputSource);
         }
@@ -106,10 +105,14 @@ namespace Bssom.Serializer
         public unsafe BssomFieldOffsetInfo IndexOf(string simpleMemberAccessLang, long indexOfStartPosition = -1)
         {
             if (indexOfStartPosition == -1)
+            {
                 indexOfStartPosition = basePos;
+            }
 
             if (bufferWriter.Position != indexOfStartPosition)
+            {
                 bufferWriter.Seek(indexOfStartPosition, BssomSeekOrgin.Begin);
+            }
 
             return IndexOf(bufferWriter.GetBssomBuffer(), simpleMemberAccessLang);
         }
@@ -200,39 +203,73 @@ namespace Bssom.Serializer
 
         #region StaticMethod
 
-        public static BssomFieldOffsetInfo IndexOf(byte[] buffer, int start, int end, IIndexOfInputSource indexOfInputSource) => IndexOf(new SimpleBufferWriter(buffer, start, end), indexOfInputSource);
+        public static BssomFieldOffsetInfo IndexOf(byte[] buffer, int start, int end, IIndexOfInputSource indexOfInputSource)
+        {
+            return IndexOf(new SimpleBufferWriter(buffer, start, end), indexOfInputSource);
+        }
 
-        public static BssomFieldOffsetInfo IndexOf(byte[] buffer, int start, int end, string simpleMemberAccessLang) => IndexOf(new SimpleBufferWriter(buffer, start, end), simpleMemberAccessLang);
+        public static BssomFieldOffsetInfo IndexOf(byte[] buffer, int start, int end, string simpleMemberAccessLang)
+        {
+            return IndexOf(new SimpleBufferWriter(buffer, start, end), simpleMemberAccessLang);
+        }
 
-        public static T ReadValue<T>(byte[] buffer, int start, int end, BssomFieldOffsetInfo offsetInfo, BssomSerializerOptions option = null) => ReadValue<T>(new SimpleBufferWriter(buffer, start, end), offsetInfo, option);
+        public static T ReadValue<T>(byte[] buffer, int start, int end, BssomFieldOffsetInfo offsetInfo, BssomSerializerOptions option = null)
+        {
+            return ReadValue<T>(new SimpleBufferWriter(buffer, start, end), offsetInfo, option);
+        }
 
-        public static int ReadValueSize(byte[] buffer, int start, int end, BssomFieldOffsetInfo offsetInfo) => ReadValueSize(new SimpleBufferWriter(buffer, start, end), offsetInfo);
+        public static int ReadValueSize(byte[] buffer, int start, int end, BssomFieldOffsetInfo offsetInfo)
+        {
+            return ReadValueSize(new SimpleBufferWriter(buffer, start, end), offsetInfo);
+        }
 
-        public static BssomValueType ReadValueType(byte[] buffer, int start, int end, BssomFieldOffsetInfo offsetInfo) => ReadValueType(new SimpleBufferWriter(buffer, start, end), offsetInfo);
+        public static BssomValueType ReadValueType(byte[] buffer, int start, int end, BssomFieldOffsetInfo offsetInfo)
+        {
+            return ReadValueType(new SimpleBufferWriter(buffer, start, end), offsetInfo);
+        }
 
-        public static byte ReadValueTypeCode(byte[] buffer, int start, int end, BssomFieldOffsetInfo offsetInfo, out bool isNativeType) => ReadValueTypeCode(new SimpleBufferWriter(buffer, start, end), offsetInfo, out isNativeType);
+        public static byte ReadValueTypeCode(byte[] buffer, int start, int end, BssomFieldOffsetInfo offsetInfo, out bool isNativeType)
+        {
+            return ReadValueTypeCode(new SimpleBufferWriter(buffer, start, end), offsetInfo, out isNativeType);
+        }
 
-        public static int ReadArrayCount(byte[] buffer, int start, int end, BssomFieldOffsetInfo offsetInfo) => ReadArrayCountByMapType(new SimpleBufferWriter(buffer, start, end), offsetInfo);
+        public static int ReadArrayCount(byte[] buffer, int start, int end, BssomFieldOffsetInfo offsetInfo)
+        {
+            return ReadArrayCountByMapType(new SimpleBufferWriter(buffer, start, end), offsetInfo);
+        }
 
-        public static IEnumerable<KeyValuePair<TKey, BssomFieldOffsetInfo>> ReadAllKeysByMapType<TKey>(byte[] buffer, int start, int end, BssomFieldOffsetInfo offsetInfo, BssomSerializerOptions option = null) => ReadAllKeysByMapType<TKey>(new SimpleBufferWriter(buffer, start, end), offsetInfo, option);
+        public static IEnumerable<KeyValuePair<TKey, BssomFieldOffsetInfo>> ReadAllKeysByMapType<TKey>(byte[] buffer, int start, int end, BssomFieldOffsetInfo offsetInfo, BssomSerializerOptions option = null)
+        {
+            return ReadAllKeysByMapType<TKey>(new SimpleBufferWriter(buffer, start, end), offsetInfo, option);
+        }
 
-        public static bool TryWrite<T>(byte[] buffer, int start, int end, BssomFieldOffsetInfo offsetInfo, T value, BssomSerializerOptions option = null) => TryWrite(new SimpleBufferWriter(buffer, start, end), offsetInfo, value, option);
+        public static bool TryWrite<T>(byte[] buffer, int start, int end, BssomFieldOffsetInfo offsetInfo, T value, BssomSerializerOptions option = null)
+        {
+            return TryWrite(new SimpleBufferWriter(buffer, start, end), offsetInfo, value, option);
+        }
 
         public static BssomFieldOffsetInfo IndexOf(IBssomBuffer buffer, IIndexOfInputSource indexOfInputSource)
         {
             if (buffer is null)
+            {
                 throw new ArgumentNullException(nameof(buffer));
+            }
 
             if (indexOfInputSource is null)
+            {
                 throw new ArgumentNullException(nameof(indexOfInputSource));
+            }
 
-            var reader = new BssomReader(buffer);
+            BssomReader reader = new BssomReader(buffer);
             BssomFieldOffsetInfo info = new BssomFieldOffsetInfo();
 
             indexOfInputSource.Reset();
             if (!indexOfInputSource.MoveNext())
+            {
                 throw BssomSerializationOperationException.InputDataSouceIsEmpty();
-            Next:
+            }
+
+        Next:
             byte bssOjectType = reader.SkipBlankCharacterAndReadBssomType();
             switch (bssOjectType)
             {
@@ -240,7 +277,9 @@ namespace Bssom.Serializer
                     {
                         object key = indexOfInputSource.CurrentMapKey();
                         if (!BssMapKeyResolverProvider.TryGetBssMapKeyResolver(key.GetType(), out IBssMapKeyResolver resolver))
+                        {
                             throw BssomSerializationTypeFormatterException.BssomMapKeyUnsupportedType(key.GetType());
+                        }
 
                         reader.SkipVariableNumber();//Skip Length 
                         int count = reader.ReadVariableNumber();
@@ -283,7 +322,10 @@ namespace Bssom.Serializer
                             }
                         }
                         if (indexOfInputSource.MoveNext())
+                        {
                             throw BssomSerializationOperationException.BssomMapIsNull(key);
+                        }
+
                         info.Offset = -1;
                         return info;
                     }
@@ -291,10 +333,12 @@ namespace Bssom.Serializer
                     {
                         object key = indexOfInputSource.CurrentMapKey();
                         if (!BssMapKeyResolverProvider.TryGetBssMapKeyResolver(key.GetType(), out IBssMapKeyResolver resolver))
+                        {
                             throw BssomSerializationTypeFormatterException.BssomMapKeyUnsupportedType(key.GetType());
+                        }
 
                         UInt64BytesISegment keyISegment = resolver.GetMap2KeySegment(key);
-                        var aprp = BssMapHeadPackInfo.Create(ref reader);
+                        BssMapHeadPackInfo aprp = BssMapHeadPackInfo.Create(ref reader);
                         if (aprp.MapHead.ElementCount > 0)
                         {
                             ref byte refb = ref reader.BssomBuffer.TryReadFixedRef(aprp.MapHead.RouteLength, out bool haveEnoughSizeAndCanBeFixed);
@@ -332,7 +376,10 @@ namespace Bssom.Serializer
                             }
                         }
                         if (indexOfInputSource.MoveNext())
+                        {
                             throw BssomSerializationOperationException.BssomMapIsNull(key);
+                        }
+
                         info.Offset = -1;
                         return info;
                     }
@@ -353,7 +400,9 @@ namespace Bssom.Serializer
                         if (index < count)
                         {
                             if (!BssomBinaryPrimitives.TryGetTypeSizeFromStaticTypeSizes(info.Array1ElementTypeIsNativeType, info.Array1ElementType, out int eleSize))
+                            {
                                 throw BssomSerializationOperationException.UnexpectedCodeRead(info.Array1ElementType, reader.Position);
+                            }
 
                             if (!indexOfInputSource.MoveNext())
                             {
@@ -403,18 +452,25 @@ namespace Bssom.Serializer
         public static BssomFieldOffsetInfo IndexOf(IBssomBuffer buffer, string simpleMemberAccessLang)
         {
             if (buffer is null)
+            {
                 throw new ArgumentNullException(nameof(buffer));
+            }
 
             if (simpleMemberAccessLang is null)
+            {
                 throw new ArgumentNullException(nameof(simpleMemberAccessLang));
+            }
 
-            var reader = new BssomReader(buffer);
+            BssomReader reader = new BssomReader(buffer);
             StringInputDataSource stringInputDataSource = new StringInputDataSource(simpleMemberAccessLang);
             BssomFieldOffsetInfo info = new BssomFieldOffsetInfo();
 
             if (!stringInputDataSource.MoveNext())
+            {
                 throw BssomSerializationOperationException.InputDataSouceIsEmpty();
-            Next:
+            }
+
+        Next:
             byte bssOjectType = reader.SkipBlankCharacterAndReadBssomType();
             switch (bssOjectType)
             {
@@ -462,14 +518,17 @@ namespace Bssom.Serializer
                             }
                         }
                         if (stringInputDataSource.MoveNext())
+                        {
                             throw BssomSerializationOperationException.BssomMapIsNull(stringInputDataSource.GetCurrentSegmentString());
+                        }
+
                         info.Offset = -1;
                         return info;
                     }
                 case BssomType.Map2:
                     {
                         UInt64BytesISegment keyISegment = stringInputDataSource.GetCurrentSegmentFromMap2StringKey();
-                        var aprp = BssMapHeadPackInfo.Create(ref reader);
+                        BssMapHeadPackInfo aprp = BssMapHeadPackInfo.Create(ref reader);
                         if (aprp.MapHead.ElementCount > 0)
                         {
                             ref byte refb = ref reader.BssomBuffer.TryReadFixedRef(aprp.MapHead.RouteLength, out bool haveEnoughSizeAndCanBeFixed);
@@ -507,7 +566,10 @@ namespace Bssom.Serializer
                             }
                         }
                         if (stringInputDataSource.MoveNext())
+                        {
                             throw BssomSerializationOperationException.BssomMapIsNull(stringInputDataSource.GetCurrentSegmentString());
+                        }
+
                         info.Offset = -1;
                         return info;
                     }
@@ -528,7 +590,9 @@ namespace Bssom.Serializer
                         if (index < count)
                         {
                             if (!BssomBinaryPrimitives.TryGetTypeSizeFromStaticTypeSizes(info.Array1ElementTypeIsNativeType, info.Array1ElementType, out int eleSize))
+                            {
                                 throw BssomSerializationOperationException.UnexpectedCodeRead(info.Array1ElementType, reader.Position);
+                            }
 
                             if (!stringInputDataSource.MoveNext())
                             {
@@ -578,45 +642,62 @@ namespace Bssom.Serializer
         public static T ReadValue<T>(IBssomBuffer buffer, BssomFieldOffsetInfo offsetInfo, BssomSerializerOptions option = null)
         {
             if (buffer is null)
+            {
                 throw new ArgumentNullException(nameof(buffer));
+            }
 
             if (offsetInfo.Offset == -1)
+            {
                 throw BssomSerializationArgumentException.InvalidOffsetInfoValue();
+            }
 
             if (option == null)
+            {
                 option = BssomSerializerOptions.Default;
+            }
 
-            var reader = new BssomReader(buffer);
-            var context = new BssomDeserializeContext(option);
+            BssomReader reader = new BssomReader(buffer);
+            BssomDeserializeContext context = new BssomDeserializeContext(option);
 
             if (reader.Position != offsetInfo.Offset)
+            {
                 reader.BssomBuffer.Seek(offsetInfo.Offset, BssomSeekOrgin.Begin);
+            }
 
             if (offsetInfo.IsArray1Type)
             {
                 return Array1ElementWriterFactory<T>.ReadElement(ref reader, option, offsetInfo);
             }
-            var formatter = option.FormatterResolver.GetFormatterWithVerify<T>();
+            IBssomFormatter<T> formatter = option.FormatterResolver.GetFormatterWithVerify<T>();
             return formatter.Deserialize(ref reader, ref context);
         }
 
         public static int ReadValueSize(IBssomBuffer buffer, BssomFieldOffsetInfo offsetInfo)
         {
             if (buffer is null)
+            {
                 throw new ArgumentNullException(nameof(buffer));
+            }
 
             if (offsetInfo.Offset == -1)
+            {
                 throw BssomSerializationArgumentException.InvalidOffsetInfoValue();
+            }
 
-            var reader = new BssomReader(buffer);
+            BssomReader reader = new BssomReader(buffer);
 
             if (reader.Position != offsetInfo.Offset)
+            {
                 reader.BssomBuffer.Seek(offsetInfo.Offset, BssomSeekOrgin.Begin);
+            }
 
             if (offsetInfo.IsArray1Type)
             {
                 if (BssomBinaryPrimitives.TryGetTypeSizeFromStaticTypeSizes(offsetInfo.Array1ElementTypeIsNativeType, offsetInfo.Array1ElementType, out int size))
+                {
                     return size;
+                }
+
                 throw BssomSerializationOperationException.UnexpectedCodeRead(offsetInfo.Array1ElementType, reader.Position);
             }
 
@@ -625,19 +706,23 @@ namespace Bssom.Serializer
 
         public static BssomValueType ReadValueType(IBssomBuffer buffer, BssomFieldOffsetInfo offsetInfo)
         {
-            var typeCode = ReadValueTypeCode(buffer, offsetInfo, out bool isNativeType);
+            byte typeCode = ReadValueTypeCode(buffer, offsetInfo, out bool isNativeType);
             return BssomType.GetBssomValueType(isNativeType, typeCode);
         }
 
         public static byte ReadValueTypeCode(IBssomBuffer buffer, BssomFieldOffsetInfo offsetInfo, out bool isNativeType)
         {
             if (buffer is null)
+            {
                 throw new ArgumentNullException(nameof(buffer));
+            }
 
             if (offsetInfo.Offset == -1)
+            {
                 throw BssomSerializationArgumentException.InvalidOffsetInfoValue();
+            }
 
-            var reader = new BssomReader(buffer);
+            BssomReader reader = new BssomReader(buffer);
 
             if (offsetInfo.IsArray1Type)
             {
@@ -646,9 +731,11 @@ namespace Bssom.Serializer
             }
 
             if (reader.Position != offsetInfo.Offset)
+            {
                 reader.BssomBuffer.Seek(offsetInfo.Offset, BssomSeekOrgin.Begin);
+            }
 
-            var typeCode = reader.SkipBlankCharacterAndReadBssomType();
+            byte typeCode = reader.SkipBlankCharacterAndReadBssomType();
             if (typeCode == BssomType.NativeCode)
             {
                 isNativeType = true;
@@ -661,21 +748,30 @@ namespace Bssom.Serializer
         public static int ReadArrayCountByMapType(IBssomBuffer buffer, BssomFieldOffsetInfo offsetInfo)
         {
             if (buffer is null)
+            {
                 throw new ArgumentNullException(nameof(buffer));
+            }
 
             if (offsetInfo.Offset == -1)
+            {
                 throw BssomSerializationArgumentException.InvalidOffsetInfoValue();
+            }
 
-            var reader = new BssomReader(buffer);
+            BssomReader reader = new BssomReader(buffer);
 
             if (reader.Position != offsetInfo.Offset)
+            {
                 reader.BssomBuffer.Seek(offsetInfo.Offset, BssomSeekOrgin.Begin);
+            }
 
-            var typeCode = reader.SkipBlankCharacterAndReadBssomType();
+            byte typeCode = reader.SkipBlankCharacterAndReadBssomType();
             if (typeCode == BssomType.Array1)
             {
                 if (reader.ReadBssomType() == BssomType.NativeCode)
+                {
                     reader.BssomBuffer.Seek(BssomBinaryPrimitives.BuildInTypeCodeSize, BssomSeekOrgin.Current);
+                }
+
                 return reader.ReadVariableNumber();
             }
             else if (typeCode == BssomType.Array2)
@@ -688,19 +784,27 @@ namespace Bssom.Serializer
         public static IEnumerable<KeyValuePair<TKey, BssomFieldOffsetInfo>> ReadAllKeysByMapType<TKey>(IBssomBuffer buffer, BssomFieldOffsetInfo offsetInfo, BssomSerializerOptions option = null)
         {
             if (buffer is null)
+            {
                 throw new ArgumentNullException(nameof(buffer));
+            }
 
             if (offsetInfo.Offset == -1)
+            {
                 throw BssomSerializationArgumentException.InvalidOffsetInfoValue();
+            }
 
             if (option == null)
+            {
                 option = BssomSerializerOptions.Default;
+            }
 
-            var reader = new BssomReader(buffer);
-            var context = new BssomDeserializeContext(option);
+            BssomReader reader = new BssomReader(buffer);
+            BssomDeserializeContext context = new BssomDeserializeContext(option);
 
             if (reader.Position != offsetInfo.Offset)
+            {
                 reader.BssomBuffer.Seek(offsetInfo.Offset, BssomSeekOrgin.Begin);
+            }
 
             return MapFormatterHelper.ReadAllKeys<TKey>(ref reader, ref context);
         }
@@ -708,20 +812,28 @@ namespace Bssom.Serializer
         public static bool TryWrite<T>(IBssomBufferWriter bufferWriter, BssomFieldOffsetInfo offsetInfo, T value, BssomSerializerOptions option = null)
         {
             if (bufferWriter is null)
+            {
                 throw new ArgumentNullException(nameof(bufferWriter));
+            }
 
             if (offsetInfo.Offset == -1)
+            {
                 throw BssomSerializationArgumentException.InvalidOffsetInfoValue();
+            }
 
             if (option == null)
+            {
                 option = BssomSerializerOptions.Default;
+            }
 
             BssomSerializeContext serializeContext = new BssomSerializeContext(option);
             BssomSizeContext sizeContext = new BssomSizeContext(option);
             BssomWriter writer = new BssomWriter(bufferWriter);
 
             if (writer.Position != offsetInfo.Offset)
+            {
                 writer.BufferWriter.Seek(offsetInfo.Offset, BssomSeekOrgin.Begin);
+            }
 
             if (offsetInfo.IsArray1Type)
             {
@@ -730,16 +842,20 @@ namespace Bssom.Serializer
             }
             else
             {
-                var formatter = option.FormatterResolver.GetFormatterWithVerify<T>();
-                var reader = writer.GetReader();
+                IBssomFormatter<T> formatter = option.FormatterResolver.GetFormatterWithVerify<T>();
+                BssomReader reader = writer.GetReader();
                 int len = reader.GetObjectLengthWithBlank();
                 len -= formatter.Size(ref sizeContext, value);
 
                 if (len < 0)
+                {
                     return false;
+                }
 
                 if (writer.Position != offsetInfo.Offset)
+                {
                     writer.BufferWriter.Seek(offsetInfo.Offset, BssomSeekOrgin.Begin);
+                }
 
                 if (len > 0)
                 {

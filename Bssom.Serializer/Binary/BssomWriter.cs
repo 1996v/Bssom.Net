@@ -1,7 +1,6 @@
-﻿using System;
+﻿using Bssom.Serializer.Binary;
+using System;
 using System.Runtime.CompilerServices;
-using System.Threading;
-using Bssom.Serializer.Binary;
 
 //using System.Runtime.CompilerServices;
 
@@ -209,7 +208,10 @@ namespace Bssom.Serializer
             if (isUseStandardDateTime)
             {
                 if (isWriteTypeCode)
+                {
                     WriteBuildInType(BssomType.TimestampCode);
+                }
+
                 BssomBinaryPrimitives.WriteDateTime(BufferWriter, value);
             }
             else

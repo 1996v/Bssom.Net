@@ -30,12 +30,15 @@
         /// <summary>
         /// Get Decimal
         /// </summary>
-        public decimal GetDecimal() => (decimal)_decimal;
+        public decimal GetDecimal()
+        {
+            return (decimal)_decimal;
+        }
 
         public override bool Equals(object obj)
         {
-            return obj is decimal raw && raw == GetDecimal() || 
-                obj is BssomDecimal bssom && bssom.GetDecimal() == this.GetDecimal();
+            return obj is decimal raw && raw == GetDecimal() ||
+                obj is BssomDecimal bssom && bssom.GetDecimal() == GetDecimal();
         }
 
         public override int GetHashCode()

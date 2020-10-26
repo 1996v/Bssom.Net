@@ -40,13 +40,16 @@ namespace Bssom.Serializer.Resolvers
                     return;
                 }
 
-                var formatterType = attr.FormatterType;
+                Type formatterType = attr.FormatterType;
                 if (formatterType.IsGenericType && !formatterType.IsConstructedGenericType)
                 {
                     formatterType = formatterType.MakeGenericType(t.GetGenericArguments());
                 }
 
-                if (formatterType != t) throw BssomSerializationTypeFormatterException.AttributeFormatterTypeMismatch(formatterType, t);
+                if (formatterType != t)
+                {
+                    throw BssomSerializationTypeFormatterException.AttributeFormatterTypeMismatch(formatterType, t);
+                }
 
                 if (attr.Arguments == null)
                 {

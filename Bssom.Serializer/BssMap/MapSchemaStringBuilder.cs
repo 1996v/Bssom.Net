@@ -1,8 +1,5 @@
 ﻿//using System.Runtime.CompilerServices;
 
-using Bssom.Serializer.BssMap.KeyResolvers;
-using System;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -39,7 +36,9 @@ namespace Bssom.Serializer.BssMap
             {
                 sb.Append(Unsafe.Add(ref refb, i).ToString());
                 if (i != len - 1)
+                {
                     sb.Append(",");
+                }
             }
             sb.Append(")");
             sb.Append(" ");

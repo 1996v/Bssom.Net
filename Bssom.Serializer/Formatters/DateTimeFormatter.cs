@@ -1,9 +1,5 @@
-﻿using System;
-using Bssom.Serializer.Binary;
-using Bssom.Serializer.BssMap.KeyResolvers;
-using Bssom.Serializer.Internal;
-using Bssom.Serializer.BssomBuffer;
-using Bssom.Serializer.BssMap;
+﻿using Bssom.Serializer.Binary;
+using System;
 
 namespace Bssom.Serializer.Formatters
 {
@@ -30,7 +26,7 @@ namespace Bssom.Serializer.Formatters
 
         public void Serialize(ref BssomWriter writer, ref BssomSerializeContext context, DateTime value)
         {
-            writer.Write(value,context.Option.IsUseStandardDateTime);
+            writer.Write(value, context.Option.IsUseStandardDateTime);
         }
     }
 }

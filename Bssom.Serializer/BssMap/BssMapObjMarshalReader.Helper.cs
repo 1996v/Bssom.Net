@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using Bssom.Serializer.Binary;
-using Bssom.Serializer.BssMap.KeyResolvers;
+﻿using Bssom.Serializer.Binary;
 using Bssom.Serializer.Internal;
-using Bssom.Serializer.BssomBuffer;
+using System;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 namespace Bssom.Serializer.BssMap
 {
     internal static class BssMapObjMarshalReader
@@ -14,10 +11,12 @@ namespace Bssom.Serializer.BssMap
         #region TryGetValue-Inline
 
         public static unsafe Byte TryGetUInt8Value(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, ref byte ref1, out bool isGet)
-        {  
+        {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             ref byte refBase = ref ref1;
             int keyPos = 0;
@@ -26,7 +25,7 @@ namespace Bssom.Serializer.BssMap
             byte nextKeyByteCount = 0;
             ulong value1 = 0;
             int mapHeadSize = paras.MapHeadSize;
-            
+
             switch (token)
             {
                 case AutomateReadOneKeyState.ReadNextBranch:
@@ -61,7 +60,10 @@ namespace Bssom.Serializer.BssMap
                             {
                                 ref1 = ref Unsafe.Add(ref refBase, nextOff - mapHeadSize);
                                 if (Unsafe.ReadUnaligned<BssMapRouteToken>(ref ref1) != BssMapRouteToken.LessElse)
+                                {
                                     throw BssomSerializationOperationException.UnexpectedCodeRead(ref1, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                                }
+
                                 ref1 = ref Unsafe.Add(ref ref1, 1);
                             }
 
@@ -93,7 +95,7 @@ namespace Bssom.Serializer.BssMap
                                 value1 = BssomBinaryPrimitives.ReadRawUInt64LittleEndian(value1);
                                 ref1 = ref Unsafe.Add(ref ref1, nextKeyByteCount);
                             }
-                            
+
                             ulong keyValue = key[keyPos];
                             if (keyValue > value1)
                             {
@@ -119,7 +121,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -166,7 +170,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -177,7 +183,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
 
                 case AutomateReadOneKeyState.ReadChildren:
@@ -197,11 +203,16 @@ namespace Bssom.Serializer.BssMap
             if (keyIsNativeType)
             {
                 if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
+                {
                     throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                }
+
                 ref1 = Unsafe.Add(ref ref1, 1);
             }
             if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
-                   throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            {
+                throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            }
 
             //seek valOffset
             reader.BssomBuffer.Seek(BssomBinaryPrimitives.ReadUInt32LittleEndian(ref Unsafe.Add(ref ref1, 1 + 1)) + paras.ReadPosition);
@@ -214,10 +225,12 @@ namespace Bssom.Serializer.BssMap
             return default;
         }
         public static unsafe SByte TryGetInt8Value(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, ref byte ref1, out bool isGet)
-        {  
+        {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             ref byte refBase = ref ref1;
             int keyPos = 0;
@@ -226,7 +239,7 @@ namespace Bssom.Serializer.BssMap
             byte nextKeyByteCount = 0;
             ulong value1 = 0;
             int mapHeadSize = paras.MapHeadSize;
-            
+
             switch (token)
             {
                 case AutomateReadOneKeyState.ReadNextBranch:
@@ -261,7 +274,10 @@ namespace Bssom.Serializer.BssMap
                             {
                                 ref1 = ref Unsafe.Add(ref refBase, nextOff - mapHeadSize);
                                 if (Unsafe.ReadUnaligned<BssMapRouteToken>(ref ref1) != BssMapRouteToken.LessElse)
+                                {
                                     throw BssomSerializationOperationException.UnexpectedCodeRead(ref1, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                                }
+
                                 ref1 = ref Unsafe.Add(ref ref1, 1);
                             }
 
@@ -293,7 +309,7 @@ namespace Bssom.Serializer.BssMap
                                 value1 = BssomBinaryPrimitives.ReadRawUInt64LittleEndian(value1);
                                 ref1 = ref Unsafe.Add(ref ref1, nextKeyByteCount);
                             }
-                            
+
                             ulong keyValue = key[keyPos];
                             if (keyValue > value1)
                             {
@@ -319,7 +335,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -366,7 +384,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -377,7 +397,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
 
                 case AutomateReadOneKeyState.ReadChildren:
@@ -397,11 +417,16 @@ namespace Bssom.Serializer.BssMap
             if (keyIsNativeType)
             {
                 if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
+                {
                     throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                }
+
                 ref1 = Unsafe.Add(ref ref1, 1);
             }
             if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
-                   throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            {
+                throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            }
 
             //seek valOffset
             reader.BssomBuffer.Seek(BssomBinaryPrimitives.ReadUInt32LittleEndian(ref Unsafe.Add(ref ref1, 1 + 1)) + paras.ReadPosition);
@@ -414,10 +439,12 @@ namespace Bssom.Serializer.BssMap
             return default;
         }
         public static unsafe Char TryGetCharValue(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, ref byte ref1, out bool isGet)
-        {  
+        {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             ref byte refBase = ref ref1;
             int keyPos = 0;
@@ -426,7 +453,7 @@ namespace Bssom.Serializer.BssMap
             byte nextKeyByteCount = 0;
             ulong value1 = 0;
             int mapHeadSize = paras.MapHeadSize;
-            
+
             switch (token)
             {
                 case AutomateReadOneKeyState.ReadNextBranch:
@@ -461,7 +488,10 @@ namespace Bssom.Serializer.BssMap
                             {
                                 ref1 = ref Unsafe.Add(ref refBase, nextOff - mapHeadSize);
                                 if (Unsafe.ReadUnaligned<BssMapRouteToken>(ref ref1) != BssMapRouteToken.LessElse)
+                                {
                                     throw BssomSerializationOperationException.UnexpectedCodeRead(ref1, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                                }
+
                                 ref1 = ref Unsafe.Add(ref ref1, 1);
                             }
 
@@ -493,7 +523,7 @@ namespace Bssom.Serializer.BssMap
                                 value1 = BssomBinaryPrimitives.ReadRawUInt64LittleEndian(value1);
                                 ref1 = ref Unsafe.Add(ref ref1, nextKeyByteCount);
                             }
-                            
+
                             ulong keyValue = key[keyPos];
                             if (keyValue > value1)
                             {
@@ -519,7 +549,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -566,7 +598,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -577,7 +611,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
 
                 case AutomateReadOneKeyState.ReadChildren:
@@ -597,11 +631,16 @@ namespace Bssom.Serializer.BssMap
             if (keyIsNativeType)
             {
                 if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
+                {
                     throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                }
+
                 ref1 = Unsafe.Add(ref ref1, 1);
             }
             if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
-                   throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            {
+                throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            }
 
             //seek valOffset
             reader.BssomBuffer.Seek(BssomBinaryPrimitives.ReadUInt32LittleEndian(ref Unsafe.Add(ref ref1, 1 + 1)) + paras.ReadPosition);
@@ -614,10 +653,12 @@ namespace Bssom.Serializer.BssMap
             return default;
         }
         public static unsafe Int16 TryGetInt16Value(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, ref byte ref1, out bool isGet)
-        {  
+        {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             ref byte refBase = ref ref1;
             int keyPos = 0;
@@ -626,7 +667,7 @@ namespace Bssom.Serializer.BssMap
             byte nextKeyByteCount = 0;
             ulong value1 = 0;
             int mapHeadSize = paras.MapHeadSize;
-            
+
             switch (token)
             {
                 case AutomateReadOneKeyState.ReadNextBranch:
@@ -661,7 +702,10 @@ namespace Bssom.Serializer.BssMap
                             {
                                 ref1 = ref Unsafe.Add(ref refBase, nextOff - mapHeadSize);
                                 if (Unsafe.ReadUnaligned<BssMapRouteToken>(ref ref1) != BssMapRouteToken.LessElse)
+                                {
                                     throw BssomSerializationOperationException.UnexpectedCodeRead(ref1, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                                }
+
                                 ref1 = ref Unsafe.Add(ref ref1, 1);
                             }
 
@@ -693,7 +737,7 @@ namespace Bssom.Serializer.BssMap
                                 value1 = BssomBinaryPrimitives.ReadRawUInt64LittleEndian(value1);
                                 ref1 = ref Unsafe.Add(ref ref1, nextKeyByteCount);
                             }
-                            
+
                             ulong keyValue = key[keyPos];
                             if (keyValue > value1)
                             {
@@ -719,7 +763,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -766,7 +812,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -777,7 +825,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
 
                 case AutomateReadOneKeyState.ReadChildren:
@@ -797,11 +845,16 @@ namespace Bssom.Serializer.BssMap
             if (keyIsNativeType)
             {
                 if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
+                {
                     throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                }
+
                 ref1 = Unsafe.Add(ref ref1, 1);
             }
             if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
-                   throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            {
+                throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            }
 
             //seek valOffset
             reader.BssomBuffer.Seek(BssomBinaryPrimitives.ReadUInt32LittleEndian(ref Unsafe.Add(ref ref1, 1 + 1)) + paras.ReadPosition);
@@ -814,10 +867,12 @@ namespace Bssom.Serializer.BssMap
             return default;
         }
         public static unsafe UInt16 TryGetUInt16Value(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, ref byte ref1, out bool isGet)
-        {  
+        {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             ref byte refBase = ref ref1;
             int keyPos = 0;
@@ -826,7 +881,7 @@ namespace Bssom.Serializer.BssMap
             byte nextKeyByteCount = 0;
             ulong value1 = 0;
             int mapHeadSize = paras.MapHeadSize;
-            
+
             switch (token)
             {
                 case AutomateReadOneKeyState.ReadNextBranch:
@@ -861,7 +916,10 @@ namespace Bssom.Serializer.BssMap
                             {
                                 ref1 = ref Unsafe.Add(ref refBase, nextOff - mapHeadSize);
                                 if (Unsafe.ReadUnaligned<BssMapRouteToken>(ref ref1) != BssMapRouteToken.LessElse)
+                                {
                                     throw BssomSerializationOperationException.UnexpectedCodeRead(ref1, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                                }
+
                                 ref1 = ref Unsafe.Add(ref ref1, 1);
                             }
 
@@ -893,7 +951,7 @@ namespace Bssom.Serializer.BssMap
                                 value1 = BssomBinaryPrimitives.ReadRawUInt64LittleEndian(value1);
                                 ref1 = ref Unsafe.Add(ref ref1, nextKeyByteCount);
                             }
-                            
+
                             ulong keyValue = key[keyPos];
                             if (keyValue > value1)
                             {
@@ -919,7 +977,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -966,7 +1026,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -977,7 +1039,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
 
                 case AutomateReadOneKeyState.ReadChildren:
@@ -997,11 +1059,16 @@ namespace Bssom.Serializer.BssMap
             if (keyIsNativeType)
             {
                 if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
+                {
                     throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                }
+
                 ref1 = Unsafe.Add(ref ref1, 1);
             }
             if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
-                   throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            {
+                throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            }
 
             //seek valOffset
             reader.BssomBuffer.Seek(BssomBinaryPrimitives.ReadUInt32LittleEndian(ref Unsafe.Add(ref ref1, 1 + 1)) + paras.ReadPosition);
@@ -1014,10 +1081,12 @@ namespace Bssom.Serializer.BssMap
             return default;
         }
         public static unsafe Int32 TryGetInt32Value(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, ref byte ref1, out bool isGet)
-        {  
+        {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             ref byte refBase = ref ref1;
             int keyPos = 0;
@@ -1026,7 +1095,7 @@ namespace Bssom.Serializer.BssMap
             byte nextKeyByteCount = 0;
             ulong value1 = 0;
             int mapHeadSize = paras.MapHeadSize;
-            
+
             switch (token)
             {
                 case AutomateReadOneKeyState.ReadNextBranch:
@@ -1061,7 +1130,10 @@ namespace Bssom.Serializer.BssMap
                             {
                                 ref1 = ref Unsafe.Add(ref refBase, nextOff - mapHeadSize);
                                 if (Unsafe.ReadUnaligned<BssMapRouteToken>(ref ref1) != BssMapRouteToken.LessElse)
+                                {
                                     throw BssomSerializationOperationException.UnexpectedCodeRead(ref1, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                                }
+
                                 ref1 = ref Unsafe.Add(ref ref1, 1);
                             }
 
@@ -1093,7 +1165,7 @@ namespace Bssom.Serializer.BssMap
                                 value1 = BssomBinaryPrimitives.ReadRawUInt64LittleEndian(value1);
                                 ref1 = ref Unsafe.Add(ref ref1, nextKeyByteCount);
                             }
-                            
+
                             ulong keyValue = key[keyPos];
                             if (keyValue > value1)
                             {
@@ -1119,7 +1191,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -1166,7 +1240,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -1177,7 +1253,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
 
                 case AutomateReadOneKeyState.ReadChildren:
@@ -1197,11 +1273,16 @@ namespace Bssom.Serializer.BssMap
             if (keyIsNativeType)
             {
                 if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
+                {
                     throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                }
+
                 ref1 = Unsafe.Add(ref ref1, 1);
             }
             if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
-                   throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            {
+                throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            }
 
             //seek valOffset
             reader.BssomBuffer.Seek(BssomBinaryPrimitives.ReadUInt32LittleEndian(ref Unsafe.Add(ref ref1, 1 + 1)) + paras.ReadPosition);
@@ -1214,10 +1295,12 @@ namespace Bssom.Serializer.BssMap
             return default;
         }
         public static unsafe UInt32 TryGetUInt32Value(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, ref byte ref1, out bool isGet)
-        {  
+        {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             ref byte refBase = ref ref1;
             int keyPos = 0;
@@ -1226,7 +1309,7 @@ namespace Bssom.Serializer.BssMap
             byte nextKeyByteCount = 0;
             ulong value1 = 0;
             int mapHeadSize = paras.MapHeadSize;
-            
+
             switch (token)
             {
                 case AutomateReadOneKeyState.ReadNextBranch:
@@ -1261,7 +1344,10 @@ namespace Bssom.Serializer.BssMap
                             {
                                 ref1 = ref Unsafe.Add(ref refBase, nextOff - mapHeadSize);
                                 if (Unsafe.ReadUnaligned<BssMapRouteToken>(ref ref1) != BssMapRouteToken.LessElse)
+                                {
                                     throw BssomSerializationOperationException.UnexpectedCodeRead(ref1, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                                }
+
                                 ref1 = ref Unsafe.Add(ref ref1, 1);
                             }
 
@@ -1293,7 +1379,7 @@ namespace Bssom.Serializer.BssMap
                                 value1 = BssomBinaryPrimitives.ReadRawUInt64LittleEndian(value1);
                                 ref1 = ref Unsafe.Add(ref ref1, nextKeyByteCount);
                             }
-                            
+
                             ulong keyValue = key[keyPos];
                             if (keyValue > value1)
                             {
@@ -1319,7 +1405,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -1366,7 +1454,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -1377,7 +1467,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
 
                 case AutomateReadOneKeyState.ReadChildren:
@@ -1397,11 +1487,16 @@ namespace Bssom.Serializer.BssMap
             if (keyIsNativeType)
             {
                 if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
+                {
                     throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                }
+
                 ref1 = Unsafe.Add(ref ref1, 1);
             }
             if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
-                   throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            {
+                throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            }
 
             //seek valOffset
             reader.BssomBuffer.Seek(BssomBinaryPrimitives.ReadUInt32LittleEndian(ref Unsafe.Add(ref ref1, 1 + 1)) + paras.ReadPosition);
@@ -1414,10 +1509,12 @@ namespace Bssom.Serializer.BssMap
             return default;
         }
         public static unsafe Int64 TryGetInt64Value(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, ref byte ref1, out bool isGet)
-        {  
+        {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             ref byte refBase = ref ref1;
             int keyPos = 0;
@@ -1426,7 +1523,7 @@ namespace Bssom.Serializer.BssMap
             byte nextKeyByteCount = 0;
             ulong value1 = 0;
             int mapHeadSize = paras.MapHeadSize;
-            
+
             switch (token)
             {
                 case AutomateReadOneKeyState.ReadNextBranch:
@@ -1461,7 +1558,10 @@ namespace Bssom.Serializer.BssMap
                             {
                                 ref1 = ref Unsafe.Add(ref refBase, nextOff - mapHeadSize);
                                 if (Unsafe.ReadUnaligned<BssMapRouteToken>(ref ref1) != BssMapRouteToken.LessElse)
+                                {
                                     throw BssomSerializationOperationException.UnexpectedCodeRead(ref1, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                                }
+
                                 ref1 = ref Unsafe.Add(ref ref1, 1);
                             }
 
@@ -1493,7 +1593,7 @@ namespace Bssom.Serializer.BssMap
                                 value1 = BssomBinaryPrimitives.ReadRawUInt64LittleEndian(value1);
                                 ref1 = ref Unsafe.Add(ref ref1, nextKeyByteCount);
                             }
-                            
+
                             ulong keyValue = key[keyPos];
                             if (keyValue > value1)
                             {
@@ -1519,7 +1619,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -1566,7 +1668,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -1577,7 +1681,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
 
                 case AutomateReadOneKeyState.ReadChildren:
@@ -1597,11 +1701,16 @@ namespace Bssom.Serializer.BssMap
             if (keyIsNativeType)
             {
                 if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
+                {
                     throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                }
+
                 ref1 = Unsafe.Add(ref ref1, 1);
             }
             if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
-                   throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            {
+                throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            }
 
             //seek valOffset
             reader.BssomBuffer.Seek(BssomBinaryPrimitives.ReadUInt32LittleEndian(ref Unsafe.Add(ref ref1, 1 + 1)) + paras.ReadPosition);
@@ -1614,10 +1723,12 @@ namespace Bssom.Serializer.BssMap
             return default;
         }
         public static unsafe UInt64 TryGetUInt64Value(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, ref byte ref1, out bool isGet)
-        {  
+        {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             ref byte refBase = ref ref1;
             int keyPos = 0;
@@ -1626,7 +1737,7 @@ namespace Bssom.Serializer.BssMap
             byte nextKeyByteCount = 0;
             ulong value1 = 0;
             int mapHeadSize = paras.MapHeadSize;
-            
+
             switch (token)
             {
                 case AutomateReadOneKeyState.ReadNextBranch:
@@ -1661,7 +1772,10 @@ namespace Bssom.Serializer.BssMap
                             {
                                 ref1 = ref Unsafe.Add(ref refBase, nextOff - mapHeadSize);
                                 if (Unsafe.ReadUnaligned<BssMapRouteToken>(ref ref1) != BssMapRouteToken.LessElse)
+                                {
                                     throw BssomSerializationOperationException.UnexpectedCodeRead(ref1, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                                }
+
                                 ref1 = ref Unsafe.Add(ref ref1, 1);
                             }
 
@@ -1693,7 +1807,7 @@ namespace Bssom.Serializer.BssMap
                                 value1 = BssomBinaryPrimitives.ReadRawUInt64LittleEndian(value1);
                                 ref1 = ref Unsafe.Add(ref ref1, nextKeyByteCount);
                             }
-                            
+
                             ulong keyValue = key[keyPos];
                             if (keyValue > value1)
                             {
@@ -1719,7 +1833,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -1766,7 +1882,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -1777,7 +1895,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
 
                 case AutomateReadOneKeyState.ReadChildren:
@@ -1797,11 +1915,16 @@ namespace Bssom.Serializer.BssMap
             if (keyIsNativeType)
             {
                 if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
+                {
                     throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                }
+
                 ref1 = Unsafe.Add(ref ref1, 1);
             }
             if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
-                   throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            {
+                throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            }
 
             //seek valOffset
             reader.BssomBuffer.Seek(BssomBinaryPrimitives.ReadUInt32LittleEndian(ref Unsafe.Add(ref ref1, 1 + 1)) + paras.ReadPosition);
@@ -1814,10 +1937,12 @@ namespace Bssom.Serializer.BssMap
             return default;
         }
         public static unsafe Single TryGetFloat32Value(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, ref byte ref1, out bool isGet)
-        {  
+        {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             ref byte refBase = ref ref1;
             int keyPos = 0;
@@ -1826,7 +1951,7 @@ namespace Bssom.Serializer.BssMap
             byte nextKeyByteCount = 0;
             ulong value1 = 0;
             int mapHeadSize = paras.MapHeadSize;
-            
+
             switch (token)
             {
                 case AutomateReadOneKeyState.ReadNextBranch:
@@ -1861,7 +1986,10 @@ namespace Bssom.Serializer.BssMap
                             {
                                 ref1 = ref Unsafe.Add(ref refBase, nextOff - mapHeadSize);
                                 if (Unsafe.ReadUnaligned<BssMapRouteToken>(ref ref1) != BssMapRouteToken.LessElse)
+                                {
                                     throw BssomSerializationOperationException.UnexpectedCodeRead(ref1, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                                }
+
                                 ref1 = ref Unsafe.Add(ref ref1, 1);
                             }
 
@@ -1893,7 +2021,7 @@ namespace Bssom.Serializer.BssMap
                                 value1 = BssomBinaryPrimitives.ReadRawUInt64LittleEndian(value1);
                                 ref1 = ref Unsafe.Add(ref ref1, nextKeyByteCount);
                             }
-                            
+
                             ulong keyValue = key[keyPos];
                             if (keyValue > value1)
                             {
@@ -1919,7 +2047,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -1966,7 +2096,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -1977,7 +2109,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
 
                 case AutomateReadOneKeyState.ReadChildren:
@@ -1997,11 +2129,16 @@ namespace Bssom.Serializer.BssMap
             if (keyIsNativeType)
             {
                 if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
+                {
                     throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                }
+
                 ref1 = Unsafe.Add(ref ref1, 1);
             }
             if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
-                   throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            {
+                throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            }
 
             //seek valOffset
             reader.BssomBuffer.Seek(BssomBinaryPrimitives.ReadUInt32LittleEndian(ref Unsafe.Add(ref ref1, 1 + 1)) + paras.ReadPosition);
@@ -2014,10 +2151,12 @@ namespace Bssom.Serializer.BssMap
             return default;
         }
         public static unsafe Double TryGetFloat64Value(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, ref byte ref1, out bool isGet)
-        {  
+        {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             ref byte refBase = ref ref1;
             int keyPos = 0;
@@ -2026,7 +2165,7 @@ namespace Bssom.Serializer.BssMap
             byte nextKeyByteCount = 0;
             ulong value1 = 0;
             int mapHeadSize = paras.MapHeadSize;
-            
+
             switch (token)
             {
                 case AutomateReadOneKeyState.ReadNextBranch:
@@ -2061,7 +2200,10 @@ namespace Bssom.Serializer.BssMap
                             {
                                 ref1 = ref Unsafe.Add(ref refBase, nextOff - mapHeadSize);
                                 if (Unsafe.ReadUnaligned<BssMapRouteToken>(ref ref1) != BssMapRouteToken.LessElse)
+                                {
                                     throw BssomSerializationOperationException.UnexpectedCodeRead(ref1, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                                }
+
                                 ref1 = ref Unsafe.Add(ref ref1, 1);
                             }
 
@@ -2093,7 +2235,7 @@ namespace Bssom.Serializer.BssMap
                                 value1 = BssomBinaryPrimitives.ReadRawUInt64LittleEndian(value1);
                                 ref1 = ref Unsafe.Add(ref ref1, nextKeyByteCount);
                             }
-                            
+
                             ulong keyValue = key[keyPos];
                             if (keyValue > value1)
                             {
@@ -2119,7 +2261,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -2166,7 +2310,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -2177,7 +2323,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
 
                 case AutomateReadOneKeyState.ReadChildren:
@@ -2197,11 +2343,16 @@ namespace Bssom.Serializer.BssMap
             if (keyIsNativeType)
             {
                 if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
+                {
                     throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                }
+
                 ref1 = Unsafe.Add(ref ref1, 1);
             }
             if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
-                   throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            {
+                throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            }
 
             //seek valOffset
             reader.BssomBuffer.Seek(BssomBinaryPrimitives.ReadUInt32LittleEndian(ref Unsafe.Add(ref ref1, 1 + 1)) + paras.ReadPosition);
@@ -2214,10 +2365,12 @@ namespace Bssom.Serializer.BssMap
             return default;
         }
         public static unsafe Decimal TryGetDecimalValue(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, ref byte ref1, out bool isGet)
-        {  
+        {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             ref byte refBase = ref ref1;
             int keyPos = 0;
@@ -2226,7 +2379,7 @@ namespace Bssom.Serializer.BssMap
             byte nextKeyByteCount = 0;
             ulong value1 = 0;
             int mapHeadSize = paras.MapHeadSize;
-            
+
             switch (token)
             {
                 case AutomateReadOneKeyState.ReadNextBranch:
@@ -2261,7 +2414,10 @@ namespace Bssom.Serializer.BssMap
                             {
                                 ref1 = ref Unsafe.Add(ref refBase, nextOff - mapHeadSize);
                                 if (Unsafe.ReadUnaligned<BssMapRouteToken>(ref ref1) != BssMapRouteToken.LessElse)
+                                {
                                     throw BssomSerializationOperationException.UnexpectedCodeRead(ref1, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                                }
+
                                 ref1 = ref Unsafe.Add(ref ref1, 1);
                             }
 
@@ -2293,7 +2449,7 @@ namespace Bssom.Serializer.BssMap
                                 value1 = BssomBinaryPrimitives.ReadRawUInt64LittleEndian(value1);
                                 ref1 = ref Unsafe.Add(ref ref1, nextKeyByteCount);
                             }
-                            
+
                             ulong keyValue = key[keyPos];
                             if (keyValue > value1)
                             {
@@ -2319,7 +2475,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -2366,7 +2524,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -2377,7 +2537,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
 
                 case AutomateReadOneKeyState.ReadChildren:
@@ -2397,11 +2557,16 @@ namespace Bssom.Serializer.BssMap
             if (keyIsNativeType)
             {
                 if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
+                {
                     throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                }
+
                 ref1 = Unsafe.Add(ref ref1, 1);
             }
             if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
-                   throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            {
+                throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            }
 
             //seek valOffset
             reader.BssomBuffer.Seek(BssomBinaryPrimitives.ReadUInt32LittleEndian(ref Unsafe.Add(ref ref1, 1 + 1)) + paras.ReadPosition);
@@ -2414,10 +2579,12 @@ namespace Bssom.Serializer.BssMap
             return default;
         }
         public static unsafe Boolean TryGetBooleanValue(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, ref byte ref1, out bool isGet)
-        {  
+        {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             ref byte refBase = ref ref1;
             int keyPos = 0;
@@ -2426,7 +2593,7 @@ namespace Bssom.Serializer.BssMap
             byte nextKeyByteCount = 0;
             ulong value1 = 0;
             int mapHeadSize = paras.MapHeadSize;
-            
+
             switch (token)
             {
                 case AutomateReadOneKeyState.ReadNextBranch:
@@ -2461,7 +2628,10 @@ namespace Bssom.Serializer.BssMap
                             {
                                 ref1 = ref Unsafe.Add(ref refBase, nextOff - mapHeadSize);
                                 if (Unsafe.ReadUnaligned<BssMapRouteToken>(ref ref1) != BssMapRouteToken.LessElse)
+                                {
                                     throw BssomSerializationOperationException.UnexpectedCodeRead(ref1, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                                }
+
                                 ref1 = ref Unsafe.Add(ref ref1, 1);
                             }
 
@@ -2493,7 +2663,7 @@ namespace Bssom.Serializer.BssMap
                                 value1 = BssomBinaryPrimitives.ReadRawUInt64LittleEndian(value1);
                                 ref1 = ref Unsafe.Add(ref ref1, nextKeyByteCount);
                             }
-                            
+
                             ulong keyValue = key[keyPos];
                             if (keyValue > value1)
                             {
@@ -2519,7 +2689,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -2566,7 +2738,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -2577,7 +2751,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
 
                 case AutomateReadOneKeyState.ReadChildren:
@@ -2597,11 +2771,16 @@ namespace Bssom.Serializer.BssMap
             if (keyIsNativeType)
             {
                 if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
+                {
                     throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                }
+
                 ref1 = Unsafe.Add(ref ref1, 1);
             }
             if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
-                   throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            {
+                throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            }
 
             //seek valOffset
             reader.BssomBuffer.Seek(BssomBinaryPrimitives.ReadUInt32LittleEndian(ref Unsafe.Add(ref ref1, 1 + 1)) + paras.ReadPosition);
@@ -2614,10 +2793,12 @@ namespace Bssom.Serializer.BssMap
             return default;
         }
         public static unsafe Guid TryGetGuidValue(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, ref byte ref1, out bool isGet)
-        {  
+        {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             ref byte refBase = ref ref1;
             int keyPos = 0;
@@ -2626,7 +2807,7 @@ namespace Bssom.Serializer.BssMap
             byte nextKeyByteCount = 0;
             ulong value1 = 0;
             int mapHeadSize = paras.MapHeadSize;
-            
+
             switch (token)
             {
                 case AutomateReadOneKeyState.ReadNextBranch:
@@ -2661,7 +2842,10 @@ namespace Bssom.Serializer.BssMap
                             {
                                 ref1 = ref Unsafe.Add(ref refBase, nextOff - mapHeadSize);
                                 if (Unsafe.ReadUnaligned<BssMapRouteToken>(ref ref1) != BssMapRouteToken.LessElse)
+                                {
                                     throw BssomSerializationOperationException.UnexpectedCodeRead(ref1, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                                }
+
                                 ref1 = ref Unsafe.Add(ref ref1, 1);
                             }
 
@@ -2693,7 +2877,7 @@ namespace Bssom.Serializer.BssMap
                                 value1 = BssomBinaryPrimitives.ReadRawUInt64LittleEndian(value1);
                                 ref1 = ref Unsafe.Add(ref ref1, nextKeyByteCount);
                             }
-                            
+
                             ulong keyValue = key[keyPos];
                             if (keyValue > value1)
                             {
@@ -2719,7 +2903,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -2766,7 +2952,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -2777,7 +2965,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
 
                 case AutomateReadOneKeyState.ReadChildren:
@@ -2797,11 +2985,16 @@ namespace Bssom.Serializer.BssMap
             if (keyIsNativeType)
             {
                 if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
+                {
                     throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                }
+
                 ref1 = Unsafe.Add(ref ref1, 1);
             }
             if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
-                   throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            {
+                throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            }
 
             //seek valOffset
             reader.BssomBuffer.Seek(BssomBinaryPrimitives.ReadUInt32LittleEndian(ref Unsafe.Add(ref ref1, 1 + 1)) + paras.ReadPosition);
@@ -2814,10 +3007,12 @@ namespace Bssom.Serializer.BssMap
             return default;
         }
         public static unsafe DateTime TryGetDateTimeValue(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, ref byte ref1, out bool isGet)
-        {  
+        {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             ref byte refBase = ref ref1;
             int keyPos = 0;
@@ -2826,7 +3021,7 @@ namespace Bssom.Serializer.BssMap
             byte nextKeyByteCount = 0;
             ulong value1 = 0;
             int mapHeadSize = paras.MapHeadSize;
-            
+
             switch (token)
             {
                 case AutomateReadOneKeyState.ReadNextBranch:
@@ -2861,7 +3056,10 @@ namespace Bssom.Serializer.BssMap
                             {
                                 ref1 = ref Unsafe.Add(ref refBase, nextOff - mapHeadSize);
                                 if (Unsafe.ReadUnaligned<BssMapRouteToken>(ref ref1) != BssMapRouteToken.LessElse)
+                                {
                                     throw BssomSerializationOperationException.UnexpectedCodeRead(ref1, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                                }
+
                                 ref1 = ref Unsafe.Add(ref ref1, 1);
                             }
 
@@ -2893,7 +3091,7 @@ namespace Bssom.Serializer.BssMap
                                 value1 = BssomBinaryPrimitives.ReadRawUInt64LittleEndian(value1);
                                 ref1 = ref Unsafe.Add(ref ref1, nextKeyByteCount);
                             }
-                            
+
                             ulong keyValue = key[keyPos];
                             if (keyValue > value1)
                             {
@@ -2919,7 +3117,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -2966,7 +3166,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -2977,7 +3179,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
 
                 case AutomateReadOneKeyState.ReadChildren:
@@ -2997,11 +3199,16 @@ namespace Bssom.Serializer.BssMap
             if (keyIsNativeType)
             {
                 if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
+                {
                     throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                }
+
                 ref1 = Unsafe.Add(ref ref1, 1);
             }
             if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
-                   throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            {
+                throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            }
 
             //seek valOffset
             reader.BssomBuffer.Seek(BssomBinaryPrimitives.ReadUInt32LittleEndian(ref Unsafe.Add(ref ref1, 1 + 1)) + paras.ReadPosition);
@@ -3013,16 +3220,18 @@ namespace Bssom.Serializer.BssMap
             isGet = false;
             return default;
         }
- 
+
         #endregion
 
         #region TryGetValueSlow-Inline
 
         public static unsafe Byte TryGetUInt8ValueSlow(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, out bool isGet)
-        {  
+        {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             reader.BssomBuffer.Seek(paras.MapRouteDataStartPos);
             int keyPos = 0;
@@ -3104,7 +3313,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -3147,7 +3358,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -3158,7 +3371,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
                 case AutomateReadOneKeyState.ReadChildren:
                     t = reader.ReadMapToken();
@@ -3172,7 +3385,10 @@ namespace Bssom.Serializer.BssMap
         TryReadValue:
             //verify keyType
             if (keyIsNativeType)
+            {
                 reader.EnsureType(BssomType.NativeCode);
+            }
+
             reader.EnsureType(keyType);
             //seek valOffset
             reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);
@@ -3186,10 +3402,12 @@ namespace Bssom.Serializer.BssMap
             return default;
         }
         public static unsafe SByte TryGetInt8ValueSlow(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, out bool isGet)
-        {  
+        {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             reader.BssomBuffer.Seek(paras.MapRouteDataStartPos);
             int keyPos = 0;
@@ -3271,7 +3489,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -3314,7 +3534,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -3325,7 +3547,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
                 case AutomateReadOneKeyState.ReadChildren:
                     t = reader.ReadMapToken();
@@ -3339,7 +3561,10 @@ namespace Bssom.Serializer.BssMap
         TryReadValue:
             //verify keyType
             if (keyIsNativeType)
+            {
                 reader.EnsureType(BssomType.NativeCode);
+            }
+
             reader.EnsureType(keyType);
             //seek valOffset
             reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);
@@ -3353,10 +3578,12 @@ namespace Bssom.Serializer.BssMap
             return default;
         }
         public static unsafe Char TryGetCharValueSlow(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, out bool isGet)
-        {  
+        {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             reader.BssomBuffer.Seek(paras.MapRouteDataStartPos);
             int keyPos = 0;
@@ -3438,7 +3665,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -3481,7 +3710,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -3492,7 +3723,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
                 case AutomateReadOneKeyState.ReadChildren:
                     t = reader.ReadMapToken();
@@ -3506,7 +3737,10 @@ namespace Bssom.Serializer.BssMap
         TryReadValue:
             //verify keyType
             if (keyIsNativeType)
+            {
                 reader.EnsureType(BssomType.NativeCode);
+            }
+
             reader.EnsureType(keyType);
             //seek valOffset
             reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);
@@ -3520,10 +3754,12 @@ namespace Bssom.Serializer.BssMap
             return default;
         }
         public static unsafe Int16 TryGetInt16ValueSlow(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, out bool isGet)
-        {  
+        {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             reader.BssomBuffer.Seek(paras.MapRouteDataStartPos);
             int keyPos = 0;
@@ -3605,7 +3841,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -3648,7 +3886,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -3659,7 +3899,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
                 case AutomateReadOneKeyState.ReadChildren:
                     t = reader.ReadMapToken();
@@ -3673,7 +3913,10 @@ namespace Bssom.Serializer.BssMap
         TryReadValue:
             //verify keyType
             if (keyIsNativeType)
+            {
                 reader.EnsureType(BssomType.NativeCode);
+            }
+
             reader.EnsureType(keyType);
             //seek valOffset
             reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);
@@ -3687,10 +3930,12 @@ namespace Bssom.Serializer.BssMap
             return default;
         }
         public static unsafe UInt16 TryGetUInt16ValueSlow(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, out bool isGet)
-        {  
+        {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             reader.BssomBuffer.Seek(paras.MapRouteDataStartPos);
             int keyPos = 0;
@@ -3772,7 +4017,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -3815,7 +4062,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -3826,7 +4075,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
                 case AutomateReadOneKeyState.ReadChildren:
                     t = reader.ReadMapToken();
@@ -3840,7 +4089,10 @@ namespace Bssom.Serializer.BssMap
         TryReadValue:
             //verify keyType
             if (keyIsNativeType)
+            {
                 reader.EnsureType(BssomType.NativeCode);
+            }
+
             reader.EnsureType(keyType);
             //seek valOffset
             reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);
@@ -3854,10 +4106,12 @@ namespace Bssom.Serializer.BssMap
             return default;
         }
         public static unsafe Int32 TryGetInt32ValueSlow(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, out bool isGet)
-        {  
+        {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             reader.BssomBuffer.Seek(paras.MapRouteDataStartPos);
             int keyPos = 0;
@@ -3939,7 +4193,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -3982,7 +4238,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -3993,7 +4251,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
                 case AutomateReadOneKeyState.ReadChildren:
                     t = reader.ReadMapToken();
@@ -4007,7 +4265,10 @@ namespace Bssom.Serializer.BssMap
         TryReadValue:
             //verify keyType
             if (keyIsNativeType)
+            {
                 reader.EnsureType(BssomType.NativeCode);
+            }
+
             reader.EnsureType(keyType);
             //seek valOffset
             reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);
@@ -4021,10 +4282,12 @@ namespace Bssom.Serializer.BssMap
             return default;
         }
         public static unsafe UInt32 TryGetUInt32ValueSlow(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, out bool isGet)
-        {  
+        {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             reader.BssomBuffer.Seek(paras.MapRouteDataStartPos);
             int keyPos = 0;
@@ -4106,7 +4369,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -4149,7 +4414,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -4160,7 +4427,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
                 case AutomateReadOneKeyState.ReadChildren:
                     t = reader.ReadMapToken();
@@ -4174,7 +4441,10 @@ namespace Bssom.Serializer.BssMap
         TryReadValue:
             //verify keyType
             if (keyIsNativeType)
+            {
                 reader.EnsureType(BssomType.NativeCode);
+            }
+
             reader.EnsureType(keyType);
             //seek valOffset
             reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);
@@ -4188,10 +4458,12 @@ namespace Bssom.Serializer.BssMap
             return default;
         }
         public static unsafe Int64 TryGetInt64ValueSlow(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, out bool isGet)
-        {  
+        {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             reader.BssomBuffer.Seek(paras.MapRouteDataStartPos);
             int keyPos = 0;
@@ -4273,7 +4545,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -4316,7 +4590,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -4327,7 +4603,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
                 case AutomateReadOneKeyState.ReadChildren:
                     t = reader.ReadMapToken();
@@ -4341,7 +4617,10 @@ namespace Bssom.Serializer.BssMap
         TryReadValue:
             //verify keyType
             if (keyIsNativeType)
+            {
                 reader.EnsureType(BssomType.NativeCode);
+            }
+
             reader.EnsureType(keyType);
             //seek valOffset
             reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);
@@ -4355,10 +4634,12 @@ namespace Bssom.Serializer.BssMap
             return default;
         }
         public static unsafe UInt64 TryGetUInt64ValueSlow(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, out bool isGet)
-        {  
+        {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             reader.BssomBuffer.Seek(paras.MapRouteDataStartPos);
             int keyPos = 0;
@@ -4440,7 +4721,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -4483,7 +4766,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -4494,7 +4779,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
                 case AutomateReadOneKeyState.ReadChildren:
                     t = reader.ReadMapToken();
@@ -4508,7 +4793,10 @@ namespace Bssom.Serializer.BssMap
         TryReadValue:
             //verify keyType
             if (keyIsNativeType)
+            {
                 reader.EnsureType(BssomType.NativeCode);
+            }
+
             reader.EnsureType(keyType);
             //seek valOffset
             reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);
@@ -4522,10 +4810,12 @@ namespace Bssom.Serializer.BssMap
             return default;
         }
         public static unsafe Single TryGetFloat32ValueSlow(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, out bool isGet)
-        {  
+        {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             reader.BssomBuffer.Seek(paras.MapRouteDataStartPos);
             int keyPos = 0;
@@ -4607,7 +4897,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -4650,7 +4942,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -4661,7 +4955,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
                 case AutomateReadOneKeyState.ReadChildren:
                     t = reader.ReadMapToken();
@@ -4675,7 +4969,10 @@ namespace Bssom.Serializer.BssMap
         TryReadValue:
             //verify keyType
             if (keyIsNativeType)
+            {
                 reader.EnsureType(BssomType.NativeCode);
+            }
+
             reader.EnsureType(keyType);
             //seek valOffset
             reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);
@@ -4689,10 +4986,12 @@ namespace Bssom.Serializer.BssMap
             return default;
         }
         public static unsafe Double TryGetFloat64ValueSlow(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, out bool isGet)
-        {  
+        {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             reader.BssomBuffer.Seek(paras.MapRouteDataStartPos);
             int keyPos = 0;
@@ -4774,7 +5073,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -4817,7 +5118,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -4828,7 +5131,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
                 case AutomateReadOneKeyState.ReadChildren:
                     t = reader.ReadMapToken();
@@ -4842,7 +5145,10 @@ namespace Bssom.Serializer.BssMap
         TryReadValue:
             //verify keyType
             if (keyIsNativeType)
+            {
                 reader.EnsureType(BssomType.NativeCode);
+            }
+
             reader.EnsureType(keyType);
             //seek valOffset
             reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);
@@ -4856,10 +5162,12 @@ namespace Bssom.Serializer.BssMap
             return default;
         }
         public static unsafe Decimal TryGetDecimalValueSlow(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, out bool isGet)
-        {  
+        {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             reader.BssomBuffer.Seek(paras.MapRouteDataStartPos);
             int keyPos = 0;
@@ -4941,7 +5249,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -4984,7 +5294,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -4995,7 +5307,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
                 case AutomateReadOneKeyState.ReadChildren:
                     t = reader.ReadMapToken();
@@ -5009,7 +5321,10 @@ namespace Bssom.Serializer.BssMap
         TryReadValue:
             //verify keyType
             if (keyIsNativeType)
+            {
                 reader.EnsureType(BssomType.NativeCode);
+            }
+
             reader.EnsureType(keyType);
             //seek valOffset
             reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);
@@ -5023,10 +5338,12 @@ namespace Bssom.Serializer.BssMap
             return default;
         }
         public static unsafe Boolean TryGetBooleanValueSlow(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, out bool isGet)
-        {  
+        {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             reader.BssomBuffer.Seek(paras.MapRouteDataStartPos);
             int keyPos = 0;
@@ -5108,7 +5425,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -5151,7 +5470,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -5162,7 +5483,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
                 case AutomateReadOneKeyState.ReadChildren:
                     t = reader.ReadMapToken();
@@ -5176,7 +5497,10 @@ namespace Bssom.Serializer.BssMap
         TryReadValue:
             //verify keyType
             if (keyIsNativeType)
+            {
                 reader.EnsureType(BssomType.NativeCode);
+            }
+
             reader.EnsureType(keyType);
             //seek valOffset
             reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);
@@ -5190,10 +5514,12 @@ namespace Bssom.Serializer.BssMap
             return default;
         }
         public static unsafe Guid TryGetGuidValueSlow(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, out bool isGet)
-        {  
+        {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             reader.BssomBuffer.Seek(paras.MapRouteDataStartPos);
             int keyPos = 0;
@@ -5275,7 +5601,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -5318,7 +5646,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -5329,7 +5659,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
                 case AutomateReadOneKeyState.ReadChildren:
                     t = reader.ReadMapToken();
@@ -5343,7 +5673,10 @@ namespace Bssom.Serializer.BssMap
         TryReadValue:
             //verify keyType
             if (keyIsNativeType)
+            {
                 reader.EnsureType(BssomType.NativeCode);
+            }
+
             reader.EnsureType(keyType);
             //seek valOffset
             reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);
@@ -5357,10 +5690,12 @@ namespace Bssom.Serializer.BssMap
             return default;
         }
         public static unsafe DateTime TryGetDateTimeValueSlow(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, out bool isGet)
-        {  
+        {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             reader.BssomBuffer.Seek(paras.MapRouteDataStartPos);
             int keyPos = 0;
@@ -5442,7 +5777,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -5485,7 +5822,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -5496,7 +5835,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
                 case AutomateReadOneKeyState.ReadChildren:
                     t = reader.ReadMapToken();
@@ -5510,7 +5849,10 @@ namespace Bssom.Serializer.BssMap
         TryReadValue:
             //verify keyType
             if (keyIsNativeType)
+            {
                 reader.EnsureType(BssomType.NativeCode);
+            }
+
             reader.EnsureType(keyType);
             //seek valOffset
             reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);
@@ -5523,7 +5865,7 @@ namespace Bssom.Serializer.BssMap
             isGet = false;
             return default;
         }
- 
+
         #endregion
 
 
@@ -5532,7 +5874,9 @@ namespace Bssom.Serializer.BssMap
         {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             ref byte refBase = ref ref1;
             int keyPos = 0;
@@ -5541,7 +5885,7 @@ namespace Bssom.Serializer.BssMap
             byte nextKeyByteCount = 0;
             ulong value1 = 0;
             int mapHeadSize = paras.MapHeadSize;
-            
+
             switch (token)
             {
                 case AutomateReadOneKeyState.ReadNextBranch:
@@ -5576,7 +5920,10 @@ namespace Bssom.Serializer.BssMap
                             {
                                 ref1 = ref Unsafe.Add(ref refBase, nextOff - mapHeadSize);
                                 if (Unsafe.ReadUnaligned<BssMapRouteToken>(ref ref1) != BssMapRouteToken.LessElse)
+                                {
                                     throw BssomSerializationOperationException.UnexpectedCodeRead(ref1, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                                }
+
                                 ref1 = ref Unsafe.Add(ref ref1, 1);
                             }
 
@@ -5608,7 +5955,7 @@ namespace Bssom.Serializer.BssMap
                                 value1 = BssomBinaryPrimitives.ReadRawUInt64LittleEndian(value1);
                                 ref1 = ref Unsafe.Add(ref ref1, nextKeyByteCount);
                             }
-                            
+
                             ulong keyValue = key[keyPos];
                             if (keyValue > value1)
                             {
@@ -5634,7 +5981,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -5681,7 +6030,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -5692,7 +6043,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
 
                 case AutomateReadOneKeyState.ReadChildren:
@@ -5712,11 +6063,16 @@ namespace Bssom.Serializer.BssMap
             if (keyIsNativeType)
             {
                 if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
+                {
                     throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                }
+
                 ref1 = Unsafe.Add(ref ref1, 1);
             }
             if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
-                   throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            {
+                throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            }
 
             //seek valOffset
             reader.BssomBuffer.Seek(BssomBinaryPrimitives.ReadUInt32LittleEndian(ref Unsafe.Add(ref ref1, 1 + 1)) + paras.ReadPosition);
@@ -5730,7 +6086,9 @@ namespace Bssom.Serializer.BssMap
         {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             reader.BssomBuffer.Seek(paras.MapRouteDataStartPos);
             int keyPos = 0;
@@ -5812,7 +6170,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -5855,7 +6215,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -5866,7 +6228,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
                 case AutomateReadOneKeyState.ReadChildren:
                     t = reader.ReadMapToken();
@@ -5880,7 +6242,10 @@ namespace Bssom.Serializer.BssMap
         TryReadValue:
             //verify keyType
             if (keyIsNativeType)
+            {
                 reader.EnsureType(BssomType.NativeCode);
+            }
+
             reader.EnsureType(keyType);
             //seek valOffset
             reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);
@@ -5895,7 +6260,9 @@ namespace Bssom.Serializer.BssMap
         {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             ref byte refBase = ref ref1;
             int keyPos = 0;
@@ -5904,7 +6271,7 @@ namespace Bssom.Serializer.BssMap
             byte nextKeyByteCount = 0;
             ulong value1 = 0;
             int mapHeadSize = paras.MapHeadSize;
-            
+
             switch (token)
             {
                 case AutomateReadOneKeyState.ReadNextBranch:
@@ -5939,7 +6306,10 @@ namespace Bssom.Serializer.BssMap
                             {
                                 ref1 = ref Unsafe.Add(ref refBase, nextOff - mapHeadSize);
                                 if (Unsafe.ReadUnaligned<BssMapRouteToken>(ref ref1) != BssMapRouteToken.LessElse)
+                                {
                                     throw BssomSerializationOperationException.UnexpectedCodeRead(ref1, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                                }
+
                                 ref1 = ref Unsafe.Add(ref ref1, 1);
                             }
 
@@ -5971,7 +6341,7 @@ namespace Bssom.Serializer.BssMap
                                 value1 = BssomBinaryPrimitives.ReadRawUInt64LittleEndian(value1);
                                 ref1 = ref Unsafe.Add(ref ref1, nextKeyByteCount);
                             }
-                            
+
                             ulong keyValue = key[keyPos];
                             if (keyValue > value1)
                             {
@@ -5997,7 +6367,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -6044,7 +6416,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -6055,7 +6429,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
 
                 case AutomateReadOneKeyState.ReadChildren:
@@ -6075,11 +6449,16 @@ namespace Bssom.Serializer.BssMap
             if (keyIsNativeType)
             {
                 if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
+                {
                     throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                }
+
                 ref1 = Unsafe.Add(ref ref1, 1);
             }
             if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
-                   throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            {
+                throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            }
 
             //seek valOffset
             reader.BssomBuffer.Seek(BssomBinaryPrimitives.ReadUInt32LittleEndian(ref Unsafe.Add(ref ref1, 1 + 1)) + paras.ReadPosition);
@@ -6093,7 +6472,9 @@ namespace Bssom.Serializer.BssMap
         {
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             reader.BssomBuffer.Seek(paras.MapRouteDataStartPos);
             int keyPos = 0;
@@ -6175,7 +6556,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -6218,7 +6601,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -6229,7 +6614,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
                 case AutomateReadOneKeyState.ReadChildren:
                     t = reader.ReadMapToken();
@@ -6243,7 +6628,10 @@ namespace Bssom.Serializer.BssMap
         TryReadValue:
             //verify keyType
             if (keyIsNativeType)
+            {
                 reader.EnsureType(BssomType.NativeCode);
+            }
+
             reader.EnsureType(keyType);
             //seek valOffset
             reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);
@@ -6262,11 +6650,15 @@ namespace Bssom.Serializer.BssMap
         public static unsafe TValue TryGetValue<TValue>(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, ref byte ref1, out bool isGet, IBssomFormatter<TValue> formatter = null)
         {
             if (formatter == null)
+            {
                 formatter = context.Option.FormatterResolver.GetFormatterWithVerify<TValue>();
+            }
 
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             ref byte refBase = ref ref1;
             int keyPos = 0;
@@ -6275,7 +6667,7 @@ namespace Bssom.Serializer.BssMap
             byte nextKeyByteCount = 0;
             ulong value1 = 0;
             int mapHeadSize = paras.MapHeadSize;
-            
+
             switch (token)
             {
                 case AutomateReadOneKeyState.ReadNextBranch:
@@ -6310,7 +6702,10 @@ namespace Bssom.Serializer.BssMap
                             {
                                 ref1 = ref Unsafe.Add(ref refBase, nextOff - mapHeadSize);
                                 if (Unsafe.ReadUnaligned<BssMapRouteToken>(ref ref1) != BssMapRouteToken.LessElse)
+                                {
                                     throw BssomSerializationOperationException.UnexpectedCodeRead(ref1, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                                }
+
                                 ref1 = ref Unsafe.Add(ref ref1, 1);
                             }
 
@@ -6342,7 +6737,7 @@ namespace Bssom.Serializer.BssMap
                                 value1 = BssomBinaryPrimitives.ReadRawUInt64LittleEndian(value1);
                                 ref1 = ref Unsafe.Add(ref ref1, nextKeyByteCount);
                             }
-                            
+
                             ulong keyValue = key[keyPos];
                             if (keyValue > value1)
                             {
@@ -6368,7 +6763,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -6415,7 +6812,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -6426,7 +6825,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
 
                 case AutomateReadOneKeyState.ReadChildren:
@@ -6446,11 +6845,16 @@ namespace Bssom.Serializer.BssMap
             if (keyIsNativeType)
             {
                 if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
+                {
                     throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                }
+
                 ref1 = Unsafe.Add(ref ref1, 1);
             }
             if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
-                   throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            {
+                throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            }
 
             //seek valOffset
             reader.BssomBuffer.Seek(BssomBinaryPrimitives.ReadUInt32LittleEndian(ref Unsafe.Add(ref ref1, 1 + 1)) + paras.ReadPosition);
@@ -6465,11 +6869,15 @@ namespace Bssom.Serializer.BssMap
         public static unsafe TValue TryGetValueSlow<TValue>(ulong[] key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, out bool isGet, IBssomFormatter<TValue> formatter = null)
         {
             if (formatter == null)
+            {
                 formatter = context.Option.FormatterResolver.GetFormatterWithVerify<TValue>();
+            }
 
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             reader.BssomBuffer.Seek(paras.MapRouteDataStartPos);
             int keyPos = 0;
@@ -6551,7 +6959,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -6594,7 +7004,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -6605,7 +7017,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
                 case AutomateReadOneKeyState.ReadChildren:
                     t = reader.ReadMapToken();
@@ -6619,7 +7031,10 @@ namespace Bssom.Serializer.BssMap
         TryReadValue:
             //verify keyType
             if (keyIsNativeType)
+            {
                 reader.EnsureType(BssomType.NativeCode);
+            }
+
             reader.EnsureType(keyType);
             //seek valOffset
             reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);
@@ -6635,11 +7050,15 @@ namespace Bssom.Serializer.BssMap
         public static unsafe TValue TryGetValue<TValue>(ISegment<ulong> key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, ref byte ref1, out bool isGet, IBssomFormatter<TValue> formatter = null)
         {
             if (formatter == null)
+            {
                 formatter = context.Option.FormatterResolver.GetFormatterWithVerify<TValue>();
+            }
 
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             ref byte refBase = ref ref1;
             int keyPos = 0;
@@ -6648,7 +7067,7 @@ namespace Bssom.Serializer.BssMap
             byte nextKeyByteCount = 0;
             ulong value1 = 0;
             int mapHeadSize = paras.MapHeadSize;
-            
+
             switch (token)
             {
                 case AutomateReadOneKeyState.ReadNextBranch:
@@ -6683,7 +7102,10 @@ namespace Bssom.Serializer.BssMap
                             {
                                 ref1 = ref Unsafe.Add(ref refBase, nextOff - mapHeadSize);
                                 if (Unsafe.ReadUnaligned<BssMapRouteToken>(ref ref1) != BssMapRouteToken.LessElse)
+                                {
                                     throw BssomSerializationOperationException.UnexpectedCodeRead(ref1, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                                }
+
                                 ref1 = ref Unsafe.Add(ref ref1, 1);
                             }
 
@@ -6715,7 +7137,7 @@ namespace Bssom.Serializer.BssMap
                                 value1 = BssomBinaryPrimitives.ReadRawUInt64LittleEndian(value1);
                                 ref1 = ref Unsafe.Add(ref ref1, nextKeyByteCount);
                             }
-                            
+
                             ulong keyValue = key[keyPos];
                             if (keyValue > value1)
                             {
@@ -6741,7 +7163,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -6788,7 +7212,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -6799,7 +7225,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
 
                 case AutomateReadOneKeyState.ReadChildren:
@@ -6819,11 +7245,16 @@ namespace Bssom.Serializer.BssMap
             if (keyIsNativeType)
             {
                 if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
+                {
                     throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+                }
+
                 ref1 = Unsafe.Add(ref ref1, 1);
             }
             if (Unsafe.ReadUnaligned<byte>(ref ref1) != keyType)
-                   throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            {
+                throw BssomSerializationOperationException.UnexpectedCodeRead(keyType, paras.MapRouteDataStartPos + (int)Unsafe.ByteOffset(ref refBase, ref ref1));
+            }
 
             //seek valOffset
             reader.BssomBuffer.Seek(BssomBinaryPrimitives.ReadUInt32LittleEndian(ref Unsafe.Add(ref ref1, 1 + 1)) + paras.ReadPosition);
@@ -6838,11 +7269,15 @@ namespace Bssom.Serializer.BssMap
         public static unsafe TValue TryGetValueSlow<TValue>(ISegment<ulong> key, byte keyType, bool keyIsNativeType, ref BssMapHeadPackInfo paras, ref BssomReader reader, ref BssomDeserializeContext context, out bool isGet, IBssomFormatter<TValue> formatter = null)
         {
             if (formatter == null)
+            {
                 formatter = context.Option.FormatterResolver.GetFormatterWithVerify<TValue>();
+            }
 
             int keyLength = key.Length;
             if (paras.MapHead.MaxDepth < keyLength)
+            {
                 goto ReturnFalse;
+            }
 
             reader.BssomBuffer.Seek(paras.MapRouteDataStartPos);
             int keyPos = 0;
@@ -6924,7 +7359,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualNextN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -6967,7 +7404,9 @@ namespace Bssom.Serializer.BssMap
                                 else
                                 {
                                     if (t == BssMapRouteToken.EqualLastN)
+                                    {
                                         goto ReturnFalse;
+                                    }
 
                                     goto TryReadValue;
                                 }
@@ -6978,7 +7417,7 @@ namespace Bssom.Serializer.BssMap
                             }
                         }
 
-                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t,reader.Position);
+                        throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
                     }
                 case AutomateReadOneKeyState.ReadChildren:
                     t = reader.ReadMapToken();
@@ -6992,7 +7431,10 @@ namespace Bssom.Serializer.BssMap
         TryReadValue:
             //verify keyType
             if (keyIsNativeType)
+            {
                 reader.EnsureType(BssomType.NativeCode);
+            }
+
             reader.EnsureType(keyType);
             //seek valOffset
             reader.BssomBuffer.Seek(1, BssomSeekOrgin.Current);

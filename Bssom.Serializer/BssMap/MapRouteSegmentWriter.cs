@@ -1,13 +1,8 @@
 ﻿//using System.Runtime.CompilerServices;
 
-using System;
-using System.Buffers;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using Bssom.Serializer.Binary;
 using Bssom.Serializer.Internal;
-using Bssom.Serializer.BssMap.KeyResolvers;
-using Bssom.Serializer.BssomBuffer;
+using System.Collections.Generic;
 
 namespace Bssom.Serializer.BssMap
 {
@@ -20,7 +15,7 @@ namespace Bssom.Serializer.BssMap
         public MapRouteSegmentWriter(BssomWriter writer, long basePosition)
         {
             this.writer = writer;
-            this._basePosition = basePosition;
+            _basePosition = basePosition;
         }
 
         public void WriteRouteData<TValue>(BssMapObjMarshal<TValue>.Entry[] entries, int index, int length, Queue<KeyValuePair<int, TValue>> valueMapOffsets)
@@ -36,35 +31,35 @@ namespace Bssom.Serializer.BssMap
                     // write back the offset value of a branch
                     if (nextNextBranchPos != -1)
                     {
-                        this.WriteBackNextBranchOff(nextNextBranchPos);
+                        WriteBackNextBranchOff(nextNextBranchPos);
                         nextNextBranchPos = -1;
                     }
 
                     if (i != len - 1)
                     {
                         //equalNext
-                        this.WriteEqualNext(entries[i].IsKey, entries[i].LastValueByteCount);
+                        WriteEqualNext(entries[i].IsKey, entries[i].LastValueByteCount);
                         // fillNextBranchOff 
-                        nextNextBranchPos = this.FillNextBranchOff();
+                        nextNextBranchPos = FillNextBranchOff();
                     }
                     else
                     {
                         //equalLast
-                        this.WriteEqualLast(entries[i].IsKey, entries[i].LastValueByteCount);
+                        WriteEqualLast(entries[i].IsKey, entries[i].LastValueByteCount);
                     }
 
                     // determine if it is key
                     if (entries[i].IsKey)
                     {
                         //if it is the key
-                        int valueOffset = this.WriteKey(entries[i].LastValueByteCount, entries[i].KeyType, entries[i].KeyIsNativeType, entries[i].CurrentUInt64Value);
+                        int valueOffset = WriteKey(entries[i].LastValueByteCount, entries[i].KeyType, entries[i].KeyIsNativeType, entries[i].CurrentUInt64Value);
                         valueMapOffsets.Enqueue(new KeyValuePair<int, TValue>(valueOffset, entries[i].Value));
                     }
                     else
                     {
                         //if not key
                         //writeLittleEndian8Bytes
-                        this.WriteKeyBytes(8, entries[i].CurrentUInt64Value);
+                        WriteKeyBytes(8, entries[i].CurrentUInt64Value);
                     }
 
                     // determine if there are childrens
@@ -72,15 +67,15 @@ namespace Bssom.Serializer.BssMap
                     {
                         if (entries[i].IsKey)
                         {
-                            this.WriteHasChidlerns(true);
+                            WriteHasChidlerns(true);
                         }
 
                         //writeReleation
-                        this.WriteRouteData(entries[i].Chidlerns, 0, entries[i].ChidlernLength, valueMapOffsets);
+                        WriteRouteData(entries[i].Chidlerns, 0, entries[i].ChidlernLength, valueMapOffsets);
                     }
                     else
                     {
-                        this.WriteHasChidlerns(false);
+                        WriteHasChidlerns(false);
                     }
 
                 }
@@ -91,24 +86,27 @@ namespace Bssom.Serializer.BssMap
                 int middle = index + length / 2;
 
                 //lessThan
-                this.WriteLessThen(entries[middle - 1].LastValueByteCount);
+                WriteLessThen(entries[middle - 1].LastValueByteCount);
                 // 1.  fillNextBranchOff 
-                int a1Pos = this.FillNextBranchOff();
+                int a1Pos = FillNextBranchOff();
                 // 2.  writeKeyBytes
-                this.WriteKeyBytes(entries[middle - 1].LastValueByteCount, entries[middle - 1].CurrentUInt64Value);
+                WriteKeyBytes(entries[middle - 1].LastValueByteCount, entries[middle - 1].CurrentUInt64Value);
                 // 3.  writeReleation
-                this.WriteRouteData(entries, index, middle - index, valueMapOffsets);
+                WriteRouteData(entries, index, middle - index, valueMapOffsets);
                 // 4.  write back the offset value of a branch
-                this.WriteBackNextBranchOff(a1Pos);
+                WriteBackNextBranchOff(a1Pos);
 
                 //lessElse
-                this.WriteLessElse();
+                WriteLessElse();
                 // 1. writeReleation
-                this.WriteRouteData(entries, middle, length - (middle - index), valueMapOffsets);
+                WriteRouteData(entries, middle, length - (middle - index), valueMapOffsets);
             }
         }
 
-        public BssomWriter GetBssomWriter() => writer;
+        public BssomWriter GetBssomWriter()
+        {
+            return writer;
+        }
 
         private int GetRelativePosition()
         {
@@ -123,17 +121,25 @@ namespace Bssom.Serializer.BssMap
         private void WriteEqualNext(bool isKey, int byteCount)
         {
             if (isKey)
+            {
                 WriteMapToken((BssMapRouteToken)byteCount);
+            }
             else
+            {
                 WriteMapToken(BssMapRouteToken.EqualNextN);
+            }
         }
 
         private void WriteEqualLast(bool isKey, int byteCount)
         {
             if (isKey)
+            {
                 WriteMapToken((BssMapRouteToken)(10 + byteCount));
+            }
             else
+            {
                 WriteMapToken(BssMapRouteToken.EqualLastN);
+            }
         }
 
         private void WriteLessThen(int byteCount)
@@ -171,18 +177,27 @@ namespace Bssom.Serializer.BssMap
         {
             DEBUG.Assert(lastValueByteCount != 0 && lastValueByteCount <= 8);
             if (lastValueByteCount == 8)
+            {
                 writer.WriteWithOutTypeHead(keyBytes);
+            }
             else
+            {
                 writer.WriteRaw64(keyBytes, lastValueByteCount);
+            }
         }
 
         private unsafe int WriteKey(byte lastValueByteCount, byte keyType, bool keyIsNativeType, ulong keyBytes)
         {
             WriteKeyBytes(lastValueByteCount, keyBytes);
             if (keyIsNativeType)
+            {
                 writer.WriteNativeType(keyType);
+            }
             else
+            {
                 writer.WriteBuildInType(keyType);
+            }
+
             int valueOffset = GetRelativePosition();
             writer.FillUInt32FixNumber();
             return valueOffset;
@@ -219,36 +234,36 @@ namespace Bssom.Serializer.BssMap
                     // write back the offset value of a branch
                     if (nextNextBranchPos != -1)
                     {
-                        this.WriteBackNextBranchOff(nextNextBranchPos);
+                        WriteBackNextBranchOff(nextNextBranchPos);
                         nextNextBranchPos = -1;
                     }
 
                     if (i != len - 1)
                     {
                         //equalNext
-                        this.WriteEqualNext(entries[i].IsKey, entries[i].LastValueByteCount);
+                        WriteEqualNext(entries[i].IsKey, entries[i].LastValueByteCount);
                         // fillNextBranchOff 
-                        nextNextBranchPos = this.FillNextBranchOff();
+                        nextNextBranchPos = FillNextBranchOff();
                     }
                     else
                     {
                         //equalLast
-                        this.WriteEqualLast(entries[i].IsKey, entries[i].LastValueByteCount);
+                        WriteEqualLast(entries[i].IsKey, entries[i].LastValueByteCount);
                     }
-                   
+
 
                     // determine if it is key
                     if (entries[i].IsKey)
                     {
                         //if it is the key
-                        int valueOffset = this.WriteKey(entries[i].LastValueByteCount, entries[i].KeyType, entries[i].KeyIsNativeType, entries[i].CurrentUInt64Value);
+                        int valueOffset = WriteKey(entries[i].LastValueByteCount, entries[i].KeyType, entries[i].KeyIsNativeType, entries[i].CurrentUInt64Value);
                         valueMapOffsets.Enqueue(new KeyValuePair<int, TValue>(valueOffset, entries[i].Value));
                     }
                     else
                     {
                         //if not key
                         //writeLittleEndian8Bytes
-                        this.WriteKeyBytes(8, entries[i].CurrentUInt64Value);
+                        WriteKeyBytes(8, entries[i].CurrentUInt64Value);
                     }
 
                     // determine if there are childrens
@@ -256,15 +271,15 @@ namespace Bssom.Serializer.BssMap
                     {
                         if (entries[i].IsKey)
                         {
-                            this.WriteHasChidlerns(true);
+                            WriteHasChidlerns(true);
                         }
 
                         //writeReleation
-                        this.SizeRouteData(entries[i].Chidlerns, 0, entries[i].ChidlernLength, valueMapOffsets);
+                        SizeRouteData(entries[i].Chidlerns, 0, entries[i].ChidlernLength, valueMapOffsets);
                     }
                     else
                     {
-                        this.WriteHasChidlerns(false);
+                        WriteHasChidlerns(false);
                     }
 
                 }
@@ -275,20 +290,20 @@ namespace Bssom.Serializer.BssMap
                 int middle = index + length / 2;
 
                 //lessThan
-                this.WriteLessThen(entries[middle - 1].LastValueByteCount);
+                WriteLessThen(entries[middle - 1].LastValueByteCount);
                 // 1.  fillNextBranchOff 
-                int a1Pos = this.FillNextBranchOff();
+                int a1Pos = FillNextBranchOff();
                 // 2.  writeKeyBytes
-                this.WriteKeyBytes(entries[middle - 1].LastValueByteCount, entries[middle - 1].CurrentUInt64Value);
+                WriteKeyBytes(entries[middle - 1].LastValueByteCount, entries[middle - 1].CurrentUInt64Value);
                 // 3.  writeReleation
-                this.SizeRouteData(entries, index, middle - index, valueMapOffsets);
+                SizeRouteData(entries, index, middle - index, valueMapOffsets);
                 // 4.  write back the offset value of a branch
-                this.WriteBackNextBranchOff(a1Pos);
+                WriteBackNextBranchOff(a1Pos);
 
                 //lessElse
-                this.WriteLessElse();
+                WriteLessElse();
                 // 1. writeReleation
-                this.SizeRouteData(entries, middle, length - (middle - index), valueMapOffsets);
+                SizeRouteData(entries, middle, length - (middle - index), valueMapOffsets);
             }
         }
 
@@ -305,17 +320,25 @@ namespace Bssom.Serializer.BssMap
         private void WriteEqualNext(bool isKey, int byteCount)
         {
             if (isKey)
+            {
                 WriteMapToken((BssMapRouteToken)byteCount);
+            }
             else
+            {
                 WriteMapToken(BssMapRouteToken.EqualNextN);
+            }
         }
 
         private void WriteEqualLast(bool isKey, int byteCount)
         {
             if (isKey)
+            {
                 WriteMapToken((BssMapRouteToken)(10 + byteCount));
+            }
             else
+            {
                 WriteMapToken(BssMapRouteToken.EqualLastN);
+            }
         }
 
         private void WriteLessThen(int byteCount)
@@ -359,9 +382,14 @@ namespace Bssom.Serializer.BssMap
         {
             WriteKeyBytes(lastValueByteCount, keyBytes);
             if (keyIsNativeType)
+            {
                 WriteNativeType(keyType);
+            }
             else
+            {
                 WriteBuildInType(keyType);
+            }
+
             int valueOffset = GetRelativePosition();
             FillUInt32FixNumber();
             return valueOffset;
@@ -395,7 +423,10 @@ namespace Bssom.Serializer.BssMap
         private void AdvanceSize(int size)
         {
             if (position == advanced)
+            {
                 advanced += size;
+            }
+
             position += size;
         }
     }

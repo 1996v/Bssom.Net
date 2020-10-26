@@ -32,12 +32,15 @@ namespace Bssom.Serializer
         /// <summary>
         /// Get DateTime
         /// </summary>
-        public DateTime GetDateTime() => (DateTime)_dateTime;
+        public DateTime GetDateTime()
+        {
+            return (DateTime)_dateTime;
+        }
 
         public override bool Equals(object obj)
         {
-            return obj is DateTime raw && raw == GetDateTime() || 
-                obj is BssomDateTime bssom && bssom.GetDateTime() == this.GetDateTime();
+            return obj is DateTime raw && raw == GetDateTime() ||
+                obj is BssomDateTime bssom && bssom.GetDateTime() == GetDateTime();
         }
 
         public override int GetHashCode()

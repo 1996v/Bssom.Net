@@ -1,15 +1,7 @@
 ﻿//using System.Runtime.CompilerServices;
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using Bssom.Serializer.BssMap;
-using Bssom.Serializer.Binary;
-using Bssom.Serializer.BssMap.KeyResolvers;
-using Bssom.Serializer.Internal;
-using Bssom.Serializer.BssomBuffer;
+using System.Collections;
 
 namespace Bssom.Serializer.Formatters
 {
@@ -31,12 +23,12 @@ namespace Bssom.Serializer.Formatters
 
         public IDictionary Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
-            return MapFormatterHelper.GenericDictionaryDeserialize<object, object>(ref reader,ref context);
+            return MapFormatterHelper.GenericDictionaryDeserialize<object, object>(ref reader, ref context);
         }
 
         public int Size(ref BssomSizeContext context, IDictionary value)
         {
-            return MapFormatterHelper.SizeIDictionary(ref context,value);
+            return MapFormatterHelper.SizeIDictionary(ref context, value);
         }
     }
 }

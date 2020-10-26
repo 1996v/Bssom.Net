@@ -14,8 +14,8 @@
 
         internal BssomFloat(object value, BssomFloatType type)
         {
-            this._float = value;
-            this.FloatType = type;
+            _float = value;
+            FloatType = type;
         }
         /// <summary>
         /// Initializes a new instance of the <see cref="BssomFloat"/> class.
@@ -61,12 +61,12 @@
                 case BssomFloatType.Single:
                     {
                         return obj is float raw && raw == GetFloat32() ||
-                              obj is BssomFloat bssom && bssom.FloatType == this.FloatType && bssom.GetFloat32() == GetFloat32();
+                              obj is BssomFloat bssom && bssom.FloatType == FloatType && bssom.GetFloat32() == GetFloat32();
                     }
                 default://case BssomFloatType.Double:
                     {
                         return obj is double raw && raw == GetFloat64() ||
-                                  obj is BssomFloat bssom && bssom.FloatType == this.FloatType && bssom.GetFloat64() == GetFloat64();
+                                  obj is BssomFloat bssom && bssom.FloatType == FloatType && bssom.GetFloat64() == GetFloat64();
                     }
             }
         }

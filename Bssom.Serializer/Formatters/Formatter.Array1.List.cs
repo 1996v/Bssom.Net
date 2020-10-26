@@ -1,16 +1,7 @@
 ﻿
+using Bssom.Serializer.Binary;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using Bssom.Serializer.Binary;
-using Bssom.Serializer.BssMap.KeyResolvers;
-using Bssom.Serializer.Internal;
-using Bssom.Serializer.BssomBuffer;
 namespace Bssom.Serializer.Formatters
 {
     /// <summary>
@@ -27,7 +18,9 @@ namespace Bssom.Serializer.Formatters
         public int Size(ref BssomSizeContext context, List<SByte> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             return BssomBinaryPrimitives.Array1BuildInTypeSize(BssomBinaryPrimitives.Int8Size, value.Count);
         }
@@ -35,11 +28,14 @@ namespace Bssom.Serializer.Formatters
         public List<SByte> Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureArray1BuildInType(BssomType.Int8Code))
+            {
                 return default;
+            }
+
             context.Option.Security.DepthStep(ref context);
             reader.SkipVariableNumber();
             int len = reader.ReadVariableNumber();
-            var val = new List<SByte>(len);
+            List<sbyte> val = new List<SByte>(len);
             for (int i = 0; i < len; i++)
             {
                 val.Add(reader.ReadInt8WithOutTypeHead());
@@ -50,7 +46,7 @@ namespace Bssom.Serializer.Formatters
 
         public void Serialize(ref BssomWriter writer, ref BssomSerializeContext context, List<SByte> value)
         {
-            if(value == null)
+            if (value == null)
             {
                 writer.WriteNull();
                 return;
@@ -78,7 +74,9 @@ namespace Bssom.Serializer.Formatters
         public int Size(ref BssomSizeContext context, List<Int16> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             return BssomBinaryPrimitives.Array1BuildInTypeSize(BssomBinaryPrimitives.Int16Size, value.Count);
         }
@@ -86,11 +84,14 @@ namespace Bssom.Serializer.Formatters
         public List<Int16> Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureArray1BuildInType(BssomType.Int16Code))
+            {
                 return default;
+            }
+
             context.Option.Security.DepthStep(ref context);
             reader.SkipVariableNumber();
             int len = reader.ReadVariableNumber();
-            var val = new List<Int16>(len);
+            List<short> val = new List<Int16>(len);
             for (int i = 0; i < len; i++)
             {
                 val.Add(reader.ReadInt16WithOutTypeHead());
@@ -101,7 +102,7 @@ namespace Bssom.Serializer.Formatters
 
         public void Serialize(ref BssomWriter writer, ref BssomSerializeContext context, List<Int16> value)
         {
-            if(value == null)
+            if (value == null)
             {
                 writer.WriteNull();
                 return;
@@ -129,7 +130,9 @@ namespace Bssom.Serializer.Formatters
         public int Size(ref BssomSizeContext context, List<Int32> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             return BssomBinaryPrimitives.Array1BuildInTypeSize(BssomBinaryPrimitives.Int32Size, value.Count);
         }
@@ -137,11 +140,14 @@ namespace Bssom.Serializer.Formatters
         public List<Int32> Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureArray1BuildInType(BssomType.Int32Code))
+            {
                 return default;
+            }
+
             context.Option.Security.DepthStep(ref context);
             reader.SkipVariableNumber();
             int len = reader.ReadVariableNumber();
-            var val = new List<Int32>(len);
+            List<int> val = new List<Int32>(len);
             for (int i = 0; i < len; i++)
             {
                 val.Add(reader.ReadInt32WithOutTypeHead());
@@ -152,7 +158,7 @@ namespace Bssom.Serializer.Formatters
 
         public void Serialize(ref BssomWriter writer, ref BssomSerializeContext context, List<Int32> value)
         {
-            if(value == null)
+            if (value == null)
             {
                 writer.WriteNull();
                 return;
@@ -180,7 +186,9 @@ namespace Bssom.Serializer.Formatters
         public int Size(ref BssomSizeContext context, List<Int64> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             return BssomBinaryPrimitives.Array1BuildInTypeSize(BssomBinaryPrimitives.Int64Size, value.Count);
         }
@@ -188,11 +196,14 @@ namespace Bssom.Serializer.Formatters
         public List<Int64> Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureArray1BuildInType(BssomType.Int64Code))
+            {
                 return default;
+            }
+
             context.Option.Security.DepthStep(ref context);
             reader.SkipVariableNumber();
             int len = reader.ReadVariableNumber();
-            var val = new List<Int64>(len);
+            List<long> val = new List<Int64>(len);
             for (int i = 0; i < len; i++)
             {
                 val.Add(reader.ReadInt64WithOutTypeHead());
@@ -203,7 +214,7 @@ namespace Bssom.Serializer.Formatters
 
         public void Serialize(ref BssomWriter writer, ref BssomSerializeContext context, List<Int64> value)
         {
-            if(value == null)
+            if (value == null)
             {
                 writer.WriteNull();
                 return;
@@ -231,7 +242,9 @@ namespace Bssom.Serializer.Formatters
         public int Size(ref BssomSizeContext context, List<Byte> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             return BssomBinaryPrimitives.Array1BuildInTypeSize(BssomBinaryPrimitives.UInt8Size, value.Count);
         }
@@ -239,11 +252,14 @@ namespace Bssom.Serializer.Formatters
         public List<Byte> Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureArray1BuildInType(BssomType.UInt8Code))
+            {
                 return default;
+            }
+
             context.Option.Security.DepthStep(ref context);
             reader.SkipVariableNumber();
             int len = reader.ReadVariableNumber();
-            var val = new List<Byte>(len);
+            List<byte> val = new List<Byte>(len);
             for (int i = 0; i < len; i++)
             {
                 val.Add(reader.ReadUInt8WithOutTypeHead());
@@ -254,7 +270,7 @@ namespace Bssom.Serializer.Formatters
 
         public void Serialize(ref BssomWriter writer, ref BssomSerializeContext context, List<Byte> value)
         {
-            if(value == null)
+            if (value == null)
             {
                 writer.WriteNull();
                 return;
@@ -282,7 +298,9 @@ namespace Bssom.Serializer.Formatters
         public int Size(ref BssomSizeContext context, List<UInt16> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             return BssomBinaryPrimitives.Array1BuildInTypeSize(BssomBinaryPrimitives.UInt16Size, value.Count);
         }
@@ -290,11 +308,14 @@ namespace Bssom.Serializer.Formatters
         public List<UInt16> Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureArray1BuildInType(BssomType.UInt16Code))
+            {
                 return default;
+            }
+
             context.Option.Security.DepthStep(ref context);
             reader.SkipVariableNumber();
             int len = reader.ReadVariableNumber();
-            var val = new List<UInt16>(len);
+            List<ushort> val = new List<UInt16>(len);
             for (int i = 0; i < len; i++)
             {
                 val.Add(reader.ReadUInt16WithOutTypeHead());
@@ -305,7 +326,7 @@ namespace Bssom.Serializer.Formatters
 
         public void Serialize(ref BssomWriter writer, ref BssomSerializeContext context, List<UInt16> value)
         {
-            if(value == null)
+            if (value == null)
             {
                 writer.WriteNull();
                 return;
@@ -333,7 +354,9 @@ namespace Bssom.Serializer.Formatters
         public int Size(ref BssomSizeContext context, List<UInt32> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             return BssomBinaryPrimitives.Array1BuildInTypeSize(BssomBinaryPrimitives.UInt32Size, value.Count);
         }
@@ -341,11 +364,14 @@ namespace Bssom.Serializer.Formatters
         public List<UInt32> Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureArray1BuildInType(BssomType.UInt32Code))
+            {
                 return default;
+            }
+
             context.Option.Security.DepthStep(ref context);
             reader.SkipVariableNumber();
             int len = reader.ReadVariableNumber();
-            var val = new List<UInt32>(len);
+            List<uint> val = new List<UInt32>(len);
             for (int i = 0; i < len; i++)
             {
                 val.Add(reader.ReadUInt32WithOutTypeHead());
@@ -356,7 +382,7 @@ namespace Bssom.Serializer.Formatters
 
         public void Serialize(ref BssomWriter writer, ref BssomSerializeContext context, List<UInt32> value)
         {
-            if(value == null)
+            if (value == null)
             {
                 writer.WriteNull();
                 return;
@@ -384,7 +410,9 @@ namespace Bssom.Serializer.Formatters
         public int Size(ref BssomSizeContext context, List<UInt64> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             return BssomBinaryPrimitives.Array1BuildInTypeSize(BssomBinaryPrimitives.UInt64Size, value.Count);
         }
@@ -392,11 +420,14 @@ namespace Bssom.Serializer.Formatters
         public List<UInt64> Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureArray1BuildInType(BssomType.UInt64Code))
+            {
                 return default;
+            }
+
             context.Option.Security.DepthStep(ref context);
             reader.SkipVariableNumber();
             int len = reader.ReadVariableNumber();
-            var val = new List<UInt64>(len);
+            List<ulong> val = new List<UInt64>(len);
             for (int i = 0; i < len; i++)
             {
                 val.Add(reader.ReadUInt64WithOutTypeHead());
@@ -407,7 +438,7 @@ namespace Bssom.Serializer.Formatters
 
         public void Serialize(ref BssomWriter writer, ref BssomSerializeContext context, List<UInt64> value)
         {
-            if(value == null)
+            if (value == null)
             {
                 writer.WriteNull();
                 return;
@@ -435,7 +466,9 @@ namespace Bssom.Serializer.Formatters
         public int Size(ref BssomSizeContext context, List<Single> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             return BssomBinaryPrimitives.Array1BuildInTypeSize(BssomBinaryPrimitives.Float32Size, value.Count);
         }
@@ -443,11 +476,14 @@ namespace Bssom.Serializer.Formatters
         public List<Single> Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureArray1BuildInType(BssomType.Float32Code))
+            {
                 return default;
+            }
+
             context.Option.Security.DepthStep(ref context);
             reader.SkipVariableNumber();
             int len = reader.ReadVariableNumber();
-            var val = new List<Single>(len);
+            List<float> val = new List<Single>(len);
             for (int i = 0; i < len; i++)
             {
                 val.Add(reader.ReadFloat32WithOutTypeHead());
@@ -458,7 +494,7 @@ namespace Bssom.Serializer.Formatters
 
         public void Serialize(ref BssomWriter writer, ref BssomSerializeContext context, List<Single> value)
         {
-            if(value == null)
+            if (value == null)
             {
                 writer.WriteNull();
                 return;
@@ -486,7 +522,9 @@ namespace Bssom.Serializer.Formatters
         public int Size(ref BssomSizeContext context, List<Double> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             return BssomBinaryPrimitives.Array1BuildInTypeSize(BssomBinaryPrimitives.Float64Size, value.Count);
         }
@@ -494,11 +532,14 @@ namespace Bssom.Serializer.Formatters
         public List<Double> Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureArray1BuildInType(BssomType.Float64Code))
+            {
                 return default;
+            }
+
             context.Option.Security.DepthStep(ref context);
             reader.SkipVariableNumber();
             int len = reader.ReadVariableNumber();
-            var val = new List<Double>(len);
+            List<double> val = new List<Double>(len);
             for (int i = 0; i < len; i++)
             {
                 val.Add(reader.ReadFloat64WithOutTypeHead());
@@ -509,7 +550,7 @@ namespace Bssom.Serializer.Formatters
 
         public void Serialize(ref BssomWriter writer, ref BssomSerializeContext context, List<Double> value)
         {
-            if(value == null)
+            if (value == null)
             {
                 writer.WriteNull();
                 return;
@@ -537,7 +578,9 @@ namespace Bssom.Serializer.Formatters
         public int Size(ref BssomSizeContext context, List<Boolean> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             return BssomBinaryPrimitives.Array1BuildInTypeSize(BssomBinaryPrimitives.BooleanSize, value.Count);
         }
@@ -545,11 +588,14 @@ namespace Bssom.Serializer.Formatters
         public List<Boolean> Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureArray1BuildInType(BssomType.BooleanCode))
+            {
                 return default;
+            }
+
             context.Option.Security.DepthStep(ref context);
             reader.SkipVariableNumber();
             int len = reader.ReadVariableNumber();
-            var val = new List<Boolean>(len);
+            List<bool> val = new List<Boolean>(len);
             for (int i = 0; i < len; i++)
             {
                 val.Add(reader.ReadBooleanWithOutTypeHead());
@@ -560,7 +606,7 @@ namespace Bssom.Serializer.Formatters
 
         public void Serialize(ref BssomWriter writer, ref BssomSerializeContext context, List<Boolean> value)
         {
-            if(value == null)
+            if (value == null)
             {
                 writer.WriteNull();
                 return;
@@ -588,7 +634,9 @@ namespace Bssom.Serializer.Formatters
         public int Size(ref BssomSizeContext context, List<Char> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             return BssomBinaryPrimitives.Array1NativeTypeSize(BssomBinaryPrimitives.CharSize, value.Count);
         }
@@ -596,11 +644,14 @@ namespace Bssom.Serializer.Formatters
         public List<Char> Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureArray1NativeType(NativeBssomType.CharCode))
+            {
                 return default;
+            }
+
             context.Option.Security.DepthStep(ref context);
             reader.SkipVariableNumber();
             int len = reader.ReadVariableNumber();
-            var val = new List<Char>(len);
+            List<char> val = new List<Char>(len);
             for (int i = 0; i < len; i++)
             {
                 val.Add(reader.ReadCharWithOutTypeHead());
@@ -611,7 +662,7 @@ namespace Bssom.Serializer.Formatters
 
         public void Serialize(ref BssomWriter writer, ref BssomSerializeContext context, List<Char> value)
         {
-            if(value == null)
+            if (value == null)
             {
                 writer.WriteNull();
                 return;
@@ -639,7 +690,9 @@ namespace Bssom.Serializer.Formatters
         public int Size(ref BssomSizeContext context, List<Decimal> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             return BssomBinaryPrimitives.Array1NativeTypeSize(BssomBinaryPrimitives.DecimalSize, value.Count);
         }
@@ -647,11 +700,14 @@ namespace Bssom.Serializer.Formatters
         public List<Decimal> Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureArray1NativeType(NativeBssomType.DecimalCode))
+            {
                 return default;
+            }
+
             context.Option.Security.DepthStep(ref context);
             reader.SkipVariableNumber();
             int len = reader.ReadVariableNumber();
-            var val = new List<Decimal>(len);
+            List<decimal> val = new List<Decimal>(len);
             for (int i = 0; i < len; i++)
             {
                 val.Add(reader.ReadDecimalWithOutTypeHead());
@@ -662,7 +718,7 @@ namespace Bssom.Serializer.Formatters
 
         public void Serialize(ref BssomWriter writer, ref BssomSerializeContext context, List<Decimal> value)
         {
-            if(value == null)
+            if (value == null)
             {
                 writer.WriteNull();
                 return;
@@ -690,7 +746,9 @@ namespace Bssom.Serializer.Formatters
         public int Size(ref BssomSizeContext context, List<Guid> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             return BssomBinaryPrimitives.Array1NativeTypeSize(BssomBinaryPrimitives.GuidSize, value.Count);
         }
@@ -698,11 +756,14 @@ namespace Bssom.Serializer.Formatters
         public List<Guid> Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureArray1NativeType(NativeBssomType.GuidCode))
+            {
                 return default;
+            }
+
             context.Option.Security.DepthStep(ref context);
             reader.SkipVariableNumber();
             int len = reader.ReadVariableNumber();
-            var val = new List<Guid>(len);
+            List<Guid> val = new List<Guid>(len);
             for (int i = 0; i < len; i++)
             {
                 val.Add(reader.ReadGuidWithOutTypeHead());
@@ -713,7 +774,7 @@ namespace Bssom.Serializer.Formatters
 
         public void Serialize(ref BssomWriter writer, ref BssomSerializeContext context, List<Guid> value)
         {
-            if(value == null)
+            if (value == null)
             {
                 writer.WriteNull();
                 return;
@@ -741,18 +802,27 @@ namespace Bssom.Serializer.Formatters
         public int Size(ref BssomSizeContext context, List<DateTime> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             if (context.Option.IsUseStandardDateTime == false)
+            {
                 return BssomBinaryPrimitives.NativeDateTimeArraySize(value.Count);
+            }
             else
+            {
                 return BssomBinaryPrimitives.StandardDateTimeArraySize(value.Count);
+            }
         }
 
         public List<DateTime> Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureBuildInType(BssomType.Array1))
+            {
                 return default;
+            }
+
             context.Option.Security.DepthStep(ref context);
             List<DateTime> val;
             byte type = reader.ReadBssomType();
@@ -778,7 +848,7 @@ namespace Bssom.Serializer.Formatters
                     }
                     break;
                 default:
-                    throw BssomSerializationOperationException.UnexpectedCodeRead(type, reader.Position);            
+                    throw BssomSerializationOperationException.UnexpectedCodeRead(type, reader.Position);
             }
 
             context.Depth--;
@@ -794,16 +864,21 @@ namespace Bssom.Serializer.Formatters
             }
 
             if (context.Option.IsUseStandardDateTime)
+            {
                 writer.WriteArray1BuildInType(BssomType.TimestampCode);
+            }
             else
+            {
                 writer.WriteArray1NativeType(NativeBssomType.DateTimeCode);
+            }
+
             long posLen = writer.FillUInt32FixNumber();
             writer.WriteVariableNumber(value.Count);
             for (int i = 0; i < value.Count; i++)
             {
                 writer.Write(value[i], context.Option.IsUseStandardDateTime, false);
             }
-            writer.WriteBackFixNumber(posLen,checked((int)(writer.Position - posLen - BssomBinaryPrimitives.FixUInt32NumberSize)));
+            writer.WriteBackFixNumber(posLen, checked((int)(writer.Position - posLen - BssomBinaryPrimitives.FixUInt32NumberSize)));
         }
     }
 }

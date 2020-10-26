@@ -1,10 +1,8 @@
 ﻿
-using System;
-using System.Runtime.CompilerServices;
 using Bssom.Serializer.Binary;
 using Bssom.Serializer.Internal;
-using Bssom.Serializer.BssMap.KeyResolvers;
-using Bssom.Serializer.BssomBuffer;
+using System;
+using System.Runtime.CompilerServices;
 namespace Bssom.Serializer.Formatters
 {
     /// <summary>
@@ -20,7 +18,7 @@ namespace Bssom.Serializer.Formatters
 
         private EnumFormatter()
         {
-            var underlyingType = typeof(T).GetEnumUnderlyingType();
+            Type underlyingType = typeof(T).GetEnumUnderlyingType();
             switch (Type.GetTypeCode(underlyingType))
             {
                 case TypeCode.Byte:
@@ -131,7 +129,7 @@ namespace Bssom.Serializer.Formatters
 
         public void Serialize(ref BssomWriter writer, ref BssomSerializeContext context, T value)
         {
-            serializer(ref writer,ref context, value);
+            serializer(ref writer, ref context, value);
         }
 
         public int Size(ref BssomSizeContext context, T value)

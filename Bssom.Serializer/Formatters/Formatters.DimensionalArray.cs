@@ -1,10 +1,7 @@
 ﻿//using System.Runtime.CompilerServices;
 
-using System;
 using Bssom.Serializer.Binary;
 using Bssom.Serializer.Internal;
-using Bssom.Serializer.BssMap.KeyResolvers;
-using Bssom.Serializer.BssomBuffer;
 namespace Bssom.Serializer.Formatters
 {
     /// <summary>
@@ -15,11 +12,13 @@ namespace Bssom.Serializer.Formatters
         public T[] Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureBuildInType(BssomType.Array2))
+            {
                 return default;
+            }
 
-            var formatter = context.Option.FormatterResolver.GetFormatterWithVerify<T>();
+            IBssomFormatter<T> formatter = context.Option.FormatterResolver.GetFormatterWithVerify<T>();
             reader.SkipVariableNumber();
-            var array = new T[reader.ReadVariableNumber()];
+            T[] array = new T[reader.ReadVariableNumber()];
 
             for (int i = 0; i < array.Length; i++)
             {
@@ -32,12 +31,12 @@ namespace Bssom.Serializer.Formatters
 
         public void Serialize(ref BssomWriter writer, ref BssomSerializeContext context, T[] value)
         {
-            Array2FormatterHelper.SerializeGenerIList(ref writer,ref context, value);
+            Array2FormatterHelper.SerializeGenerIList(ref writer, ref context, value);
         }
 
         public int Size(ref BssomSizeContext context, T[] value)
         {
-            return Array2FormatterHelper.SizeGenericIEnumerable<T>(ref context,value);
+            return Array2FormatterHelper.SizeGenericIEnumerable<T>(ref context, value);
         }
     }
 
@@ -56,8 +55,8 @@ namespace Bssom.Serializer.Formatters
                 return;
             }
 
-            var i = value.GetLength(0);
-            var j = value.GetLength(1);
+            int i = value.GetLength(0);
+            int j = value.GetLength(1);
 
             IBssomFormatter<T> formatter = context.Option.FormatterResolver.GetFormatterWithVerify<T>();
 
@@ -89,24 +88,28 @@ namespace Bssom.Serializer.Formatters
         public T[,] Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureBuildInType(BssomType.Array2))
+            {
                 return default;
+            }
 
             IBssomFormatter<T> formatter = context.Option.FormatterResolver.GetFormatterWithVerify<T>();
 
             reader.SkipVariableNumber();
             if (reader.ReadVariableNumber() != ArrayLength)
-                throw BssomSerializationTypeFormatterException.TypeFormatterError(typeof(T[,]),"Invalid T[,] format");
+            {
+                throw BssomSerializationTypeFormatterException.TypeFormatterError(typeof(T[,]), "Invalid T[,] format");
+            }
 
-            var iLength = reader.ReadUInt8();
-            var jLength = reader.ReadUInt8();
+            byte iLength = reader.ReadUInt8();
+            byte jLength = reader.ReadUInt8();
             reader.SkipBlankCharacterAndEnsureType(BssomType.Array2);
             reader.SkipVariableNumber();//len
-            var maxLen = reader.ReadVariableNumber();
+            int maxLen = reader.ReadVariableNumber();
 
-            var array = new T[iLength, jLength];
+            T[,] array = new T[iLength, jLength];
 
-            var i = 0;
-            var j = -1;
+            int i = 0;
+            int j = -1;
             context.Option.Security.DepthStep(ref context);
 
             for (int loop = 0; loop < maxLen; loop++)
@@ -132,9 +135,11 @@ namespace Bssom.Serializer.Formatters
         public int Size(ref BssomSizeContext context, T[,] value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
-            var formatter = context.Option.FormatterResolver.GetFormatterWithVerify<T>();
+            IBssomFormatter<T> formatter = context.Option.FormatterResolver.GetFormatterWithVerify<T>();
 
             long dataLen = 0;
             foreach (T item in value)
@@ -163,9 +168,9 @@ namespace Bssom.Serializer.Formatters
                 return;
             }
 
-            var i = value.GetLength(0);
-            var j = value.GetLength(1);
-            var k = value.GetLength(2);
+            int i = value.GetLength(0);
+            int j = value.GetLength(1);
+            int k = value.GetLength(2);
 
             IBssomFormatter<T> formatter = context.Option.FormatterResolver.GetFormatterWithVerify<T>();
 
@@ -196,7 +201,9 @@ namespace Bssom.Serializer.Formatters
         public T[,,] Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureBuildInType(BssomType.Array2))
+            {
                 return default;
+            }
 
             IBssomFormatter<T> formatter = context.Option.FormatterResolver.GetFormatterWithVerify<T>();
             reader.SkipVariableNumber();
@@ -205,18 +212,18 @@ namespace Bssom.Serializer.Formatters
                 throw BssomSerializationTypeFormatterException.TypeFormatterError(typeof(T[,,]), "Invalid T[,,] format");
             }
 
-            var iLength = reader.ReadUInt8();
-            var jLength = reader.ReadUInt8();
-            var kLength = reader.ReadUInt8();
+            byte iLength = reader.ReadUInt8();
+            byte jLength = reader.ReadUInt8();
+            byte kLength = reader.ReadUInt8();
             reader.SkipBlankCharacterAndEnsureType(BssomType.Array2);
             reader.SkipVariableNumber();
-            var maxLen = reader.ReadVariableNumber();
+            int maxLen = reader.ReadVariableNumber();
 
-            var array = new T[iLength, jLength, kLength];
+            T[,,] array = new T[iLength, jLength, kLength];
 
-            var i = 0;
-            var j = 0;
-            var k = -1;
+            int i = 0;
+            int j = 0;
+            int k = -1;
             context.Option.Security.DepthStep(ref context);
 
             for (int loop = 0; loop < maxLen; loop++)
@@ -248,9 +255,11 @@ namespace Bssom.Serializer.Formatters
         public int Size(ref BssomSizeContext context, T[,,] value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
-            var formatter = context.Option.FormatterResolver.GetFormatterWithVerify<T>();
+            IBssomFormatter<T> formatter = context.Option.FormatterResolver.GetFormatterWithVerify<T>();
 
             long dataLen = 0;
             foreach (T item in value)
@@ -279,10 +288,10 @@ namespace Bssom.Serializer.Formatters
             }
             else
             {
-                var i = value.GetLength(0);
-                var j = value.GetLength(1);
-                var k = value.GetLength(2);
-                var l = value.GetLength(3);
+                int i = value.GetLength(0);
+                int j = value.GetLength(1);
+                int k = value.GetLength(2);
+                int l = value.GetLength(3);
 
                 IBssomFormatter<T> formatter = context.Option.FormatterResolver.GetFormatterWithVerify<T>();
 
@@ -312,7 +321,9 @@ namespace Bssom.Serializer.Formatters
         public T[,,,] Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureBuildInType(BssomType.Array2))
+            {
                 return default;
+            }
 
             IBssomFormatter<T> formatter = context.Option.FormatterResolver.GetFormatterWithVerify<T>();
             reader.SkipVariableNumber();
@@ -321,19 +332,19 @@ namespace Bssom.Serializer.Formatters
                 throw BssomSerializationTypeFormatterException.TypeFormatterError(typeof(T[,,,]), "Invalid T[,,,] format");
             }
 
-            var iLength = reader.ReadUInt8();
-            var jLength = reader.ReadUInt8();
-            var kLength = reader.ReadUInt8();
-            var lLength = reader.ReadUInt8();
+            byte iLength = reader.ReadUInt8();
+            byte jLength = reader.ReadUInt8();
+            byte kLength = reader.ReadUInt8();
+            byte lLength = reader.ReadUInt8();
             reader.SkipBlankCharacterAndEnsureType(BssomType.Array2);
             reader.SkipVariableNumber();
-            var maxLen = reader.ReadVariableNumber();
-            var array = new T[iLength, jLength, kLength, lLength];
+            int maxLen = reader.ReadVariableNumber();
+            T[,,,] array = new T[iLength, jLength, kLength, lLength];
 
-            var i = 0;
-            var j = 0;
-            var k = 0;
-            var l = -1;
+            int i = 0;
+            int j = 0;
+            int k = 0;
+            int l = -1;
             context.Option.Security.DepthStep(ref context);
 
             for (int loop = 0; loop < maxLen; loop++)
@@ -372,9 +383,11 @@ namespace Bssom.Serializer.Formatters
         public int Size(ref BssomSizeContext context, T[,,,] value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
-            var formatter = context.Option.FormatterResolver.GetFormatterWithVerify<T>();
+            IBssomFormatter<T> formatter = context.Option.FormatterResolver.GetFormatterWithVerify<T>();
 
             long dataLen = 0;
             foreach (T item in value)

@@ -1,8 +1,4 @@
 ﻿using System.Collections.Generic;
-using Bssom.Serializer.Binary;
-using Bssom.Serializer.BssMap.KeyResolvers;
-using Bssom.Serializer.Internal;
-using Bssom.Serializer.BssomBuffer;
 
 namespace Bssom.Serializer.BssMap
 {

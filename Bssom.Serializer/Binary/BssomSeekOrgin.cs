@@ -9,5 +9,5 @@
         Begin,
         Current
     }
-    
+
 }

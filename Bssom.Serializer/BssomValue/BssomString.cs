@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 
 namespace Bssom.Serializer
 {
@@ -37,12 +36,15 @@ namespace Bssom.Serializer
         /// <summary>
         /// Get string
         /// </summary>
-        public string GetString() => _value;
+        public string GetString()
+        {
+            return _value;
+        }
 
         public override bool Equals(object obj)
         {
-            return obj is string raw && raw == GetString() || 
-                obj is BssomString bssom && bssom.GetString() == this.GetString();
+            return obj is string raw && raw == GetString() ||
+                obj is BssomString bssom && bssom.GetString() == GetString();
         }
 
         public override int GetHashCode()

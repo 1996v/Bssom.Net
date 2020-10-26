@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Bssom.Serializer
+﻿namespace Bssom.Serializer
 {
     /// <summary>
     /// The exception that is thrown when one of the arguments provided to a method is not valid.
@@ -26,7 +24,7 @@ namespace Bssom.Serializer
 
         internal static BssomSerializationArgumentException BssMapKeyUnsupportedSameRawValue(byte key1Type, bool key1IsNative, byte key2Type, bool key2IsNative, ulong value)
         {
-            throw new BssomSerializationArgumentException(SerializationErrorCode.BssomMapKeySame, $"BssomMap的Key中存在相同宽度类型({BssomType.GetTypeName(key1IsNative,key1Type)} 和 {BssomType.GetTypeName(key2IsNative, key2Type)})的相同的值{value}. The same value {value} of the same width type ({BssomType.GetTypeName(key1IsNative, key1Type)} and {BssomType.GetTypeName(key2IsNative, key2Type)} exist in the Key of BssomMap.");
+            throw new BssomSerializationArgumentException(SerializationErrorCode.BssomMapKeySame, $"BssomMap的Key中存在相同宽度类型({BssomType.GetTypeName(key1IsNative, key1Type)} 和 {BssomType.GetTypeName(key2IsNative, key2Type)})的相同的值{value}. The same value {value} of the same width type ({BssomType.GetTypeName(key1IsNative, key1Type)} and {BssomType.GetTypeName(key2IsNative, key2Type)} exist in the Key of BssomMap.");
         }
 
         internal static T InvalidOffsetInfoFormat<T>()

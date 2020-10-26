@@ -2,11 +2,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using static Bssom.Serializer.BssomFloat;
-using static Bssom.Serializer.BssomNumber;
 
 namespace Bssom.Serializer
 {
@@ -37,29 +32,83 @@ namespace Bssom.Serializer
         /// <returns></returns>
         public static BssomValue Create(object value)
         {
-            if (value == null) return BssomNull.Value;
+            if (value == null)
+            {
+                return BssomNull.Value;
+            }
 
-            if (value is Int16) return new BssomNumber(value, BssomNumber.BssomNumberType.Short);
-            else if (value is Int32) return new BssomNumber(value, BssomNumber.BssomNumberType.Int);
-            else if (value is Int64) return new BssomNumber(value, BssomNumber.BssomNumberType.Long);
-            else if (value is UInt16) return new BssomNumber(value, BssomNumber.BssomNumberType.UShort);
-            else if (value is UInt32) return new BssomNumber(value, BssomNumber.BssomNumberType.UInt);
-            else if (value is UInt64) return new BssomNumber(value, BssomNumber.BssomNumberType.ULong);
-            else if (value is Byte) return new BssomNumber(value, BssomNumber.BssomNumberType.Byte);
-            else if (value is SByte) return new BssomNumber(value, BssomNumber.BssomNumberType.SByte);
-            else if (value is Boolean) return new BssomBoolean(value);
-            else if (value is String) return new BssomString(value);
-            else if (value is Single) return new BssomFloat(value, BssomFloat.BssomFloatType.Single);
-            else if (value is Double) return new BssomFloat(value, BssomFloat.BssomFloatType.Double);
-            else if (value is Decimal) return new BssomDecimal(value);
-            else if (value is DateTime) return new BssomDateTime(value);
-            else if (value is Char) return new BssomChar(value);
-            else if (value is Guid) return new BssomGuid(value);
-            else if (value is BssomValue bsv) return BssomValue.Create(bsv.RawValue);
+            if (value is Int16)
+            {
+                return new BssomNumber(value, BssomNumber.BssomNumberType.Short);
+            }
+            else if (value is Int32)
+            {
+                return new BssomNumber(value, BssomNumber.BssomNumberType.Int);
+            }
+            else if (value is Int64)
+            {
+                return new BssomNumber(value, BssomNumber.BssomNumberType.Long);
+            }
+            else if (value is UInt16)
+            {
+                return new BssomNumber(value, BssomNumber.BssomNumberType.UShort);
+            }
+            else if (value is UInt32)
+            {
+                return new BssomNumber(value, BssomNumber.BssomNumberType.UInt);
+            }
+            else if (value is UInt64)
+            {
+                return new BssomNumber(value, BssomNumber.BssomNumberType.ULong);
+            }
+            else if (value is Byte)
+            {
+                return new BssomNumber(value, BssomNumber.BssomNumberType.Byte);
+            }
+            else if (value is SByte)
+            {
+                return new BssomNumber(value, BssomNumber.BssomNumberType.SByte);
+            }
+            else if (value is Boolean)
+            {
+                return new BssomBoolean(value);
+            }
+            else if (value is String)
+            {
+                return new BssomString(value);
+            }
+            else if (value is Single)
+            {
+                return new BssomFloat(value, BssomFloat.BssomFloatType.Single);
+            }
+            else if (value is Double)
+            {
+                return new BssomFloat(value, BssomFloat.BssomFloatType.Double);
+            }
+            else if (value is Decimal)
+            {
+                return new BssomDecimal(value);
+            }
+            else if (value is DateTime)
+            {
+                return new BssomDateTime(value);
+            }
+            else if (value is Char)
+            {
+                return new BssomChar(value);
+            }
+            else if (value is Guid)
+            {
+                return new BssomGuid(value);
+            }
+            else if (value is BssomValue bsv)
+            {
+                return BssomValue.Create(bsv.RawValue);
+            }
             else
             {
-                var enumerable = value as IEnumerable;
-                var dictionary = value as IDictionary;
+                IEnumerable enumerable = value as IEnumerable;
+                IDictionary dictionary = value as IDictionary;
 
                 if (dictionary != null)
                 {
@@ -72,7 +121,7 @@ namespace Bssom.Serializer
                 else
                 {
                     Dictionary<object, object> mapcore = new Dictionary<object, object>();
-                    foreach (var item in value.GetPublicMembersWithDynamicObject())
+                    foreach (KeyValuePair<string, object> item in value.GetPublicMembersWithDynamicObject())
                     {
                         mapcore.Add(item.Key, item.Value);
                     }

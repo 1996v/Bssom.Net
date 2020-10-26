@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Bssom.Serializer.Binary;
+using Bssom.Serializer.BssomBuffer;
+using System;
 using System.Buffers;
 using System.IO;
 using System.Threading.Tasks;
-using Bssom.Serializer.Binary;
-using Bssom.Serializer.BssomBuffer;
 
 namespace Bssom.Serializer
 {
@@ -17,9 +17,9 @@ namespace Bssom.Serializer
         public StreamDeserializeAux(Stream stream)
         {
             this.stream = stream;
-            this.buffer = BssomSerializerIBssomBufferWriterBufferCache.GetUnsafeBssomArrayCache();
-            this.position = 0;
-            this.bufferHasExpanded = false;
+            buffer = BssomSerializerIBssomBufferWriterBufferCache.GetUnsafeBssomArrayCache();
+            position = 0;
+            bufferHasExpanded = false;
         }
 
         public IBssomBuffer GetBssomBuffer()
@@ -37,7 +37,7 @@ namespace Bssom.Serializer
         private int GetSizeOfOneObjectToBuffer()
         {
             int size;
-            var objType = GetBssomTypeFromStreamPack.Get(stream, buffer);
+            byte objType = GetBssomTypeFromStreamPack.Get(stream, buffer);
             buffer[0] = objType;
             position++;
 
@@ -54,15 +54,26 @@ namespace Bssom.Serializer
                             ReadStreamToBuffer(1);
                             objType = buffer[position - 1];
                             if (objType == NativeBssomType.CharCode)
+                            {
                                 size = BssomBinaryPrimitives.CharSize;
+                            }
                             else if (objType == NativeBssomType.DateTimeCode)
+                            {
                                 size = BssomBinaryPrimitives.NativeDateTimeSize;
+                            }
                             else if (objType == NativeBssomType.DecimalCode)
+                            {
                                 size = BssomBinaryPrimitives.DecimalSize;
+                            }
                             else if (objType == NativeBssomType.GuidCode)
+                            {
                                 size = BssomBinaryPrimitives.GuidSize;
+                            }
                             else
+                            {
                                 throw BssomSerializationOperationException.UnexpectedCodeRead(objType);
+                            }
+
                             break;
                         }
                     case BssomType.Map1:
@@ -75,7 +86,10 @@ namespace Bssom.Serializer
                         {
                             ReadStreamToBuffer(1);
                             if (buffer[position - 1] /*elementType*/ == BssomType.NativeCode)
+                            {
                                 ReadStreamToBuffer(1);
+                            }
+
                             size = (int)ReadVariableNumberCore();
                             break;
                         }
@@ -100,7 +114,7 @@ namespace Bssom.Serializer
 
         private void BufferResize(int len)
         {
-            var newBuf = ArrayPool<byte>.Shared.Rent(position + len);
+            byte[] newBuf = ArrayPool<byte>.Shared.Rent(position + len);
             Array.Copy(buffer, 0, newBuf, 0, position);
             if (bufferHasExpanded)
             {
@@ -116,22 +130,32 @@ namespace Bssom.Serializer
         private void ReadStreamToBuffer(int len)
         {
             if (buffer.Length < position + len)
+            {
                 BufferResize(position + len);
+            }
 
             int readNum = stream.Read(buffer, position, len);
             if (readNum != len)
+            {
                 throw new Exception();//格式错误
+            }
+
             position += len;
         }
 
         private async Task ReadStreamToBufferAsync(int len)
         {
             if (buffer.Length < position + len)
+            {
                 BufferResize(position + len);
+            }
 
             int readNum = await stream.ReadAsync(buffer, position, len);
             if (readNum != len)
+            {
                 throw new Exception();//格式错误
+            }
+
             position += len;
         }
 
@@ -227,13 +251,18 @@ namespace Bssom.Serializer
             {
                 int one = stream.ReadByte();
                 if (one == -1)
+                {
                     throw new Exception();//end
+                }
+
                 return (byte)one;
             }
             private static void AdvanceStream(Stream stream, byte[] buffer, int size)
             {
                 if (stream.CanSeek)
+                {
                     stream.Seek(size, SeekOrigin.Current);
+                }
                 else
                 {
                     while (size > 0)
@@ -255,7 +284,9 @@ namespace Bssom.Serializer
             {
                 int readNum = stream.Read(buffer, 0, size);
                 if (readNum != size)
+                {
                     throw new Exception();//格式错误
+                }
             }
         }
     }

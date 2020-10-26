@@ -1,13 +1,7 @@
-﻿using System;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using Bssom.Serializer.BssMap.KeyResolvers;
-using Bssom.Serializer.Internal;
-using Bssom.Serializer.BssomBuffer;
-using Bssom.Serializer.BssMap;
-using Bssom.Serializer.Resolvers;
+﻿using Bssom.Serializer.Binary;
+using System;
 using System.Linq.Expressions;
-using Bssom.Serializer.Binary;
+using System.Runtime.CompilerServices;
 
 namespace Bssom.Serializer.Internal
 {

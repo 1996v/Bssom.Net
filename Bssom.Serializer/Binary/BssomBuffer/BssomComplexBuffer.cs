@@ -1,8 +1,6 @@
-﻿using System;
-using System.IO;
+﻿using Bssom.Serializer.Internal;
+using System;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using Bssom.Serializer.Internal;
 
 namespace Bssom.Serializer.BssomBuffer
 {
@@ -15,7 +13,7 @@ namespace Bssom.Serializer.BssomBuffer
 
         public BssomComplexBuffer(byte[] buffer, int start = 0)
         {
-            Spans = new BufferSpan[] { new BufferSpan(buffer,start), };
+            Spans = new BufferSpan[] { new BufferSpan(buffer, start), };
             SpansCumulativeBoundary = new long[] { 0 };
         }
 
@@ -28,24 +26,39 @@ namespace Bssom.Serializer.BssomBuffer
         public BufferSpan CurrentSpan => Spans[CurrentSpanIndex];
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ref byte ReadRef(int sizeHint) => ref CurrentSpan.ReadRef(sizeHint, CurrentSpanPosition);
+        public ref byte ReadRef(int sizeHint)
+        {
+            return ref CurrentSpan.ReadRef(sizeHint, CurrentSpanPosition);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SeekWithOutVerify(long postion, BssomSeekOrgin orgin) => Seek(postion, orgin, -1);
+        public void SeekWithOutVerify(long postion, BssomSeekOrgin orgin)
+        {
+            Seek(postion, orgin, -1);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Seek(long postion, BssomSeekOrgin orgin) => Seek(postion, orgin, Boundary);
+        public void Seek(long postion, BssomSeekOrgin orgin)
+        {
+            Seek(postion, orgin, Boundary);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Seek(long postion, BssomSeekOrgin orgin, long limit)
         {
             if (orgin == BssomSeekOrgin.Current)
+            {
                 Position += postion;
+            }
             else
+            {
                 Position = postion;
+            }
 
             if (limit != -1 && Position > limit)
+            {
                 BssomSerializationOperationException.ReaderEndOfBufferException();
+            }
 
             if (Spans.Length == 1)
             {
@@ -55,7 +68,10 @@ namespace Bssom.Serializer.BssomBuffer
             {
                 CurrentSpanIndex = Array.BinarySearch(SpansCumulativeBoundary, Position);
                 if (CurrentSpanIndex <= -1)
+                {
                     CurrentSpanIndex = ~CurrentSpanIndex - 1;
+                }
+
                 CurrentSpanPosition = (int)(Position - SpansCumulativeBoundary[CurrentSpanIndex]);
             }
         }

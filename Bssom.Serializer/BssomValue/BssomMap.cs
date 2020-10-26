@@ -1,8 +1,8 @@
-﻿using Bssom.Serializer.Internal;
+﻿using Bssom.Serializer.BssMap.KeyResolvers;
+using Bssom.Serializer.Internal;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Bssom.Serializer.BssMap.KeyResolvers;
 
 namespace Bssom.Serializer
 {
@@ -33,10 +33,15 @@ namespace Bssom.Serializer
         public BssomMap(IEnumerable<KeyValuePair<object, object>> ienums)
         {
             if (ienums.TryGetICollectionCount(out int count))
+            {
                 _dict = new Dictionary<object, object>(count);
+            }
             else
+            {
                 _dict = new Dictionary<object, object>();
-            foreach (var item in ienums)
+            }
+
+            foreach (KeyValuePair<object, object> item in ienums)
             {
                 BssMapKeyResolverProvider.VertyBssMapKeyType(item.Key);
                 _dict.Add(item.Key, item.Value);
@@ -96,7 +101,10 @@ namespace Bssom.Serializer
         /// <para>将指定的键值对添加到Map</para>
         /// <para>Adds the specified KeyValuePair to the map</para>
         /// </summary>
-        public void Add(KeyValuePair<object, object> item) => this.Add(item.Key, item.Value);
+        public void Add(KeyValuePair<object, object> item)
+        {
+            Add(item.Key, item.Value);
+        }
 
         /// <summary>
         /// <para>从map中删除具有指定键的元素</para>
@@ -122,10 +130,7 @@ namespace Bssom.Serializer
         /// </summary>
         public object this[object key]
         {
-            get
-            {
-                return _dict[key];
-            }
+            get => _dict[key];
             set => Add(key, value);
         }
 
@@ -142,28 +147,57 @@ namespace Bssom.Serializer
         /// <para>从map中删除所有键和值</para>
         /// <para>removes all keys and values from map</para>
         /// </summary>
-        public void Clear() => _dict.Clear();
+        public void Clear()
+        {
+            _dict.Clear();
+        }
 
         /// <summary>
         /// Get map
         /// </summary>
         /// <returns></returns>
-        public IDictionary<object, object> GetMap() => _dict;
+        public IDictionary<object, object> GetMap()
+        {
+            return _dict;
+        }
 
-        public IEnumerator<KeyValuePair<object, object>> GetEnumerator() => _dict.GetEnumerator();
+        public IEnumerator<KeyValuePair<object, object>> GetEnumerator()
+        {
+            return _dict.GetEnumerator();
+        }
+
         ICollection<object> IDictionary<object, object>.Keys => _dict.Keys;
         ICollection<object> IDictionary<object, object>.Values => _dict.Values;
         bool ICollection<KeyValuePair<object, object>>.IsReadOnly => false;
-        bool ICollection<KeyValuePair<object, object>>.Remove(KeyValuePair<object, object> item) => _dict.Remove(item);
-        bool ICollection<KeyValuePair<object, object>>.Contains(KeyValuePair<object, object> item) => _dict.Contains(item);
-        void ICollection<KeyValuePair<object, object>>.CopyTo(KeyValuePair<object, object>[] array, int arrayIndex) => ((IDictionary<object, object>)_dict).CopyTo(array, arrayIndex);
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        bool ICollection<KeyValuePair<object, object>>.Remove(KeyValuePair<object, object> item)
+        {
+            return _dict.Remove(item);
+        }
+
+        bool ICollection<KeyValuePair<object, object>>.Contains(KeyValuePair<object, object> item)
+        {
+            return _dict.Contains(item);
+        }
+
+        void ICollection<KeyValuePair<object, object>>.CopyTo(KeyValuePair<object, object>[] array, int arrayIndex)
+        {
+            ((IDictionary<object, object>)_dict).CopyTo(array, arrayIndex);
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
         IEnumerator<KeyValuePair<BssomValue, object>> IEnumerable<KeyValuePair<BssomValue, object>>.GetEnumerator()
         {
-            foreach (var item in _dict)
+            foreach (KeyValuePair<object, object> item in _dict)
             {
                 if (!(item.Key is BssomValue val))
+                {
                     val = BssomValue.Create(item.Key);
+                }
+
                 yield return new KeyValuePair<BssomValue, object>(val, item.Value);
             }
         }

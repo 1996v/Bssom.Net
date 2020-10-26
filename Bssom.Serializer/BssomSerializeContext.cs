@@ -31,7 +31,10 @@ namespace Bssom.Serializer
             get
             {
                 if (_contextDataSlots == null)
+                {
                     _contextDataSlots = new ContextDataSlots();
+                }
+
                 return _contextDataSlots;
             }
             set => _contextDataSlots = value;
@@ -50,9 +53,9 @@ namespace Bssom.Serializer
         /// </summary>
         public BssomSerializeContext(BssomSerializerOptions option, CancellationToken canceToken)
         {
-            this._contextDataSlots = default;
-            this.Option = option;
-            this.CancellationToken = canceToken;
+            _contextDataSlots = default;
+            Option = option;
+            CancellationToken = canceToken;
         }
     }
 }

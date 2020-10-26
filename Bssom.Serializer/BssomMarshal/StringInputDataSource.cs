@@ -1,10 +1,10 @@
 ﻿//using System.Runtime.CompilerServices;
 
+using Bssom.Serializer.BssMap;
+using Bssom.Serializer.Internal;
 using System;
 using System.Runtime.CompilerServices;
 using System.Text;
-using Bssom.Serializer.BssMap;
-using Bssom.Serializer.Internal;
 
 namespace Bssom.Serializer
 {
@@ -22,10 +22,14 @@ namespace Bssom.Serializer
         public StringInputDataSource(string str) : this()
         {
             if (str is null)
+            {
                 throw new ArgumentNullException(nameof(str));
+            }
 
             if (str.Length < 1)
+            {
                 throw BssomSerializationArgumentException.InputDataFormatterError();
+            }
 
             _str = str;
         }
@@ -33,7 +37,9 @@ namespace Bssom.Serializer
         public bool MoveNext()
         {
             if (curIndex == _str.Length)
+            {
                 return false;
+            }
 
             switch (_str[curIndex])
             {
@@ -48,7 +54,10 @@ namespace Bssom.Serializer
                             {
                                 mapKeyLength = curIndex - mapKeyIndex;
                                 if (mapKeyLength == 0)
-                                    BssomSerializationArgumentException.BssomMapStringKeyIsEmpty(); 
+                                {
+                                    BssomSerializationArgumentException.BssomMapStringKeyIsEmpty();
+                                }
+
                                 curIndex++;
                                 return true;
                             }
@@ -72,7 +81,9 @@ namespace Bssom.Serializer
         private int ReadInt()
         {
             if (_str[curIndex] < '0' || _str[curIndex] > '9')
+            {
                 throw BssomSerializationArgumentException.InputDataFormatterError();
+            }
 
             long num = 0;
             num += (_str[curIndex] - '0');
@@ -98,7 +109,9 @@ namespace Bssom.Serializer
         public unsafe Raw64BytesISegment GetCurrentSegmentFromMap1StringKey()
         {
             if (!curIsMapKey)
+            {
                 BssomSerializationOperationException.InputTypeAndDataIsInconsistent(GetCurrentSegmentString(), "Map");
+            }
 
             byte[] buffer = GetBuffer(UTF8Encoding.UTF8.GetMaxByteCount(mapKeyLength));
             fixed (char* pChar = _str) fixed (byte* pByte = &buffer[0])
@@ -112,7 +125,9 @@ namespace Bssom.Serializer
         public unsafe UInt64BytesISegment GetCurrentSegmentFromMap2StringKey()
         {
             if (!curIsMapKey)
+            {
                 BssomSerializationOperationException.InputTypeAndDataIsInconsistent(GetCurrentSegmentString(), "Map");
+            }
 
             byte[] buffer = GetBuffer(UTF8Encoding.UTF8.GetMaxByteCount(mapKeyLength));
             fixed (char* pChar = _str) fixed (byte* pByte = &buffer[0])
@@ -126,7 +141,9 @@ namespace Bssom.Serializer
         public int GetCurrentArrayIndex()
         {
             if (curIsMapKey)
+            {
                 BssomSerializationOperationException.InputTypeAndDataIsInconsistent(GetCurrentSegmentString(), "Array");
+            }
 
             return aryIndexNumber;
         }
@@ -134,9 +151,13 @@ namespace Bssom.Serializer
         public string GetCurrentSegmentString()
         {
             if (curIsMapKey)
+            {
                 return _str.Substring(mapKeyIndex, mapKeyLength);
+            }
             else
+            {
                 return "$" + aryIndexNumber.ToString();
+            }
         }
 
         [ThreadStatic]
@@ -146,10 +167,14 @@ namespace Bssom.Serializer
         private static byte[] GetBuffer(int len)
         {
             if (len > 256)
+            {
                 return new byte[len];
+            }
 
             if (StaticBuffer == null)
+            {
                 StaticBuffer = new byte[256];
+            }
 
             return StaticBuffer;
         }

@@ -27,7 +27,10 @@ namespace Bssom.Serializer.BssomBuffer
         public static byte[] GetUnsafeBssomArrayCache()
         {
             if (internalCache == null)
+            {
                 internalCache = new byte[BssomArrayCacheSize];
+            }
+
             return internalCache;
         }
     }

@@ -1,7 +1,6 @@
 ﻿//using System.Runtime.CompilerServices;
 
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Text.RegularExpressions;
@@ -25,15 +24,15 @@ namespace Bssom.Serializer.Internal
             AssemblyBuilderAccess builderAccess = AssemblyBuilderAccess.Run;
 #endif
             this.moduleName = moduleName;
-            this.assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName(moduleName), builderAccess);
-            this.moduleBuilder = this.assemblyBuilder.DefineDynamicModule(moduleName + ".dll");
+            assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName(moduleName), builderAccess);
+            moduleBuilder = assemblyBuilder.DefineDynamicModule(moduleName + ".dll");
         }
 
         public TypeBuilder DefineType(string name, TypeAttributes attr, Type parent, Type[] interfaces)
         {
-            lock (this.gate)
+            lock (gate)
             {
-                return this.moduleBuilder.DefineType(name, attr, parent, interfaces);
+                return moduleBuilder.DefineType(name, attr, parent, interfaces);
             }
         }
 
@@ -49,8 +48,8 @@ namespace Bssom.Serializer.Internal
 
         public AssemblyBuilder Save()
         {
-            this.assemblyBuilder.Save(this.moduleName + ".dll");
-            return this.assemblyBuilder;
+            assemblyBuilder.Save(moduleName + ".dll");
+            return assemblyBuilder;
         }
 
 #endif
@@ -71,7 +70,10 @@ namespace Bssom.Serializer.Internal
 
             string pre = "Array2.";
             if (Array1FormatterHelper.IsArray1Type(elementType))
+            {
                 pre = "Array1.";
+            }
+
             Type formatterType = typeof(IBssomFormatter<>).MakeGenericType(type);
             TypeBuilder typeBuilder = DefineType("Bssom.Formatters." + pre + SubtractFullNameRegex.Replace(type.FullName, string.Empty).Replace(".", "_") + "Formatter" + Interlocked.Increment(ref nameSequence), TypeAttributes.NotPublic | TypeAttributes.Sealed, null, new[] { formatterType });
             return typeBuilder;

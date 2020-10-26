@@ -1,13 +1,11 @@
 ﻿//using System.Runtime.CompilerServices;
 
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Text;
 using Bssom.Serializer.Binary;
 using Bssom.Serializer.BssomBuffer;
 using Bssom.Serializer.Internal;
+using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Bssom.Serializer.BssMap
 {
@@ -22,8 +20,8 @@ namespace Bssom.Serializer.BssMap
 
         static BssMapObjMarshal()
         {
-            var bw = ExpandableBufferWriter.CreateTemporary();
-            var cw = new BssomWriter(bw);
+            ExpandableBufferWriter bw = ExpandableBufferWriter.CreateTemporary();
+            BssomWriter cw = new BssomWriter(bw);
             cw.WriteUInt32FixNumber(7);//reference DefaultMapLengthFieldSize
             cw.WriteVariableNumber(0);
             cw.WriteVariableNumber(0);
@@ -54,17 +52,20 @@ namespace Bssom.Serializer.BssMap
             return DefaultMapLengthFieldSize + BssomBinaryPrimitives.VariableNumberSize((ulong)valueCount) + BssomBinaryPrimitives.VariableNumberSize((ulong)maxDepth) + DefaultRouteLengthFieldSize;
         }
 
-        public unsafe static string GetSchemaString(ref BssomReader reader)
+        public static unsafe string GetSchemaString(ref BssomReader reader)
         {
-            long positionWithOutMap2TypeHead(ref BssomReader r) => r.Position - 1;
+            long positionWithOutMap2TypeHead(ref BssomReader r)
+            {
+                return r.Position - 1;
+            }
 
             MapSchemaStringBuilder msb = new MapSchemaStringBuilder();
-            var head = BssMapHead.Read(ref reader);
+            BssMapHead head = BssMapHead.Read(ref reader);
             byte nextKeyByteCount = 0;
             BssMapRouteToken t = default;
             int count = head.ElementCount;
-            var stack = new BssmapAnalysisStack(head.MaxDepth);
-            var state = AutomateState.ReadBranch;
+            BssmapAnalysisStack stack = new BssmapAnalysisStack(head.MaxDepth);
+            AutomateState state = AutomateState.ReadBranch;
             switch (state)
             {
                 case AutomateState.ReadBranch:
@@ -126,7 +127,9 @@ namespace Bssom.Serializer.BssMap
                             goto case AutomateState.ReadBranch;
                         }
                         else
+                        {
                             throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
+                        }
                     }
                 case AutomateState.ReadKey:
                     {
@@ -143,11 +146,15 @@ namespace Bssom.Serializer.BssMap
                             reader.BssomBuffer.SeekWithOutVerify(nextKeyByteCount, BssomSeekOrgin.Current);
                         }
                         long position = positionWithOutMap2TypeHead(ref reader);
-                        var keyType = reader.ReadBssomType();
+                        byte keyType = reader.ReadBssomType();
                         if (keyType == BssomType.NativeCode)
+                        {
                             msb.AppendKeyType(position, true, reader.ReadBssomType());
+                        }
                         else
+                        {
                             msb.AppendKeyType(position, false, keyType);
+                        }
 
                         position = positionWithOutMap2TypeHead(ref reader);
                         reader.EnsureType(BssomBinaryPrimitives.FixUInt32);
@@ -178,9 +185,13 @@ namespace Bssom.Serializer.BssMap
                             {
                                 stack.PopToken();
                                 if (stack.TokenCount > 0)
+                                {
                                     goto GO1;
+                                }
                                 else
+                                {
                                     goto case AutomateState.CheckEnd;
+                                }
                             }
                             else if (t >= BssMapRouteToken.LessThen1 && t <= BssMapRouteToken.LessThen8)
                             {
@@ -191,14 +202,21 @@ namespace Bssom.Serializer.BssMap
                             {
                                 stack.PopToken();
                                 if (stack.TokenCount > 0)
+                                {
                                     goto GO1;
+                                }
+
                                 goto case AutomateState.CheckEnd;
                             }
                             else
+                            {
                                 throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
+                            }
                         }
                         else
+                        {
                             throw BssomSerializationOperationException.UnexpectedCodeRead((byte)t, reader.Position);
+                        }
                     }
                 case AutomateState.CheckEnd:
                     {
@@ -246,24 +264,24 @@ namespace Bssom.Serializer.BssMap
             {
                 return new Entry()
                 {
-                    KeyType = this.KeyType,
-                    KeyIsNativeType = this.KeyIsNativeType,
-                    Value = this.Value,
-                    IsKey = this.IsKey,
-                    LastValueByteCount = this.LastValueByteCount,
-                    CurrentUInt64Value = this.CurrentUInt64Value,
-                    Chidlerns = this.Chidlerns,
-                    ChidlernLength = this.ChidlernLength
+                    KeyType = KeyType,
+                    KeyIsNativeType = KeyIsNativeType,
+                    Value = Value,
+                    IsKey = IsKey,
+                    LastValueByteCount = LastValueByteCount,
+                    CurrentUInt64Value = CurrentUInt64Value,
+                    Chidlerns = Chidlerns,
+                    ChidlernLength = ChidlernLength
                 };
             }
 
             public Entry WithNotKey()
             {
-                this.IsKey = false;
-                this.LastValueByteCount = default;
-                this.Value = default;
-                this.KeyType = default;
-                this.KeyIsNativeType = default;
+                IsKey = false;
+                LastValueByteCount = default;
+                Value = default;
+                KeyType = default;
+                KeyIsNativeType = default;
                 return this;
             }
 
@@ -276,11 +294,11 @@ namespace Bssom.Serializer.BssMap
 
             public void SetKey(byte lastValueByteCount, TValue value, byte keyType, bool isNativeType)
             {
-                this.IsKey = true;
-                this.LastValueByteCount = lastValueByteCount;
-                this.Value = value;
-                this.KeyType = keyType;
-                this.KeyIsNativeType = isNativeType;
+                IsKey = true;
+                LastValueByteCount = lastValueByteCount;
+                Value = value;
+                KeyType = keyType;
+                KeyIsNativeType = isNativeType;
             }
         }
         public class EntryCompare : IComparer<Entry>
@@ -300,11 +318,11 @@ namespace Bssom.Serializer.BssMap
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BssMapObjMarshal(BssRow<TValue>[] rows)
         {
-            this.ValueCount = (ushort)rows.Length;
-            this.MaxDepth = Depth(rows);
-            this.Entries = Generate(rows);
+            ValueCount = (ushort)rows.Length;
+            MaxDepth = Depth(rows);
+            Entries = Generate(rows);
             Optimization(Entries);
-            this.Length = LengthCounter(Entries);
+            Length = LengthCounter(Entries);
             RecursiveLengthCounter(Entries, Length);
         }
 
@@ -313,12 +331,12 @@ namespace Bssom.Serializer.BssMap
             Entry[] entries = new Entry[rows.Length];
             for (int i = 0; i < rows.Length; i++)
             {
-                var ulongs = rows[i].Key;
-                var value = rows[i].Value;
-                var keyType = rows[i].KeyType;
-                var keyIsNativeType = rows[i].KeyIsNativeType;
+                IMapKeySegment ulongs = rows[i].Key;
+                TValue value = rows[i].Value;
+                byte keyType = rows[i].KeyType;
+                bool keyIsNativeType = rows[i].KeyIsNativeType;
 
-                var entry = new Entry();
+                Entry entry = new Entry();
                 entries[i] = entry;
                 for (int c = 0; c < ulongs.Length; c++)
                 {
@@ -359,7 +377,9 @@ namespace Bssom.Serializer.BssMap
                     if (entries[i].Chidlerns != null)
                     {
                         if (entries[i - 1].Chidlerns == null)
+                        {
                             entries[i - 1].Chidlerns = entries[i].Chidlerns;
+                        }
                         else
                         {
                             int len = entries[i].Chidlerns.Length;
@@ -406,7 +426,9 @@ namespace Bssom.Serializer.BssMap
             for (int i = 0; i < entries.Length; i++)
             {
                 if (entries[i] == null)
+                {
                     break;
+                }
 
                 if (entries[i].Chidlerns != null)
                 {
@@ -447,7 +469,9 @@ namespace Bssom.Serializer.BssMap
             for (int i = 0; i < rows.Length; i++)
             {
                 if (rows[i].Key.Length > max)
+                {
                     max = rows[i].Key.Length;
+                }
             }
 
             return (ushort)max;
@@ -483,7 +507,7 @@ namespace Bssom.Serializer.BssMap
             int len = SizeHeader(out Queue<KeyValuePair<int, TValue>> valueMapOffsets);
             while (valueMapOffsets.Count > 0)
             {
-                var item = valueMapOffsets.Dequeue();
+                KeyValuePair<int, TValue> item = valueMapOffsets.Dequeue();
                 len += formatter.Size(ref context, item.Value);
             }
 
@@ -512,18 +536,18 @@ namespace Bssom.Serializer.BssMap
         private int SizeHeader(out Queue<KeyValuePair<int, TValue>> valueMapOffsets)
         {
             valueMapOffsets = new Queue<KeyValuePair<int, TValue>>();
-            var mmsAux = new MapMetaSegmentWriterAux();
+            MapMetaSegmentWriterAux mmsAux = new MapMetaSegmentWriterAux();
             mmsAux.SizeHeadData(ValueCount, MaxDepth);
             mmsAux.SizeRouteData(Entries, 0, Length, valueMapOffsets);
             return mmsAux.Advanced;
         }
 
-        private unsafe static void WriteValues(ref BssomWriter writer, IBssomFormatter<TValue> formatter, long basePostion, ref BssomSerializeContext context, Queue<KeyValuePair<int, TValue>> valueMapOffsets, ref StackArrayPack<BssMapWriteBackEntry> writeBacks)
+        private static unsafe void WriteValues(ref BssomWriter writer, IBssomFormatter<TValue> formatter, long basePostion, ref BssomSerializeContext context, Queue<KeyValuePair<int, TValue>> valueMapOffsets, ref StackArrayPack<BssMapWriteBackEntry> writeBacks)
         {
             while (valueMapOffsets.Count > 0)
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
-                var item = valueMapOffsets.Dequeue();
+                KeyValuePair<int, TValue> item = valueMapOffsets.Dequeue();
 
                 writeBacks.Add(new BssMapWriteBackEntry() { MapOffset = item.Key, ValueOffset = (uint)(writer.Position - basePostion) });
                 formatter.Serialize(ref writer, ref context, item.Value);

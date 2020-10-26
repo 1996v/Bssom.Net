@@ -1,16 +1,6 @@
 ﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using Bssom.Serializer.Binary;
-using Bssom.Serializer.BssMap.KeyResolvers;
-using Bssom.Serializer.Internal;
-using Bssom.Serializer.BssomBuffer;
+using System;
 namespace Bssom.Serializer.Formatters
 {
     /// <summary>
@@ -22,13 +12,15 @@ namespace Bssom.Serializer.Formatters
 
         private StringFormatter()
         {
-            
+
         }
 
         public int Size(ref BssomSizeContext context, string value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             return BssomBinaryPrimitives.StringSize(value) + BssomBinaryPrimitives.BuildInTypeCodeSize;
         }

@@ -1,19 +1,7 @@
-﻿using Bssom.Serializer.Binary;
-using Bssom.Serializer.BssMap.KeyResolvers;
-using Bssom.Serializer.BssomBuffer;
-using Bssom.Serializer.BssMap;
-using Bssom.Serializer.Resolvers;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using Bssom.Serializer.Formatters;
+﻿using Bssom.Serializer.Formatters;
 using Bssom.Serializer.Internal;
-using static Bssom.Serializer.BssomFloat;
-using static Bssom.Serializer.BssomNumber;
+using System;
+using System.Collections.Generic;
 
 namespace Bssom.Serializer.Resolvers
 {
@@ -39,7 +27,7 @@ namespace Bssom.Serializer.Resolvers
             static FormatterCache()
             {
                 Type t = typeof(T);
-                if (BssomValueResolverGetFormatterHelper.TryGetFormatter(t, out var formatter))
+                if (BssomValueResolverGetFormatterHelper.TryGetFormatter(t, out IBssomFormatter formatter))
                 {
                     Formatter = (IBssomFormatter<T>)formatter;
                     return;

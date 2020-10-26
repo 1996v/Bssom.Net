@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Bssom.Serializer
 {
@@ -38,8 +37,8 @@ namespace Bssom.Serializer
 
         internal BssomNumber(object value, BssomNumberType numberType)
         {
-            this._number = value;
-            this.NumberType = numberType;
+            _number = value;
+            NumberType = numberType;
         }
 
         public BssomNumber(byte value) : this(value, BssomNumberType.Byte)
@@ -67,14 +66,45 @@ namespace Bssom.Serializer
         {
         }
 
-        public byte GetByte() => (byte)_number;
-        public sbyte GetSByte() => (sbyte)_number;
-        public short GetShort() => (short)_number;
-        public int GetInt() => (int)_number;
-        public long GetLong() => (long)_number;
-        public ushort GetUShort() => (ushort)_number;
-        public uint GetUInt() => (uint)_number;
-        public ulong GetULong() => (ulong)_number;
+        public byte GetByte()
+        {
+            return (byte)_number;
+        }
+
+        public sbyte GetSByte()
+        {
+            return (sbyte)_number;
+        }
+
+        public short GetShort()
+        {
+            return (short)_number;
+        }
+
+        public int GetInt()
+        {
+            return (int)_number;
+        }
+
+        public long GetLong()
+        {
+            return (long)_number;
+        }
+
+        public ushort GetUShort()
+        {
+            return (ushort)_number;
+        }
+
+        public uint GetUInt()
+        {
+            return (uint)_number;
+        }
+
+        public ulong GetULong()
+        {
+            return (ulong)_number;
+        }
 
         public override bool Equals(object obj)
         {
@@ -83,43 +113,43 @@ namespace Bssom.Serializer
                 case BssomNumberType.Byte:
                     {
                         return obj is byte raw && raw == GetByte() ||
-                                obj is BssomNumber bssom && bssom.NumberType == this.NumberType && bssom.GetByte() == GetByte();
+                                obj is BssomNumber bssom && bssom.NumberType == NumberType && bssom.GetByte() == GetByte();
                     }
                 case BssomNumberType.SByte:
                     {
                         return obj is sbyte raw && raw == GetSByte() ||
-                                  obj is BssomNumber bssom && bssom.NumberType == this.NumberType && bssom.GetSByte() == GetSByte();
+                                  obj is BssomNumber bssom && bssom.NumberType == NumberType && bssom.GetSByte() == GetSByte();
                     }
 
                 case BssomNumberType.Short:
                     {
                         return obj is short raw && raw == GetShort() ||
-                                  obj is BssomNumber bssom && bssom.NumberType == this.NumberType && bssom.GetShort() == GetShort();
+                                  obj is BssomNumber bssom && bssom.NumberType == NumberType && bssom.GetShort() == GetShort();
                     }
                 case BssomNumberType.Int:
                     {
                         return obj is int raw && raw == GetInt() ||
-                                  obj is BssomNumber bssom && bssom.NumberType == this.NumberType && bssom.GetInt() == GetInt();
+                                  obj is BssomNumber bssom && bssom.NumberType == NumberType && bssom.GetInt() == GetInt();
                     }
                 case BssomNumberType.Long:
                     {
                         return obj is long raw && raw == GetLong() ||
-                                  obj is BssomNumber bssom && bssom.NumberType == this.NumberType && bssom.GetLong() == GetLong();
+                                  obj is BssomNumber bssom && bssom.NumberType == NumberType && bssom.GetLong() == GetLong();
                     }
                 case BssomNumberType.UShort:
                     {
                         return obj is ushort raw && raw == GetUShort() ||
-                                  obj is BssomNumber bssom && bssom.NumberType == this.NumberType && bssom.GetUShort() == GetUShort();
+                                  obj is BssomNumber bssom && bssom.NumberType == NumberType && bssom.GetUShort() == GetUShort();
                     }
                 case BssomNumberType.UInt:
                     {
                         return obj is uint raw && raw == GetUInt() ||
-                                  obj is BssomNumber bssom && bssom.NumberType == this.NumberType && bssom.GetUInt() == GetUInt();
+                                  obj is BssomNumber bssom && bssom.NumberType == NumberType && bssom.GetUInt() == GetUInt();
                     }
                 default:// case BssomNumberType.ULong:
                     {
                         return obj is ulong raw && raw == GetULong() ||
-                                  obj is BssomNumber bssom && bssom.NumberType == this.NumberType && bssom.GetULong() == GetULong();
+                                  obj is BssomNumber bssom && bssom.NumberType == NumberType && bssom.GetULong() == GetULong();
                     }
             }
         }

@@ -1,5 +1,5 @@
-﻿using System;
-using Bssom.Serializer.Resolvers;
+﻿using Bssom.Serializer.Resolvers;
+using System;
 
 namespace Bssom.Serializer
 {
@@ -27,11 +27,11 @@ namespace Bssom.Serializer
                 throw new ArgumentNullException(nameof(copyFrom));
             }
 
-            this.Security = copyFrom.Security;
-            this.FormatterResolver = copyFrom.FormatterResolver;
-            this.IsPriorityToDeserializeObjectAsBssomValue = copyFrom.IsPriorityToDeserializeObjectAsBssomValue;
-            this.IsUseStandardDateTime = copyFrom.IsUseStandardDateTime;
-            this.IDictionaryIsSerializeMap1Type = copyFrom.IDictionaryIsSerializeMap1Type;
+            Security = copyFrom.Security;
+            FormatterResolver = copyFrom.FormatterResolver;
+            IsPriorityToDeserializeObjectAsBssomValue = copyFrom.IsPriorityToDeserializeObjectAsBssomValue;
+            IsUseStandardDateTime = copyFrom.IsUseStandardDateTime;
+            IDictionaryIsSerializeMap1Type = copyFrom.IDictionaryIsSerializeMap1Type;
         }
 
         /// <summary>
@@ -79,12 +79,12 @@ namespace Bssom.Serializer
                 throw new ArgumentNullException(nameof(security));
             }
 
-            if (this.Security == security)
+            if (Security == security)
             {
                 return this;
             }
 
-            var result = this.Clone();
+            BssomSerializerOptions result = Clone();
             result.Security = security;
             return result;
         }
@@ -96,13 +96,13 @@ namespace Bssom.Serializer
         /// <param name="resolver"><see cref="FormatterResolver"/>的新值. The new value for the <seealso cref="FormatterResolver"/></param>
         /// <returns>一个新的实例,实例内的其它属性都没有改变. The new instance,none of the other properties within the instance change</returns>
         public BssomSerializerOptions WithFormatterResolver(IFormatterResolver resolver)
-        { 
-            if (this.FormatterResolver == resolver)
+        {
+            if (FormatterResolver == resolver)
             {
                 return this;
             }
 
-            var result = this.Clone();
+            BssomSerializerOptions result = Clone();
             result.FormatterResolver = resolver;
             return result;
         }
@@ -115,12 +115,12 @@ namespace Bssom.Serializer
         /// <returns>一个新的实例,实例内的其它属性都没有改变. The new instance,none of the other properties within the instance change</returns>
         public BssomSerializerOptions WithIsPriorityToDeserializeObjectAsBssomValue(bool isPriorityToDeserializeObjectAsBssomValue)
         {
-            if (this.IsPriorityToDeserializeObjectAsBssomValue == isPriorityToDeserializeObjectAsBssomValue)
+            if (IsPriorityToDeserializeObjectAsBssomValue == isPriorityToDeserializeObjectAsBssomValue)
             {
                 return this;
             }
 
-            var result = this.Clone();
+            BssomSerializerOptions result = Clone();
             result.IsPriorityToDeserializeObjectAsBssomValue = isPriorityToDeserializeObjectAsBssomValue;
             return result;
         }
@@ -133,12 +133,12 @@ namespace Bssom.Serializer
         /// <returns>一个新的实例,实例内的其它属性都没有改变. The new instance,none of the other properties within the instance change</returns>
         public BssomSerializerOptions WithIsUseStandardDateTime(bool isUseStandardDateTime)
         {
-            if (this.IsUseStandardDateTime == isUseStandardDateTime)
+            if (IsUseStandardDateTime == isUseStandardDateTime)
             {
                 return this;
             }
 
-            var result = this.Clone();
+            BssomSerializerOptions result = Clone();
             result.IsUseStandardDateTime = isUseStandardDateTime;
             return result;
         }
@@ -151,21 +151,21 @@ namespace Bssom.Serializer
         /// <returns>一个新的实例,实例内的其它属性都没有改变. The new instance,none of the other properties within the instance change</returns>
         public BssomSerializerOptions WithIDictionaryIsSerializeMap1Type(bool iDictionaryIsSerializeMap1Type)
         {
-            if (this.IDictionaryIsSerializeMap1Type == iDictionaryIsSerializeMap1Type)
+            if (IDictionaryIsSerializeMap1Type == iDictionaryIsSerializeMap1Type)
             {
                 return this;
             }
 
-            var result = this.Clone();
+            BssomSerializerOptions result = Clone();
             result.IDictionaryIsSerializeMap1Type = iDictionaryIsSerializeMap1Type;
             return result;
         }
 
         protected virtual BssomSerializerOptions Clone()
         {
-            if (this.GetType() != typeof(BssomSerializerOptions))
+            if (GetType() != typeof(BssomSerializerOptions))
             {
-                throw new NotSupportedException($"The derived type {this.GetType().FullName} did not override the {nameof(Clone)} method as required.");
+                throw new NotSupportedException($"The derived type {GetType().FullName} did not override the {nameof(Clone)} method as required.");
             }
 
             return new BssomSerializerOptions(this);

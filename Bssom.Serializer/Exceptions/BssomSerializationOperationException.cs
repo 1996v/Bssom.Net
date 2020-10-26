@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data;
 
 namespace Bssom.Serializer
 {
@@ -105,7 +104,7 @@ namespace Bssom.Serializer
             throw new BssomSerializationOperationException(SerializationErrorCode.CopyStreamError, $"在拷贝流时发生错误. An error occurred while copying the stream.", ex);
         }
 
-        internal static void InputTypeAndDataIsInconsistent(string inputType,string dataType)
+        internal static void InputTypeAndDataIsInconsistent(string inputType, string dataType)
         {
             throw new BssomSerializationOperationException(SerializationErrorCode.InputDataUnmatch, $"输入的类型和数据中的元素类型不一致,输入的是 {inputType}, 数据中的类型是 {dataType}. The input type is inconsistent with the element type in the data. The input is {inputType}, and the data type is {dataType}");
         }

@@ -1,8 +1,4 @@
-﻿using Bssom.Serializer.Binary;
-using Bssom.Serializer.BssMap.KeyResolvers;
-using Bssom.Serializer.Internal;
-using Bssom.Serializer.BssomBuffer;
-namespace Bssom.Serializer
+﻿namespace Bssom.Serializer
 {
     /// <summary>
     /// Represents a BSSOM boolean.
@@ -35,12 +31,15 @@ namespace Bssom.Serializer
         /// <summary>
         /// Get boolean
         /// </summary>
-        public bool GetBoolean() => (bool)_boolean;
+        public bool GetBoolean()
+        {
+            return (bool)_boolean;
+        }
 
         public override bool Equals(object obj)
         {
             return obj is bool raw && raw == GetBoolean() ||
-                obj is BssomBoolean bssom && bssom.GetBoolean() == this.GetBoolean();
+                obj is BssomBoolean bssom && bssom.GetBoolean() == GetBoolean();
         }
 
         public override int GetHashCode()

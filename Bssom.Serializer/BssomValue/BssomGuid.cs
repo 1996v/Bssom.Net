@@ -31,12 +31,15 @@ namespace Bssom.Serializer
         /// <summary>
         /// Get Guid
         /// </summary>
-        public Guid GetGuid() => (Guid)_guid;
+        public Guid GetGuid()
+        {
+            return (Guid)_guid;
+        }
 
         public override bool Equals(object obj)
         {
             return obj is Guid raw && raw == GetGuid() ||
-                obj is BssomGuid bssom && bssom.GetGuid() == this.GetGuid();
+                obj is BssomGuid bssom && bssom.GetGuid() == GetGuid();
         }
 
         public override int GetHashCode()

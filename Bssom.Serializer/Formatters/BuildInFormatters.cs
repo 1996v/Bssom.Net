@@ -1,19 +1,15 @@
 ﻿
+using Bssom.Serializer.Binary;
+using Bssom.Serializer.BssMap;
+using Bssom.Serializer.Internal;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text;
-using Bssom.Serializer.Binary;
-using Bssom.Serializer.BssMap;
-using Bssom.Serializer.Internal;
-using Bssom.Serializer.BssMap.KeyResolvers;
-using Bssom.Serializer.BssomBuffer;
 
 namespace Bssom.Serializer.Formatters
 {
@@ -40,9 +36,12 @@ namespace Bssom.Serializer.Formatters
 
         public Version Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
-            var val = reader.ReadString();
+            string val = reader.ReadString();
             if (val == null)
+            {
                 return default;
+            }
+
             return new Version(val);
         }
 
@@ -80,9 +79,12 @@ namespace Bssom.Serializer.Formatters
 
         public Uri Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
-            var val = reader.ReadString();
+            string val = reader.ReadString();
             if (val == null)
+            {
                 return default;
+            }
+
             return new Uri(val, UriKind.RelativeOrAbsolute);
         }
 
@@ -183,7 +185,9 @@ namespace Bssom.Serializer.Formatters
         public DataTable Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureBuildInType(BssomType.Array2))
+            {
                 return default;
+            }
 
             int len = reader.ReadVariableNumber();
             DataTable dt = new DataTable();
@@ -191,8 +195,8 @@ namespace Bssom.Serializer.Formatters
             for (int i = 0; i < len; i++)
             {
                 DataRow dr = dt.NewRow();
-                var map = MapFormatterHelper.Deserialize<string, object>(ref reader, ref context);
-                foreach (var item in map)
+                IMapDataSource<string, object> map = MapFormatterHelper.Deserialize<string, object>(ref reader, ref context);
+                foreach (KeyValuePair<string, object> item in map)
                 {
                     DataColumn column = dt.Columns[item.Key];
                     if (column == null)
@@ -223,7 +227,7 @@ namespace Bssom.Serializer.Formatters
             return BssomBinaryPrimitives.Array2TypeCodeSize + BssomBinaryPrimitives.VariableNumberSize((ulong)value.Rows.Count) + GetDataRowCollectionSize(ref context, value.Rows);
         }
 
-        static int GetDataRowCollectionSize(ref BssomSizeContext context, DataRowCollection dataRow)
+        private static int GetDataRowCollectionSize(ref BssomSizeContext context, DataRowCollection dataRow)
         {
             int len = 0;
             foreach (DataRow row in dataRow)
@@ -260,11 +264,14 @@ namespace Bssom.Serializer.Formatters
 
         public NameValueCollection Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
-            var map = MapFormatterHelper.Deserialize<string, string>(ref reader, ref context);
+            IMapDataSource<string, string> map = MapFormatterHelper.Deserialize<string, string>(ref reader, ref context);
             if (map == null)
+            {
                 return default;
+            }
+
             NameValueCollection val = new NameValueCollection(map.Count);
-            foreach (var item in map)
+            foreach (KeyValuePair<string, string> item in map)
             {
                 val.Add(item.Key, item.Value);
             }
@@ -277,7 +284,9 @@ namespace Bssom.Serializer.Formatters
         public int Size(ref BssomSizeContext context, NameValueCollection value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             return MapFormatterHelper.Size(ref context, value.ToIEnumerable(), value.Count);
         }
@@ -314,10 +323,12 @@ namespace Bssom.Serializer.Formatters
         public BitArray Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
             if (reader.TryReadNullWithEnsureArray1BuildInType(BssomType.BooleanCode))
+            {
                 return default;
+            }
 
             reader.SkipVariableNumber();
-            var array = new BitArray(reader.ReadVariableNumber());
+            BitArray array = new BitArray(reader.ReadVariableNumber());
             for (int i = 0; i < array.Length; i++)
             {
                 array[i] = reader.ReadBooleanWithOutTypeHead();
@@ -329,7 +340,9 @@ namespace Bssom.Serializer.Formatters
         public int Size(ref BssomSizeContext context, BitArray value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             return BssomBinaryPrimitives.Array1BuildInTypeSize(BssomBinaryPrimitives.BooleanSize, value.Length);
         }
@@ -359,9 +372,11 @@ namespace Bssom.Serializer.Formatters
 
         public StringBuilder Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
-            var val = reader.ReadString();
+            string val = reader.ReadString();
             if (val == null)
+            {
                 return default;
+            }
 
             return new StringBuilder(val);
         }
@@ -369,7 +384,9 @@ namespace Bssom.Serializer.Formatters
         public int Size(ref BssomSizeContext context, StringBuilder value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             return BssomBinaryPrimitives.StringSize(value.ToString()) + BssomBinaryPrimitives.BuildInTypeCodeSize;
         }
@@ -396,12 +413,14 @@ namespace Bssom.Serializer.Formatters
 
         public StringDictionary Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
-            var map = MapFormatterHelper.Deserialize<string, string>(ref reader, ref context);
+            IMapDataSource<string, string> map = MapFormatterHelper.Deserialize<string, string>(ref reader, ref context);
             if (map == null)
+            {
                 return null;
+            }
 
             StringDictionary dict = new StringDictionary();
-            foreach (var item in map)
+            foreach (KeyValuePair<string, string> item in map)
             {
                 dict.Add(item.Key, item.Value);
             }
@@ -415,7 +434,9 @@ namespace Bssom.Serializer.Formatters
         public int Size(ref BssomSizeContext context, StringDictionary value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             return MapFormatterHelper.Size(ref context, value.ToIEnumerable(), value.Count);
         }
@@ -439,16 +460,21 @@ namespace Bssom.Serializer.Formatters
 
         public ILookup<TKey, TElement> Deserialize(ref BssomReader reader, ref BssomDeserializeContext context)
         {
-            var intermediateCollection = context.Option.FormatterResolver.GetFormatterWithVerify<IEnumerable<IGrouping<TKey, TElement>>>().Deserialize(ref reader, ref context);
+            IEnumerable<IGrouping<TKey, TElement>> intermediateCollection = context.Option.FormatterResolver.GetFormatterWithVerify<IEnumerable<IGrouping<TKey, TElement>>>().Deserialize(ref reader, ref context);
             if (intermediateCollection == null)
+            {
                 return null;
+            }
+
             return new Internal.Lookup<TKey, TElement>(intermediateCollection);
         }
 
         public int Size(ref BssomSizeContext context, ILookup<TKey, TElement> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             return context.Option.FormatterResolver.GetFormatterWithVerify<IEnumerable<IGrouping<TKey, TElement>>>().Size(ref context, value);
         }
@@ -486,7 +512,7 @@ namespace Bssom.Serializer.Formatters
                 return null;
             }
             reader.SkipVariableNumber();
-            var count = reader.ReadVariableNumber();
+            int count = reader.ReadVariableNumber();
             if (count != Length)
             {
                 throw BssomSerializationTypeFormatterException.TypeFormatterError(typeof(IGrouping<TKey, TElement>), "Invalid format");
@@ -502,7 +528,9 @@ namespace Bssom.Serializer.Formatters
         public int Size(ref BssomSizeContext context, IGrouping<TKey, TElement> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             return BssomBinaryPrimitives.Array2TypeSize(LengthSize,
                   context.Option.FormatterResolver.GetFormatterWithVerify<TKey>().Size(ref context, value.Key)
@@ -544,7 +572,9 @@ namespace Bssom.Serializer.Formatters
         public int Size(ref BssomSizeContext context, Lazy<T> value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
+            }
 
             return context.Option.FormatterResolver.GetFormatterWithVerify<T>().Size(ref context, value.Value);
         }
@@ -566,15 +596,18 @@ namespace Bssom.Serializer.Formatters
                 writer.WriteNull();
                 return;
             }
-            var properties = typeof(T).GetProperties();
+            PropertyInfo[] properties = typeof(T).GetProperties();
             MapFormatterHelper.Serialize(ref writer, ref context, properties.Select(e => new KeyValuePair<string, object>(e.Name, e.GetValue(value))), properties.Length);
         }
 
         public int Size(ref BssomSizeContext context, T value)
         {
             if (value == null)
+            {
                 return BssomBinaryPrimitives.NullSize;
-            var properties = typeof(T).GetProperties();
+            }
+
+            PropertyInfo[] properties = typeof(T).GetProperties();
             return MapFormatterHelper.Size(ref context, properties.Select(e => new KeyValuePair<string, object>(e.Name, e.GetValue(value))), properties.Length);
         }
     }

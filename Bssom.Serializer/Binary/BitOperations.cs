@@ -15,7 +15,9 @@ namespace Bssom.Serializer.Binary
         /// <returns>The rotated value.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong RotateLeft(ulong value, int offset)
-            => (value << offset) | (value >> (64 - offset));
+        {
+            return (value << offset) | (value >> (64 - offset));
+        }
 
         /// <summary>
         /// Rotates the specified value left by the specified number of bits.
@@ -27,7 +29,9 @@ namespace Bssom.Serializer.Binary
         /// <returns>The rotated value.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static uint RotateLeft(uint value, int offset)
-            => (value << offset) | (value >> (32 - offset));
+        {
+            return (value << offset) | (value >> (32 - offset));
+        }
 
         /// <summary>
         /// Rotates the specified value right by the specified number of bits.
@@ -39,7 +43,9 @@ namespace Bssom.Serializer.Binary
         /// <returns>The rotated value.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static uint RotateRight(uint value, int offset)
-            => (value >> offset) | (value << (32 - offset));
+        {
+            return (value >> offset) | (value << (32 - offset));
+        }
 
         /// <summary>
         /// Rotates the specified value right by the specified number of bits.
@@ -51,6 +57,8 @@ namespace Bssom.Serializer.Binary
         /// <returns>The rotated value.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong RotateRight(ulong value, int offset)
-            => (value >> offset) | (value << (64 - offset));
+        {
+            return (value >> offset) | (value << (64 - offset));
+        }
     }
 }
