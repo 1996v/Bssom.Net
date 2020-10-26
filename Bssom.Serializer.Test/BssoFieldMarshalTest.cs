@@ -262,8 +262,8 @@ namespace Bssom.Serializer.Test
             var buf = BssomSerializer.Serialize(new Dictionary<object, string>() { { "w", "f" } });
             var bsfm = new BssomFieldMarshaller(buf);
 
-            VerifyHelper.Throws<BssomSerializationArgumentException>(() => bsfm.IndexOf("$1"),
-              ex => ex.ErrorCode == BssomSerializationArgumentException.SerializationErrorCode.InvalidFormatOfMembers);
+            VerifyHelper.Throws<BssomSerializationOperationException>(() => bsfm.IndexOf("$1"),
+              ex => ex.ErrorCode == BssomSerializationOperationException.SerializationErrorCode.InputDataUnmatch);
 
             VerifyHelper.Throws<BssomSerializationOperationException>(() => bsfm.IndexOf("[r]$1"),
             ex => ex.ErrorCode == BssomSerializationOperationException.SerializationErrorCode.OperationObjectIsNull);
@@ -297,11 +297,11 @@ namespace Bssom.Serializer.Test
             VerifyHelper.Throws<BssomSerializationOperationException>(() => bsfm.IndexOf("$0$3"),
               ex => ex.ErrorCode == BssomSerializationOperationException.SerializationErrorCode.UnsupportedOperation);
 
-            VerifyHelper.Throws<BssomSerializationArgumentException>(() => bsfm.IndexOf("[r]"),
-            ex => ex.ErrorCode == BssomSerializationArgumentException.SerializationErrorCode.InvalidFormatOfMembers);
+            VerifyHelper.Throws<BssomSerializationOperationException>(() => bsfm.IndexOf("[r]"),
+            ex => ex.ErrorCode == BssomSerializationOperationException.SerializationErrorCode.InputDataUnmatch);
 
-            VerifyHelper.Throws<BssomSerializationArgumentException>(() => bsfm.IndexOf("[r]$1"),
-            ex => ex.ErrorCode == BssomSerializationArgumentException.SerializationErrorCode.InvalidFormatOfMembers);
+            VerifyHelper.Throws<BssomSerializationOperationException>(() => bsfm.IndexOf("[r]$1"),
+            ex => ex.ErrorCode == BssomSerializationOperationException.SerializationErrorCode.InputDataUnmatch);
 
             VerifyHelper.Throws<BssomSerializationArgumentException>(() => bsfm.IndexOf("rrr"),
            ex => ex.ErrorCode == BssomSerializationArgumentException.SerializationErrorCode.InvalidFormatOfMembers);
@@ -316,11 +316,11 @@ namespace Bssom.Serializer.Test
             VerifyHelper.Throws<BssomSerializationOperationException>(() => bsfm.IndexOf("$0[r][h]"),
         ex => ex.ErrorCode == BssomSerializationOperationException.SerializationErrorCode.UnsupportedOperation);
 
-            VerifyHelper.Throws<BssomSerializationArgumentException>(() => bsfm.IndexOf("[r]$1"),
-            ex => ex.ErrorCode == BssomSerializationArgumentException.SerializationErrorCode.InvalidFormatOfMembers);
+            VerifyHelper.Throws<BssomSerializationOperationException>(() => bsfm.IndexOf("[r]$1"),
+            ex => ex.ErrorCode == BssomSerializationOperationException.SerializationErrorCode.InputDataUnmatch);
 
-            VerifyHelper.Throws<BssomSerializationArgumentException>(() => bsfm.IndexOf("[r][h]"),
-             ex => ex.ErrorCode == BssomSerializationArgumentException.SerializationErrorCode.InvalidFormatOfMembers);
+            VerifyHelper.Throws<BssomSerializationOperationException>(() => bsfm.IndexOf("[r][h]"),
+             ex => ex.ErrorCode == BssomSerializationOperationException.SerializationErrorCode.InputDataUnmatch);
 
             VerifyHelper.Throws<BssomSerializationArgumentException>(() => bsfm.IndexOf("rrr"),
            ex => ex.ErrorCode == BssomSerializationArgumentException.SerializationErrorCode.InvalidFormatOfMembers);
@@ -335,11 +335,11 @@ namespace Bssom.Serializer.Test
             VerifyHelper.Throws<BssomSerializationOperationException>(() => bsfm.IndexOf("[r]$1[h]"),
     ex => ex.ErrorCode == BssomSerializationOperationException.SerializationErrorCode.ArrayTypeIndexOutOfBounds);
 
-            VerifyHelper.Throws<BssomSerializationArgumentException>(() => bsfm.IndexOf("$1[r]"),
-            ex => ex.ErrorCode == BssomSerializationArgumentException.SerializationErrorCode.InvalidFormatOfMembers);
+            VerifyHelper.Throws<BssomSerializationOperationException>(() => bsfm.IndexOf("$1[r]"),
+            ex => ex.ErrorCode == BssomSerializationOperationException.SerializationErrorCode.InputDataUnmatch);
 
-            VerifyHelper.Throws<BssomSerializationArgumentException>(() => bsfm.IndexOf("$1$3"),
-             ex => ex.ErrorCode == BssomSerializationArgumentException.SerializationErrorCode.InvalidFormatOfMembers);
+            VerifyHelper.Throws<BssomSerializationOperationException>(() => bsfm.IndexOf("$1$3"),
+             ex => ex.ErrorCode == BssomSerializationOperationException.SerializationErrorCode.InputDataUnmatch);
 
             VerifyHelper.Throws<BssomSerializationArgumentException>(() => bsfm.IndexOf("rrr"),
            ex => ex.ErrorCode == BssomSerializationArgumentException.SerializationErrorCode.InvalidFormatOfMembers);

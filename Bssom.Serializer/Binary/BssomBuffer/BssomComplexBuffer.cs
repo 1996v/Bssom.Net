@@ -1,40 +1,21 @@
 ﻿using System;
+using System.IO;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Bssom.Serializer.Internal;
 
 namespace Bssom.Serializer.BssomBuffer
 {
-    internal sealed class BssomComplexBuffer : IBssomBuffer
+    internal sealed partial class BssomComplexBuffer : IBssomBuffer
     {
-        internal struct BufferSpan
-        {
-            public byte[] Buffer;
-            public int Boundary;
+        private const int MinimumBufferSize = short.MaxValue;
 
-            public int BufferLength => Buffer.Length;
-
-            public BufferSpan(byte[] buffer)
-            {
-                Buffer = buffer;
-                Boundary = buffer.Length;
-            }
-
-            public ref byte ReadRef(int len, int position)
-            {
-                if (position + len > Boundary)
-                    BssomSerializationOperationException.CapacityOfBufferIsInsufficient(len);
-
-                return ref Buffer[position];
-            }
-        }
-
-        private const int MinimumBufferSize = 65536;
         public BufferSpan[] Spans;
         public long[] SpansCumulativeBoundary;
 
-        public BssomComplexBuffer(byte[] buffer)
+        public BssomComplexBuffer(byte[] buffer, int start = 0)
         {
-            Spans = new BufferSpan[] { new BufferSpan(buffer), };
+            Spans = new BufferSpan[] { new BufferSpan(buffer,start), };
             SpansCumulativeBoundary = new long[] { 0 };
         }
 

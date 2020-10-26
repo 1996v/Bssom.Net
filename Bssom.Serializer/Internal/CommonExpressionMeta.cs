@@ -153,13 +153,13 @@ namespace Bssom.Serializer.Internal
             Field_SizeOption_IsUseStandardDateTime = Expression.Property(Field_SizeContext_Option, typeof(BssomSerializerOptions).GetProperty(nameof(BssomSerializerOptions.IsUseStandardDateTime)));
 
             Field_WriterPos = Expression.Property(Par_Writer, typeof(BssomWriter).GetProperty(nameof(BssomWriter.Position), BindingFlags.Public | BindingFlags.Instance));
-            Type_TryReadNull = typeof(BssomReader).GetMethod(nameof(BssomReader.TryReadNull), instanceAndInternalFlag);
+            Type_TryReadNull = typeof(BssomReader).GetMethod(nameof(BssomReader.TryReadNull));
             Type_SkipBlankCharacterAndReadBssomType = typeof(BssomReader).GetMethod(nameof(BssomReader.SkipBlankCharacterAndReadBssomType), instanceAndInternalFlag);
             Call_Reader_TryReadNull = Expression.Call(Par_Reader, Type_TryReadNull);
 
-            Call_Reader_ReadVariableNumber = Expression.Call(Par_Reader, typeof(BssomReader).GetMethod(nameof(BssomReader.ReadVariableNumber), instanceAndInternalFlag));
+            Call_Reader_ReadVariableNumber = Expression.Call(Par_Reader, typeof(BssomReader).GetMethod(nameof(BssomReader.ReadVariableNumber)));
             Call_Reader_SkipVariableNumber = Expression.Call(Par_Reader, typeof(BssomReader).GetMethod(nameof(BssomReader.SkipVariableNumber), instanceAndInternalFlag));
-            Call_Writer_WriteNull = Expression.Call(Par_Writer, typeof(BssomWriter).GetMethod(nameof(BssomWriter.WriteNull), instanceAndInternalFlag));
+            Call_Writer_WriteNull = Expression.Call(Par_Writer, typeof(BssomWriter).GetMethod(nameof(BssomWriter.WriteNull)));
             Type_MapHeadPackInfo_Create = typeof(BssMapHeadPackInfo).GetMethod(nameof(BssMapHeadPackInfo.Create));
             Type_MapHeadPackInfo_DataEndPosition =
                 typeof(BssMapHeadPackInfo).GetProperty(nameof(BssMapHeadPackInfo.DataEndPosition));
@@ -289,13 +289,15 @@ namespace Bssom.Serializer.Internal
         //Call: writer.WriteRaw(val);
         public static Expression Call_WriteRaw(Expression value)
         {
-            return Expression.Call(Par_Writer, typeof(BssomWriter).GetMethod(nameof(BssomWriter.WriteRaw), instanceAndInternalFlag, null, new Type[] { value.Type }, null), value);
+            return Expression.Call(Par_Writer, typeof(BssomWriter).GetMethod(nameof(BssomWriter.WriteRaw), new Type[] { value.Type }), value);
+            //return Expression.Call(Par_Writer, typeof(BssomWriter).GetMethod(nameof(BssomWriter.WriteRaw), instanceAndInternalFlag, null, new Type[] { value.Type }, null), value);
         }
 
         //Call: writer.WriteBuildInType(val);
         public static Expression Call_WriteBuildInType(Expression value)
         {
-            return Expression.Call(Par_Writer, typeof(BssomWriter).GetMethod(nameof(BssomWriter.WriteBuildInType), instanceAndInternalFlag, null, new Type[] { value.Type }, null), value);
+            return Expression.Call(Par_Writer, typeof(BssomWriter).GetMethod(nameof(BssomWriter.WriteBuildInType),new Type[] { value.Type }), value);
+            //return Expression.Call(Par_Writer, typeof(BssomWriter).GetMethod(nameof(BssomWriter.WriteBuildInType), instanceAndInternalFlag, null, new Type[] { value.Type }, null), value);
         }
 
         //Block: If(t==null) { writeNull();return; }

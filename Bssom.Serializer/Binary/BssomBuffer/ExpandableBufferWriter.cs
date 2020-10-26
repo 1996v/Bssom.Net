@@ -17,7 +17,7 @@ namespace Bssom.Serializer.BssomBuffer
         private BssomComplexBuffer complexBuffer;
         private int[] bufferedsRelativeSpan;
 
-        public ExpandableBufferWriter(byte[] bufData) : this(new BssomComplexBuffer(bufData))
+        public ExpandableBufferWriter(byte[] bufData, int start = 0) : this(new BssomComplexBuffer(bufData, start))
         {
         }
 
@@ -35,6 +35,10 @@ namespace Bssom.Serializer.BssomBuffer
         /// Records all the buffered in simpleBuffer. When SpanBuffered in simpleBuffer is changed, this parameter will be changed at the same time
         /// </summary>
         public long Buffered { get; private set; } = 0;
+        /// <summary>
+        /// BufferSpans count
+        /// </summary>
+        public int BufferSpanCount => complexBuffer.Spans.Length;
         /// <summary>
         /// Records the Buffered of the CurrentSpan in simpleBuffer, this value is only used internally
         /// </summary>
@@ -116,11 +120,38 @@ namespace Bssom.Serializer.BssomBuffer
             {
                 array = new byte[Buffered];
                 if (array.Length != 0)
-                    Unsafe.CopyBlock(ref array[0], ref complexBuffer.CurrentSpan.Buffer[0], (uint)Buffered);
+                    Unsafe.CopyBlock(ref array[0], ref complexBuffer.CurrentSpan.GetBufferStartRef(), (uint)Buffered);
             }
             else
             {
                 array = GetBufferedArrayCore();
+            }
+            return array;
+        }
+
+        /// <summary>
+        /// If there is only one buffer, return it directly; otherwise, the <see cref="BufferSpan.Start"/> front portion of the first buffer is kept, and only the buffered portion is taken for all subsequent buffers
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public byte[] GetBufferedArrayWithKeepFirstBuffer()
+        {
+            if (complexBuffer.Spans.Length == 1)
+                return complexBuffer.CurrentSpan.Buffer;
+
+            FlushLastSpanBoundary();
+            byte[] array = new byte[complexBuffer.CurrentSpan.Start + Buffered];
+            //save first buffer start front port
+            int copyLen = complexBuffer.Spans[0].Start + complexBuffer.Spans[0].Boundary;
+            Array.Copy(complexBuffer.Spans[0].Buffer,array, copyLen);
+
+            int start = copyLen;
+            for (int i = 1; i < complexBuffer.Spans.Length; i++)
+            {
+                if (bufferedsRelativeSpan[i] != 0)
+                {
+                    Unsafe.CopyBlock(ref array[start], ref complexBuffer.Spans[i].GetBufferStartRef(), (uint)bufferedsRelativeSpan[i]);
+                    start += bufferedsRelativeSpan[i];
+                }
             }
             return array;
         }
@@ -134,7 +165,7 @@ namespace Bssom.Serializer.BssomBuffer
             {
                 if (bufferedsRelativeSpan[i] != 0)
                 {
-                    Unsafe.CopyBlock(ref array[start], ref complexBuffer.Spans[i].Buffer[0], (uint)bufferedsRelativeSpan[i]);
+                    Unsafe.CopyBlock(ref array[start], ref complexBuffer.Spans[i].GetBufferStartRef(), (uint)bufferedsRelativeSpan[i]);
                     start += bufferedsRelativeSpan[i];
                 }
             }
@@ -151,7 +182,7 @@ namespace Bssom.Serializer.BssomBuffer
                     if (bufferedsRelativeSpan[i] != 0)
                     {
                         CancellationToken.ThrowIfCancellationRequested();
-                        stream.Write(complexBuffer.Spans[i].Buffer, 0, bufferedsRelativeSpan[i]);
+                        complexBuffer.Spans[i].WriteTo(stream, bufferedsRelativeSpan[i]);
                     }
                 }
             }
@@ -167,7 +198,7 @@ namespace Bssom.Serializer.BssomBuffer
                     if (bufferedsRelativeSpan[i] != 0)
                     {
                         CancellationToken.ThrowIfCancellationRequested();
-                        await stream.WriteAsync(complexBuffer.Spans[i].Buffer, 0, bufferedsRelativeSpan[i]).ConfigureAwait(false);
+                        await complexBuffer.Spans[i].WriteToAsync(stream, bufferedsRelativeSpan[i]).ConfigureAwait(false);
                     }
                 }
             }
@@ -181,10 +212,10 @@ namespace Bssom.Serializer.BssomBuffer
         {
             if (complexBuffer.CurrentSpanIsLast)
             {
-                if (complexBuffer.CurrentSpanPosition + size <= complexBuffer.CurrentSpan.BufferLength)
+                if (complexBuffer.CurrentSpan.AnyLength(complexBuffer.CurrentSpanPosition + size))
                 {
                     //Only when GetBuffer is called can the branch be entered,so need to restore the logic of refreshing Boundary to Buffered in GetBuffer, and re-assign BufferLength to Boundary
-                    complexBuffer.Spans[complexBuffer.CurrentSpanIndex].Boundary = complexBuffer.CurrentSpan.BufferLength;
+                    complexBuffer.Spans[complexBuffer.CurrentSpanIndex].BoundaryMaxExpand();
                     return;
                 }
                 //Add
@@ -200,7 +231,7 @@ namespace Bssom.Serializer.BssomBuffer
         {
             if (size < MinimumBufferSize)
                 size = MinimumBufferSize;
-            var span = new BssomComplexBuffer.BufferSpan(ArrayPool<byte>.Shared.Rent(size));
+            var span = new BufferSpan(ArrayPool<byte>.Shared.Rent(size));
 
             this.SpansResize(complexBuffer.Spans.Length + 1);
 
@@ -218,7 +249,7 @@ namespace Bssom.Serializer.BssomBuffer
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void FlushLastSpanBoundary()
         {
-            complexBuffer.Spans[complexBuffer.Spans.Length - 1].Boundary = bufferedsRelativeSpan[bufferedsRelativeSpan.Length - 1];
+            complexBuffer.Spans[complexBuffer.Spans.Length - 1].SetBoundary(bufferedsRelativeSpan[bufferedsRelativeSpan.Length - 1]);
         }
 
         public static ExpandableBufferWriter CreateTemporary()
@@ -233,6 +264,7 @@ namespace Bssom.Serializer.BssomBuffer
 
         public void Dispose()
         {
+            //first is ThreadStatic or User injected
             if (complexBuffer.Spans.Length > 1)
             {
                 for (int i = 1; i < complexBuffer.Spans.Length; i++)
@@ -242,6 +274,6 @@ namespace Bssom.Serializer.BssomBuffer
             }
         }
 
-      
+
     }
 }

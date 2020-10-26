@@ -69,6 +69,68 @@ namespace Bssom.Serializer
         }
 
         /// <summary>
+        /// <para>将给定的值序列化到<paramref name="buffer"/>中</para>
+        /// <para>Serializes a given value with the <paramref name="buffer"/></para>
+        /// </summary>
+        /// <param name="buffer">序列化所使用的buffer. The value to serialize</param>
+        /// <param name="bufOffset">buffer起始写入的偏移量. The offset that the buffer starts writing to</param>
+        /// <param name="value">要序列化的值. The value to serialize</param>
+        /// <param name="option">使用的配置,如果为<c>null</c>,则使用默认配置. The options. Use <c>null</c> to use default options</param>
+        /// <param name="cancellationToken">取消该操作的令牌. The token to cancel the operation</param>
+        /// <returns>序列化所花费的字节数. The number of bytes spent on serialization</returns>
+        public static int Serialize<T>(ref byte[] buffer, int bufOffset, T value, BssomSerializerOptions option = null, CancellationToken cancellationToken = default)
+        {
+            if (buffer == null)
+                throw new ArgumentException(nameof(buffer));
+
+            if (bufOffset > buffer.Length - 1)
+                throw new ArgumentException(nameof(bufOffset));
+
+            if (option == null)
+                option = BssomSerializerOptions.Default;
+
+            BssomSerializeContext context = new BssomSerializeContext(option, cancellationToken);
+            using (var exbuffer = new ExpandableBufferWriter(buffer, bufOffset))
+            {
+                var writer = new BssomWriter(exbuffer);
+                option.FormatterResolver.GetFormatterWithVerify<T>().Serialize(ref writer, ref context, value);
+
+                buffer = exbuffer.GetBufferedArrayWithKeepFirstBuffer();
+                return (int)exbuffer.Buffered;
+            }
+        }
+
+        /// <summary>
+        /// <para>将给定的值序列化到<paramref name="buffer"/>中</para>
+        /// <para>Serializes a given value with the <paramref name="buffer"/></para>
+        /// </summary>
+        /// <param name="context">序列化所需要的上下文. The context required for the serialization </param>
+        /// <param name="buffer">序列化所使用的buffer. The value to serialize</param>
+        /// <param name="bufOffset">buffer起始写入的偏移量. The offset that the buffer starts writing to</param>
+        /// <param name="value">要序列化的值. The value to serialize</param>
+        /// <returns>序列化所花费的字节数. The number of bytes spent on serialization</returns>
+        public static int Serialize<T>(ref BssomSerializeContext context, ref byte[] buffer, int bufOffset, T value)
+        {
+            if (buffer == null)
+                throw new ArgumentException(nameof(buffer));
+
+            if (bufOffset > buffer.Length - 1)
+                throw new ArgumentException(nameof(bufOffset));
+
+            if (context.Option == null)
+                context.Option = BssomSerializerOptions.Default;
+
+            using (var exbuffer = new ExpandableBufferWriter(buffer, bufOffset))
+            {
+                var writer = new BssomWriter(exbuffer);
+                context.Option.FormatterResolver.GetFormatterWithVerify<T>().Serialize(ref writer, ref context, value);
+
+                buffer = exbuffer.GetBufferedArrayWithKeepFirstBuffer();
+                return (int)exbuffer.Buffered;
+            }
+        }
+
+        /// <summary>
         /// <para>将给定的值序列化到<paramref name="bufferWriter"/></para>
         /// <para>Serializes a given value with the specified <paramref name="bufferWriter"/></para>
         /// </summary>
@@ -328,7 +390,7 @@ namespace Bssom.Serializer
         /// <param name="option">使用的配置,如果为<c>null</c>,则使用默认配置. The options. Use <c>null</c> to use default options</param>
         /// <param name="cancellationToken">取消该操作的令牌. The token to cancel the operation</param>
         /// <returns>反序列化的值. The deserialized value</returns>
-        public static async Task<object> DeserializeAsync(Stream stream,Type type, BssomSerializerOptions option = null,
+        public static async Task<object> DeserializeAsync(Stream stream, Type type, BssomSerializerOptions option = null,
             CancellationToken cancellationToken = default)
         {
             BssomDeserializeContext context = new BssomDeserializeContext(option, cancellationToken);
