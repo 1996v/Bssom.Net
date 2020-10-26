@@ -13,7 +13,7 @@ namespace Bssom.Serializer.Benchmark
 
         public IEnumerable<SerializerBase> Serializers => new SerializerBase[]
         {
-            new BssomSerializers(),
+            new BssomSerializer(),
             new MessagePack(),
             new ProtobufNet(),
         };

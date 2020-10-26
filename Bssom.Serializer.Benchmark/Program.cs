@@ -15,8 +15,8 @@ namespace Bssom.Serializer.Benchmark
     {
         static void Main(string[] args)
         {
-            BssomFunction();
-            //ComplexClass();
+            //BssomFunction();
+            ComplexClass();
         }
 
         static void BssomFunction()
@@ -40,7 +40,7 @@ namespace Bssom.Serializer.Benchmark
 
         static void ComplexClass()
         {
-            BenchmarkRunner.Run<GeneralSerialize<BenchmarkComplexClass>>();
+            BenchmarkRunner.Run<GeneralSerialize<List<BenchmarkComplexClass>>>();
         }
 
         static void EmptyClass()

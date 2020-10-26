@@ -489,8 +489,27 @@ namespace Bssom.Serializer
         /// <returns>反序列化的值. The deserialized value</returns>
         public static T Deserialize<T>(byte[] buffer, int bufOffset, out int readSize, BssomSerializerOptions option = null, CancellationToken cancellationToken = default)
         {
+            if (buffer == null)
+            {
+                throw new ArgumentException(nameof(buffer));
+            }
+
+            if (bufOffset > buffer.Length - 1)
+            {
+                throw new ArgumentException(nameof(bufOffset));
+            }
+
+            if (option == null)
+            {
+                option = BssomSerializerOptions.Default;
+            }
+
             BssomDeserializeContext context = new BssomDeserializeContext(option, cancellationToken);
-            return Deserialize<T>(ref context, buffer, bufOffset, out readSize);
+            SimpleBuffer buf = new SimpleBuffer(buffer, bufOffset);
+            BssomReader reader = new BssomReader(buf);
+            T value = context.Option.FormatterResolver.GetFormatterWithVerify<T>().Deserialize(ref reader, ref context);
+            readSize = (int)buf.Position;
+            return value;
         }
 
         /// <summary>

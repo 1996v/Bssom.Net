@@ -14,26 +14,26 @@ namespace Bssom.Serializer.Benchmark
         {
             Input = RandomHelper.RandomValueWithOutStringEmpty<MyImage>();
             Input.Binary = new byte[4096 * 200];
-            OutPut = BssomSerializer.Serialize(Input);
+            OutPut = Serializer.BssomSerializer.Serialize(Input);
             UpdateDateOffsetInfo = BssomFieldMarshaller.IndexOf(OutPut, 0, OutPut.Length, "[UpdateTime]");
         }
 
         [Benchmark]
         public void Serialize()
         {
-            BssomSerializer.Serialize(Input);
+            Serializer.BssomSerializer.Serialize(Input);
         }
 
         [Benchmark]
         public void Deserialize()
         {
-            BssomSerializer.Deserialize<MyImage>(OutPut);
+            Serializer.BssomSerializer.Deserialize<MyImage>(OutPut);
         }
 
         [Benchmark]
         public void Size()
         {
-            BssomSerializer.Size(Input);
+            Serializer.BssomSerializer.Size(Input);
         }
 
         [Benchmark]

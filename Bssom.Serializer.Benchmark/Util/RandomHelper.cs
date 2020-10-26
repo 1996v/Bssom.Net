@@ -132,7 +132,7 @@ namespace Bssom.Serializer.Benchmark
             if (t == typeof(string))
             {
                 int start = stringValueAllowEmpty ? 0 : 1;
-                var len = Rand.Next(start, 40);
+                var len = Rand.Next(start, 28);
                 var c = new char[len];
                 for (var i = 0; i < c.Length; i++)
                 {

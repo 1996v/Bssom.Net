@@ -22,7 +22,7 @@ namespace Bssom.Serializer.Benchmark
         [ProtoMember(7)]
         public DateTime PrimitiveField_7;
         [ProtoMember(8)]
-        public Dictionary<string, long> PrimitiveField_8;
+        public Dictionary<int, long> PrimitiveField_8;
         [ProtoMember(9)]
         public List<char> PrimitiveField_9;
         [ProtoMember(10)]
