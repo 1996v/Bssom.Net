@@ -13,6 +13,11 @@ using Bssom.Serializer.Resolvers;
 
 namespace Bssom.Serializer
 {
+    /// <summary>
+    /// <para>使用Bssom二进制协议的高性能序列化器</para>
+    /// <para>A high-performance serializer using the Bssom binary protocol</para>
+    /// <remake>github: https://github.com/1996v/Bssom.Net/ </remake>
+    /// </summary>
     public static class BssomSerializer
     {
         /// <summary>
@@ -81,7 +86,7 @@ namespace Bssom.Serializer
         public static int Serialize<T>(ref byte[] buffer, int bufOffset, T value, BssomSerializerOptions option = null, CancellationToken cancellationToken = default)
         {
             if (buffer == null)
-                throw new ArgumentException(nameof(buffer));
+                throw new ArgumentNullException(nameof(buffer));
 
             if (bufOffset > buffer.Length - 1)
                 throw new ArgumentException(nameof(bufOffset));
@@ -112,7 +117,7 @@ namespace Bssom.Serializer
         public static int Serialize<T>(ref BssomSerializeContext context, ref byte[] buffer, int bufOffset, T value)
         {
             if (buffer == null)
-                throw new ArgumentException(nameof(buffer));
+                throw new ArgumentNullException(nameof(buffer));
 
             if (bufOffset > buffer.Length - 1)
                 throw new ArgumentException(nameof(bufOffset));
@@ -289,6 +294,21 @@ namespace Bssom.Serializer
         /// <para>从指定的<paramref name="stream"/>反序列化给定类型的值</para>
         /// <para>Deserializes the value of the given type from the specified <paramref name="stream"/></para>
         /// </summary>
+        /// <param name="stream">反序列化所需要的的流. The stream to deserialize from</param>
+        /// <param name="option">使用的配置,如果为<c>null</c>,则使用默认配置. The options. Use <c>null</c> to use default options</param>
+        /// <param name="cancellationToken">取消该操作的令牌. The token to cancel the operation</param>
+        /// <returns>反序列化的值. The deserialized value</returns>
+        public static T Deserialize<T>(Stream stream, BssomSerializerOptions option = null,
+            CancellationToken cancellationToken = default)
+        {
+            BssomDeserializeContext context = new BssomDeserializeContext(option, cancellationToken);
+            return Deserialize<T>(ref context, stream);
+        }
+
+        /// <summary>
+        /// <para>从指定的<paramref name="stream"/>反序列化给定类型的值</para>
+        /// <para>Deserializes the value of the given type from the specified <paramref name="stream"/></para>
+        /// </summary>
         /// <param name="context">反序列化所需要的上下文. The context required for the deserialization </param>
         /// <param name="stream">要进行反序列化的流. The stream to deserialize from</param>
         /// <returns>反序列化的值. The deserialized value</returns>
@@ -303,21 +323,6 @@ namespace Bssom.Serializer
             result = Deserialize<T>(ref context, aux.GetBssomBuffer());
             aux.Dispose();
             return result;
-        }
-
-        /// <summary>
-        /// <para>从指定的<paramref name="stream"/>反序列化给定类型的值</para>
-        /// <para>Deserializes the value of the given type from the specified <paramref name="stream"/></para>
-        /// </summary>
-        /// <param name="stream">反序列化所需要的的流. The stream to deserialize from</param>
-        /// <param name="option">使用的配置,如果为<c>null</c>,则使用默认配置. The options. Use <c>null</c> to use default options</param>
-        /// <param name="cancellationToken">取消该操作的令牌. The token to cancel the operation</param>
-        /// <returns>反序列化的值. The deserialized value</returns>
-        public static T Deserialize<T>(Stream stream, BssomSerializerOptions option = null,
-            CancellationToken cancellationToken = default)
-        {
-            BssomDeserializeContext context = new BssomDeserializeContext(option, cancellationToken);
-            return Deserialize<T>(ref context, stream);
         }
 
         /// <summary>

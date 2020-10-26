@@ -139,9 +139,9 @@ namespace Bssom.Serializer.BssomBuffer
                 return complexBuffer.CurrentSpan.Buffer;
 
             FlushLastSpanBoundary();
-            byte[] array = new byte[complexBuffer.CurrentSpan.Start + Buffered];
+            byte[] array = new byte[complexBuffer.Spans[0].Start + Buffered];
             //save first buffer start front port
-            int copyLen = complexBuffer.Spans[0].Start + complexBuffer.Spans[0].Boundary;
+            int copyLen = complexBuffer.Spans[0].Start + bufferedsRelativeSpan[0];
             Array.Copy(complexBuffer.Spans[0].Buffer,array, copyLen);
 
             int start = copyLen;

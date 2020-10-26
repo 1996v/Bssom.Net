@@ -12,6 +12,8 @@ namespace Bssom.Serializer.BssomBuffer
 
         public long Position => position;
 
+        public int Length => buffer.Length - start;
+
         internal SimpleBuffer(byte[] buffer) : this(buffer, 0)
         {
         }
@@ -26,7 +28,7 @@ namespace Bssom.Serializer.BssomBuffer
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ref byte ReadRef(int sizeHint = 0)
         {
-            if (position + sizeHint > buffer.Length)
+            if (position + sizeHint > Length)
                 return ref BssomSerializationOperationException.ReaderEndOfBufferException();
             return ref buffer[start + position];
         }
@@ -35,7 +37,7 @@ namespace Bssom.Serializer.BssomBuffer
         public void Seek(long postion, BssomSeekOrgin orgin = BssomSeekOrgin.Begin)
         {
             SeekWithOutVerify(postion, orgin);
-            if (position > buffer.Length)
+            if (position > Length)
                 BssomSerializationOperationException.ReaderEndOfBufferException();
         }
 
@@ -56,7 +58,7 @@ namespace Bssom.Serializer.BssomBuffer
         public ref byte TryReadFixedRef(int size, out bool haveEnoughSizeAndCanBeFixed)
         {
             haveEnoughSizeAndCanBeFixed = true;
-            if (position + size > buffer.Length)
+            if (position + size > Length)
                 return ref BssomSerializationOperationException.ReaderEndOfBufferException();
             return ref ReadRef(size);
         }
@@ -87,7 +89,7 @@ namespace Bssom.Serializer.BssomBuffer
             this.buffered = 0;
         }
 
-        public long Length => len;
+        public new long Length => len;
 
         public long Buffered => buffered;
 
