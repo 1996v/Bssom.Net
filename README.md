@@ -1,7 +1,7 @@
 ## A small, high performance, powerful serializer using bssom binary protocol
 [![Nuget](https://img.shields.io/nuget/v/BssomSerializer.svg)](https://www.nuget.org/packages/BssomSerializer/) 
 
-**Bssom.Net**是一个使用**bssom结构协议**实现的高性能结构化二进制**序列化器**，它具有以下特点,**小巧,快速,功能性强**.  
+**Bssom.Net**是一个使用**bssom结构协议**实现的高性能结构化二进制**序列化器**，适合存储服务和计算服务等，它具有以下特点，**小巧,快速,功能性强**.  
 
 1. 小巧,文件仅**300多k**  
 2. 快速,它具有**一流**的序列化和反序列化[性能](#1.性能)  
