@@ -258,6 +258,8 @@ namespace Xunit
                     {
                         var val = valType.RandomValue(stringValueAllowEmpty);
                         var key = keyType.RandomValue(stringValueAllowEmpty);
+                       
+
                         while (key == null || (bool)contains.Invoke(ret, new object[] { key }))
                             key = keyType.RandomValue(stringValueAllowEmpty);
                         add.Invoke(ret, new object[] { key, val });
