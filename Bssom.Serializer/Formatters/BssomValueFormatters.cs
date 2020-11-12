@@ -556,7 +556,6 @@ namespace Bssom.Serializer.Formatters
                     {
                         return BssomNull.Value;
                     }
-
                     return null;
 
                 case BssomType.BooleanCode:
@@ -761,10 +760,18 @@ namespace Bssom.Serializer.Formatters
                         break;
                     }
                 case BssomType.Array2:
+                case BssomType.Array3:
                     {
                         reader.BssomBuffer.SeekWithOutVerify(1, BssomSeekOrgin.Current);
                         reader.SkipVariableNumber();
                         int count = reader.ReadVariableNumber();
+                        if (type == BssomType.Array3)
+                        {
+                            for (int i = 0; i < count; i++)
+                            {
+                                reader.SkipVariableNumber();
+                            }
+                        }
                         List<object> ary = new List<object>(count);
                         for (int i = 0; i < count; i++)
                         {

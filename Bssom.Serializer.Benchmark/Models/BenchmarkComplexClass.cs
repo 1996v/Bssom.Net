@@ -5,6 +5,34 @@ using System.Collections.Generic;
 namespace Bssom.Serializer.Benchmark
 {
     [ProtoContract]
+    public class BenchmarkComplexClass2
+    {
+        [ProtoMember(1)]
+        public int OrderId = 1024;
+        [ProtoMember(2)]
+        public string CustomerId = "abce";
+        [ProtoMember(3)]
+        public long EmployeeId = 9;
+        [ProtoMember(4)]
+        public DateTime OrderData = DateTime.Now;
+        [ProtoMember(5)]
+        public DateTime ShippedData = DateTime.Now;
+        [ProtoMember(6)]
+        public long ShipVia = 999;
+        [ProtoMember(7)]
+        public double Freight = 0.23;
+        [ProtoMember(8)]
+        public string ShipName = "hernyfan";
+        [ProtoMember(9)]
+        public string ShipAddress = "guangdong";
+        [ProtoMember(10)]
+        public string ShipCity = "gz";
+        [ProtoMember(11)]
+        public string ShipRegion = "abc";
+    }
+
+
+    [ProtoContract]
     public class BenchmarkComplexClass
     {
         [ProtoMember(1)]

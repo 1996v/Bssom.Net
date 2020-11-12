@@ -349,6 +349,18 @@ namespace Bssom.Serializer.Test
             VerifyHelper.VerifyWithJson(val, val2);
         }
 
+        [Fact]
+        public void MapCodeGenOnlySerializePublicElement()
+        {
+            _PrivateSet w = new _PrivateSet();
+            w.Assgin(1, 3, true);
+            var buf = BssomSerializer.Serialize(w);
+            var w2 = BssomSerializer.Deserialize<_PrivateSet>(buf);
+            w2.A.Is(0);
+            w2.B.Is(3);
+            w2.C.IsFalse();
+        }
+
         public class _Class_1
         {
             public int A1;
@@ -390,6 +402,19 @@ namespace Bssom.Serializer.Test
             public byte D3;
         }
 
+        public class _PrivateSet
+        {
+            public long A { get; private set; }
+            public int B { get; set; }
+            public bool C { get; internal set; }
+
+            public void Assgin(long a, int b, bool c)
+            {
+                A = a;
+                B = b;
+                C = c;
+            }
+        }
 
 
         public struct _Struct_2<T1, T2>

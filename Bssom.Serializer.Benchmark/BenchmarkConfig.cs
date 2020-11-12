@@ -15,10 +15,10 @@ namespace Bssom.Serializer.Benchmark
             Job baseConfig = Job.ShortRun.WithIterationCount(1).WithWarmupCount(1);
             AddJob(baseConfig.WithRuntime(CoreRuntime.Core21).WithJit(Jit.RyuJit).WithPlatform(Platform.X64));
             //AddExporter(MarkdownExporter.GitHub);
-            AddExporter(JsonExporter.Full);
-            AddExporter(CsvExporter.Default);
-            AddExporter(CsvMeasurementsExporter.Default);
-            AddExporter(RPlotExporter.Default);
+            //AddExporter(JsonExporter.Full);
+            //AddExporter(CsvExporter.Default);
+            //AddExporter(CsvMeasurementsExporter.Default);
+            //AddExporter(RPlotExporter.Default);
             AddDiagnoser(MemoryDiagnoser.Default);
         }
     }

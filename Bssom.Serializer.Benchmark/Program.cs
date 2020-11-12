@@ -15,13 +15,13 @@ namespace Bssom.Serializer.Benchmark
     {
         static void Main(string[] args)
         {
-            //BssomFunction();
-            ComplexClass();
+            BssomFunction();
+            //ComplexClass();
         }
 
         static void BssomFunction()
         {
-            BenchmarkRunner.Run<BssomSerialize_MyImage>();
+            BenchmarkRunner.Run<GeneralSerialize<BenchmarkComplexClass2>>();
         }
 
         static void SingleType()

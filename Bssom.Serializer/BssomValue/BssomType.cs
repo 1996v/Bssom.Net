@@ -37,6 +37,7 @@ namespace Bssom.Serializer
 
         public const int Array1 = 0xd1;
         public const int Array2 = 0xd2;
+        public const int Array3 = 0xd3;
 
         public const int ExtendCode = 0xf1;
         public const int NativeCode = 0xf2;
@@ -84,6 +85,7 @@ namespace Bssom.Serializer
                     case BssomType.Map2: return nameof(BssomType.Map2);
                     case BssomType.Array1: return nameof(BssomType.Array1);
                     case BssomType.Array2: return nameof(BssomType.Array2);
+                    case BssomType.Array3: return nameof(BssomType.Array3);
                 }
             }
             throw BssomSerializationArgumentException.InvalidTypeCode();
@@ -139,6 +141,7 @@ namespace Bssom.Serializer
                         return BssomValueType.Map;
                     case BssomType.Array1:
                     case BssomType.Array2:
+                    case BssomType.Array3:
                         return BssomValueType.Array;
                 }
             }

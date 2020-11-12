@@ -630,6 +630,11 @@ namespace Bssom.Serializer.Internal
                     continue;
                 }
 
+                if (!item.GetMethod.IsPublic||!item.SetMethod.IsPublic)
+                {
+                    continue;
+                }
+
                 AddItem(item, item.PropertyType);
             }
             FieldInfo[] fils = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
