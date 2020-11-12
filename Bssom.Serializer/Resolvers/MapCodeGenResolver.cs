@@ -13,6 +13,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 
 namespace Bssom.Serializer.Resolvers
 {
@@ -52,7 +53,7 @@ namespace Bssom.Serializer.Resolvers
             static FormatterCache()
             {
                 Type t = typeof(T);
-                Formatter = (IBssomFormatter<T>)Activator.CreateInstance(MapCodeGenResolverBuilder.Build(DynamicAssembly, t));
+                Formatter = (IBssomFormatter<T>)Activator.CreateInstance(MapCodeGenResolverBuilder.Build(DynamicAssembly, new ObjectSerializationInfo(t, false)));
             }
         }
 
@@ -69,10 +70,10 @@ namespace Bssom.Serializer.Internal
 {
     internal static class MapCodeGenResolverBuilder
     {
-        public static TypeInfo Build(DynamicFormatterAssembly assembly, Type type)
+        public static TypeInfo Build(DynamicFormatterAssembly assembly,  ObjectSerializationInfo serializationInfo)
         {
+            Type type = serializationInfo.Type;
             TypeBuilder typeBuilder = assembly.DefineFormatterType(type);
-            ObjectSerializationInfo serializationInfo = new ObjectSerializationInfo(type, false);
 
             MethodBuilder serializeMethod = TypeBuildHelper.DefineSerializeMethod(typeBuilder, type);
             MethodBuilder deserializeMethod = TypeBuildHelper.DefineDeserializeMethod(typeBuilder, type);
@@ -258,6 +259,7 @@ namespace Bssom.Serializer.Internal
                     SerializeMemberInfo[] members = serializationInfo.SerializeMemberInfos;
                     FieldInfo mpf = serializationInfo.StoreMemberPredefinedNames();
                     FieldInfo mfif = serializationInfo.StoreMemberFormatterInstances();
+                    FieldInfo npsas = serializationInfo.StoreNonPublicSetActions();
                     //if(isFixed)
                     {
                         il.EmitLdloc(hesacbf.LocalIndex);
@@ -266,7 +268,18 @@ namespace Bssom.Serializer.Internal
                         for (int i = 0; i < members.Length; i++)
                         {
                             SerializeMemberInfo member = members[i];
-                            //instance.Member = AutomatePrefixReader.TryGet<#TypeName#>Value(mpf[i], BssomType.String, ref aprp, ref reader, ref context, ref refb, out haveEnoughSizeAndCanBeFixed);
+
+                            //1. MapCodeGenDeserializeCache<T>.NonPublicMemberSetActions[member.NonPublicSetterIndex].Invoke(t,val);
+                            Lazy<Type> setMethod = new Lazy<Type>(() => typeof(Action<,>).MakeGenericType(serializationInfo.Type, member.Type));
+                            if (member.IsPropertyAndSetMethodIsNotPublic)
+                            {
+                                il.Emit(OpCodes.Ldsfld, npsas);
+                                il.EmitLdc_I4(member.NonPublicSetterIndex);
+                                il.Emit(OpCodes.Ldelem_Ref);
+                                il.Emit(OpCodes.Castclass, setMethod.Value);
+                            }
+
+                            //2. instance.Member = AutomatePrefixReader.TryGet<#TypeName#>Value(mpf[i], BssomType.String, ref aprp, ref reader, ref context, ref refb, out haveEnoughSizeAndCanBeFixed);
                             if (serializationInfo.Type.IsValueType)
                             {
                                 il.EmitLdloca(instance.LocalIndex);
@@ -303,8 +316,16 @@ namespace Bssom.Serializer.Internal
                                     il.EmitObjectConvertTo(typeof(IBssomFormatter<>).MakeGenericType(member.Type));
                                 }
                             }
+
                             il.EmitCall(methodInfo);
-                            il.EmitSetPropertyOrField(member.Member);
+                            if (member.IsPropertyAndSetMethodIsNotPublic)
+                            {
+                                il.EmitCall(setMethod.Value.GetMethod("Invoke"));
+                            }
+                            else
+                            {
+                                il.EmitSetPropertyOrField(member.Member);
+                            }
                         }
 
                         //reader.Buffer.UnFixed();
@@ -322,7 +343,18 @@ namespace Bssom.Serializer.Internal
                         for (int i = 0; i < members.Length; i++)
                         {
                             SerializeMemberInfo member = members[i];
-                            //instance.Member = AutomatePrefixReader.TryGet<#TypeName#>ValueSlow(mpf[i], BssomType.String, false, ref aprp, ref reader, ref context, out haveEnoughSizeAndCanBeFixed);
+
+                            //1. MapCodeGenDeserializeCache<T>.NonPublicMemberSetActions[member.NonPublicSetterIndex].Invoke(t,val);
+                            Lazy<Type> setMethod = new Lazy<Type>(() => typeof(Action<,>).MakeGenericType(serializationInfo.Type, member.Type));
+                            if (member.IsPropertyAndSetMethodIsNotPublic)
+                            {
+                                il.Emit(OpCodes.Ldsfld, npsas);
+                                il.EmitLdc_I4(member.NonPublicSetterIndex);
+                                il.Emit(OpCodes.Ldelem_Ref);
+                                il.Emit(OpCodes.Castclass, setMethod.Value);
+                            }
+
+                            //2. instance.Member = AutomatePrefixReader.TryGet<#TypeName#>ValueSlow(mpf[i], BssomType.String, false, ref aprp, ref reader, ref context, out haveEnoughSizeAndCanBeFixed);
                             if (serializationInfo.Type.IsValueType)
                             {
                                 il.EmitLdloca(instance.LocalIndex);
@@ -360,7 +392,15 @@ namespace Bssom.Serializer.Internal
                                 }
                             }
                             il.EmitCall(methodInfo);
-                            il.EmitSetPropertyOrField(member.Member);
+
+                            if (member.IsPropertyAndSetMethodIsNotPublic)
+                            {
+                                il.EmitCall(setMethod.Value.GetMethod("Invoke"));
+                            }
+                            else
+                            {
+                                il.EmitSetPropertyOrField(member.Member);
+                            }
                         }
                     }
 
@@ -427,15 +467,19 @@ namespace Bssom.Serializer.Internal
 #endif
         }
     }
-    internal static class MayCodeGenDeserializeCache<T>
+    internal static class MapCodeGenDeserializeCache<T>
     {
         public static object[] ConstructorStaticParameters;
         public static ulong[][] PredefinedNames;
         public static IBssomFormatter[] MemberFormatterInstances;
+        public static object[] NonPublicMemberSetActions;
     }
+
+
     internal class ObjectSerializationInfo
     {
         private FieldInfo _memberFormatterInstances;
+        private FieldInfo _memberSetActions;
 
         public Type Type { get; set; }
 
@@ -456,7 +500,7 @@ namespace Bssom.Serializer.Internal
         public ObjectSerializationInfo(Type type, bool allowPrivate)
         {
             Type = type;
-            SerializeMemberInfos = GetAllPublicInstanceReadableAndWritableElements(type).ToArray();
+            SerializeMemberInfos = GetAllInstanceReadableAndWritableElements(type, allowPrivate).ToArray();
             if (type.IsValueType)
             {
                 BestmatchConstructor = GetValueTypeCtor(type, out object[] paras);
@@ -481,7 +525,7 @@ namespace Bssom.Serializer.Internal
         {
             if (ConstructorParametersIsDefaultValue == false)
             {
-                FieldInfo cspcfield = typeof(MayCodeGenDeserializeCache<>).MakeGenericType(Type).GetField(nameof(MayCodeGenDeserializeCache<int>.ConstructorStaticParameters));
+                FieldInfo cspcfield = typeof(MapCodeGenDeserializeCache<>).MakeGenericType(Type).GetField(nameof(MapCodeGenDeserializeCache<int>.ConstructorStaticParameters));
                 cspcfield.SetValue(null, ConstructorParameters);
                 return cspcfield;
             }
@@ -492,7 +536,7 @@ namespace Bssom.Serializer.Internal
         {
             if (SerializeMemberInfos.Length > 0)
             {
-                FieldInfo pnfield = typeof(MayCodeGenDeserializeCache<>).MakeGenericType(Type).GetField(nameof(MayCodeGenDeserializeCache<int>.PredefinedNames));
+                FieldInfo pnfield = typeof(MapCodeGenDeserializeCache<>).MakeGenericType(Type).GetField(nameof(MapCodeGenDeserializeCache<int>.PredefinedNames));
                 pnfield.SetValue(null, GetMemberPredefinedNames());
                 return pnfield;
             }
@@ -518,10 +562,42 @@ namespace Bssom.Serializer.Internal
                     array.Add(formatter);
                 }
 
-                _memberFormatterInstances = typeof(MayCodeGenDeserializeCache<>).MakeGenericType(Type).GetField(nameof(MayCodeGenDeserializeCache<int>.MemberFormatterInstances));
+                _memberFormatterInstances = typeof(MapCodeGenDeserializeCache<>).MakeGenericType(Type).GetField(nameof(MapCodeGenDeserializeCache<int>.MemberFormatterInstances));
 
                 _memberFormatterInstances.SetValue(null, array.GetArray());
                 return _memberFormatterInstances;
+            }
+            return null;
+        }
+
+        public FieldInfo StoreNonPublicSetActions()
+        {
+            if (_memberSetActions != null)
+            {
+                return _memberSetActions;
+            }
+
+            int c = SerializeMemberInfos.Count(e => e.IsPropertyAndSetMethodIsNotPublic);
+            if (c > 0)
+            {
+                object[] vals = new object[c];
+                for (int i = 0; i < SerializeMemberInfos.Length; i++)
+                {
+                    if (SerializeMemberInfos[i].IsPropertyAndSetMethodIsNotPublic)
+                    {
+                        var propertyInfo = (PropertyInfo)SerializeMemberInfos[i].Member;
+
+                        ParameterExpression instance = Expression.Parameter(Type);
+                        ParameterExpression setValue = Expression.Parameter(propertyInfo.PropertyType);
+
+                        vals[SerializeMemberInfos[i].NonPublicSetterIndex] = Expression.Lambda(typeof(Action<,>).MakeGenericType(Type, propertyInfo.PropertyType), Expression.Assign(Expression.Property(instance, propertyInfo), setValue), instance, setValue);
+                    }
+                }
+
+                _memberSetActions = typeof(MapCodeGenDeserializeCache<>).MakeGenericType(Type).GetField(nameof(MapCodeGenDeserializeCache<int>.NonPublicMemberSetActions));
+
+                _memberSetActions.SetValue(null, vals);
+                return _memberSetActions;
             }
             return null;
         }
@@ -556,12 +632,17 @@ namespace Bssom.Serializer.Internal
             return names;
         }
 
-        private static List<SerializeMemberInfo> GetAllPublicInstanceReadableAndWritableElements(Type type)
+        private static List<SerializeMemberInfo> GetAllInstanceReadableAndWritableElements(Type type, bool allowPrivate)
         {
             List<SerializeMemberInfo> list = new List<SerializeMemberInfo>();
             List<SerializeMemberInfo> includes = new List<SerializeMemberInfo>();
             Type ignoreAttribute = typeof(IgnoreKeyAttribute);
-            List<PropertyInfo> pors = type.GetProperties(BindingFlags.Public | BindingFlags.Instance).ToList();
+            Type compilerGenerated = typeof(CompilerGeneratedAttribute);
+            BindingFlags bind = BindingFlags.Instance | BindingFlags.Public;
+            if (allowPrivate)
+                bind |= BindingFlags.NonPublic;
+
+            List<PropertyInfo> pors = type.GetProperties(bind).ToList();
             if (type.IsInterface)
             {
                 Type[] interfaces = type.GetInterfaces();
@@ -574,8 +655,26 @@ namespace Bssom.Serializer.Internal
                 }
             }
 
+            int nonPublicSetterIndexCounter = -1;
             void AddItem(MemberInfo item, Type itemType)
             {
+                int nonPublicSetterIndex = -1;
+
+                //access
+                if (item is PropertyInfo propertyInfo)
+                {
+                    if (!allowPrivate)
+                    {
+                        if (!propertyInfo.GetMethod.IsPublic || !propertyInfo.SetMethod.IsPublic)
+                        {
+                            return;
+                        }
+                    }
+
+                    if (!propertyInfo.SetMethod.IsPublic)
+                        nonPublicSetterIndex = ++nonPublicSetterIndexCounter;
+                }
+
                 //alias
                 AliasAttribute alias = item.GetCustomAttribute<AliasAttribute>(false);
                 string name = alias != null ? alias.Name : item.Name;
@@ -600,11 +699,11 @@ namespace Bssom.Serializer.Internal
                 OnlyIncludeAttribute include = item.GetCustomAttribute<OnlyIncludeAttribute>(false);
                 if (include != null)
                 {
-                    includes.Add(new SerializeMemberInfo(name, itemType, item, formatter));
+                    includes.Add(new SerializeMemberInfo(name, itemType, item, formatter, nonPublicSetterIndex));
                 }
                 else
                 {
-                    list.Add(new SerializeMemberInfo(name, itemType, item, formatter));
+                    list.Add(new SerializeMemberInfo(name, itemType, item, formatter, nonPublicSetterIndex));
                 }
             }
 
@@ -620,27 +719,17 @@ namespace Bssom.Serializer.Internal
                     continue;
                 }
 
-                if (!item.CanRead)
-                {
-                    continue;
-                }
-
-                if (!item.CanWrite)
-                {
-                    continue;
-                }
-
-                if (!item.GetMethod.IsPublic||!item.SetMethod.IsPublic)
+                if (!item.CanRead || !item.CanWrite)
                 {
                     continue;
                 }
 
                 AddItem(item, item.PropertyType);
             }
-            FieldInfo[] fils = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
+            FieldInfo[] fils = type.GetFields(bind);
             foreach (FieldInfo item in fils)
             {
-                if (item.IsDefined(ignoreAttribute, false))
+                if (item.IsDefined(ignoreAttribute, false) || item.IsDefined(compilerGenerated, false) || item.IsInitOnly)
                 {
                     continue;
                 }
@@ -756,13 +845,17 @@ namespace Bssom.Serializer.Internal
         public Type Type;
         public MemberInfo Member;
         public BssomFormatterAttribute FormatterAttribute;
+        public int NonPublicSetterIndex;
 
-        public SerializeMemberInfo(string name, Type type, MemberInfo mem, BssomFormatterAttribute formatterAttribute)
+        public bool IsPropertyAndSetMethodIsNotPublic => NonPublicSetterIndex != -1;
+
+        public SerializeMemberInfo(string name, Type type, MemberInfo mem, BssomFormatterAttribute formatterAttribute, int nonPublicSetterIndex)
         {
             Name = name;
             Type = type;
             Member = mem;
             FormatterAttribute = formatterAttribute;
+            NonPublicSetterIndex = nonPublicSetterIndex;
         }
 
         public int GetFormatterAttributeIndex()

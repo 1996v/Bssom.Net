@@ -361,6 +361,39 @@ namespace Bssom.Serializer.Test
             w2.C.IsFalse();
         }
 
+        [Fact]
+        public void CompositedResolverAllowPrivateTest()
+        {
+            var val = new _PrivateMembersClass().Init();
+            var buf = BssomSerializer.Serialize(val, BssomSerializerOptions.DefaultAllowPrivate);
+            var val2= BssomSerializer.Deserialize<_PrivateSet>(buf, BssomSerializerOptions.DefaultAllowPrivate);
+            val.Equals(val2).IsTrue();
+        }
+
+        public class _PrivateMembersClass
+        {
+            private int A1;
+            private int B1 { get; set; }
+            public int C1 { get; set; }
+
+            public _PrivateMembersClass Init()
+            {
+                A1 = RandomHelper.RandomValue<int>();
+                B1= RandomHelper.RandomValue<int>();
+                C1= RandomHelper.RandomValue<int>();
+                return this;
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (obj is _PrivateMembersClass p) {
+                    return A1 == p.A1 && B1 == p.B1 && C1 == p.C1;
+                }
+
+                return false;
+            }
+        }
+
         public class _Class_1
         {
             public int A1;

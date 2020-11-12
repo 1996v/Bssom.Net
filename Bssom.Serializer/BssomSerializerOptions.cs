@@ -15,6 +15,12 @@ namespace Bssom.Serializer
         /// </summary>
         public static BssomSerializerOptions Default = new BssomSerializerOptions();
 
+        /// <summary>
+        /// <para>使用了<see cref="CompositedResolverAllowPrivate"/>的默认配置集</para>
+        /// <para>The default configuration set of <see cref ="CompositedResolverAllowPrivate"/> is used</para>
+        /// </summary>
+        public static BssomSerializerOptions DefaultAllowPrivate = new BssomSerializerOptions().WithFormatterResolver(CompositedResolverAllowPrivate.Instance);
+
         protected BssomSerializerOptions() { }
 
         /// <summary>

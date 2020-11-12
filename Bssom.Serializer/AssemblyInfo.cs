@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo(MapCodeGenResolver.ModuleName)]
+[assembly: InternalsVisibleTo(MapCodeGenResolverAllowPrivate.ModuleName)]
 [assembly: InternalsVisibleTo(IDictionaryResolver.ModuleName)]
 [assembly: InternalsVisibleTo(ICollectionResolver.ModuleName)]
 [assembly: InternalsVisibleTo("Bssom.Serializer.Test")]
