@@ -39,8 +39,10 @@ Bssom.Net采取了[Bssom协议](https://github.com/1996v/Bssom), 使序列化后
 	* [IDictionaryResolver](#idictionaryresolver)
 	* [ICollectionResolver](#icollectionresolver)
 	* [MapCodeGenResolver](#mapcodegenresolver)
+	* [MapCodeGenResolverAllowPrivate](#mapcodegenresolverallowprivate)
 	* [ObjectResolver](#objectresolver)
 	* [CompositedResolver](#compositedresolver)
+	* [CompositedResolverAllowPrivate](#compositedresolverallowprivate)
 * [5.扩展](#5扩展)
 * [6.高级API](#6高级API)
 	* [BssomSerializer](#bssomserializer)
@@ -150,13 +152,17 @@ GetFormatter | 获取对象的格式化器实例
 <a name="idictionaryresolver">IDictionaryResolver</a> | 获取和生成具有`IDictionary`行为的类型的解析器,  该解析器抽象了BCL中对于键值对定义的行为规则,  为满足该规则的对象进行动态解析代码的生成.在解析器内部,  将通过运行时的配置选项来选择`Map1`或`Map2`的两种格式
 <a name="icollectionresolver">ICollectionResolver</a> | 获取和生成具有`IColloction`行为的类型的解析器,  该解析器抽象了BCL中对于收集器定义的行为规则,  为满足该规则的对象进行动态解析代码的生成.  在解析器内部,  如果集合中的元素类型为基元类型,  则将其解析成`Array1`格式,  否则解析为`Array2`格式
 <a name="mapcodegenresolver">MapCodeGenResolver</a> | 获取和生成对象的公开字段和属性进行BssomMap类型编码的解析器,  若对象为接口,  则会自动生成该接口的实现作为反序列化的载体.在解析器内部,  始终将类型解析为`Map2`格式,  且提供`Map1`和`Map2`两种格式的反序列化代码
+<a name="mapcodegenresolverallowprivate">MapCodeGenResolverAllowPrivate</a> | 获取和生成对象的所有(公开的和非公开的)字段和属性进行BssomMap类型编码的解析器,  若对象为接口,  则会自动生成该接口的实现作为反序列化的载体.在解析器内部,  始终将类型解析为`Map2`格式,  且提供`Map1`和`Map2`两种格式的反序列化代码
 <a name="objectresolver">ObjectResolver</a> | 提供了`Object`类型的解析器
 <a name="compositedresolver">CompositedResolver</a> | 复合解析器,组合了`Object`,`Primitive`,`Attribute`,`BssomValue`,`BuildIn`,`IDictionary`,`ICollection`,`MapCodeGen`解析器
+<a name="compositedresolverallowprivate">CompositedResolverAllowPrivate</a> | 复合解析器,组合了`Object`,`Primitive`,`Attribute`,`BssomValue`,`BuildIn`,`IDictionary`,`ICollection`,`MapCodeGenAllowPrivate`解析器
 
 >  因为`IDictionaryResolver`和`ICollectionResolver`中定义的足够抽象的规则,Bssom.Net不需要为未来.NET可能出现的新的`IDictionary`或`IColloction`实现而编写特定的解析代码.
   
 
 在Bssom.Net中可以通过`BssomSerializerOptions`中的`FormatterResolver`属性来注入序列化所需要的解析器,  默认为`CompositedResolver`,  `CompositedResolver`将会对类型依次从 `Object`,`Primitive`,`Attribute`,`BssomValue`,`BuildIn`,`IDictionary`,`ICollection`,`MapCodeGen`解析器中进行查找,  直到找到对应的解析器.
+
+>  如果你想序列化对象中的私有字段,请使用`CompositedResolverAllowPrivate`,   在`BssomSerializerOptions`中可以直接使用`DefaultAllowPrivate`默认配置集
 
 ## 5.扩展
 

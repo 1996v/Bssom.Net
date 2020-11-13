@@ -366,8 +366,72 @@ namespace Bssom.Serializer.Test
         {
             var val = new _PrivateMembersClass().Init();
             var buf = BssomSerializer.Serialize(val, BssomSerializerOptions.DefaultAllowPrivate);
-            var val2= BssomSerializer.Deserialize<_PrivateSet>(buf, BssomSerializerOptions.DefaultAllowPrivate);
+            var val2 = BssomSerializer.Deserialize<_PrivateMembersClass>(buf, BssomSerializerOptions.DefaultAllowPrivate);
             val.Equals(val2).IsTrue();
+        }
+
+        [Fact]
+        public void Map1Deserialize_CompositedResolverAllowPrivateTest()
+        {
+            var val = new Dictionary<string, int>() {
+                {"A1",1 },
+                {"B1",2 },
+                {"C1",3 },
+                {"D1",4 },
+                {"E1",5 },
+            };
+            var buf = BssomSerializer.Serialize(val);
+            var val2 = BssomSerializer.Deserialize<_PrivateMembersClass>(buf, BssomSerializerOptions.DefaultAllowPrivate);
+            _PrivateMembersClass.Create(1,2,3,4,5).Equals(val2).IsTrue();
+
+        }
+
+        [Fact]
+        public void ExpentdTypeTest()
+        {
+            var val = new _sub().Init();
+            var buf = BssomSerializer.Serialize(val, BssomSerializerOptions.DefaultAllowPrivate);
+            var val2 = BssomSerializer.Deserialize<_sub>(buf, BssomSerializerOptions.DefaultAllowPrivate);
+            val.Equals(val2).IsTrue();
+
+        }
+
+        public class _base
+        {
+
+            protected int A { get; set; }
+
+            public int B;
+
+        }
+        public class _sub : _base
+        {
+
+            private int C;
+
+            internal int D;
+
+            public int E;
+
+            public _sub Init()
+            {
+                A = RandomHelper.RandomValue<int>();
+                B = RandomHelper.RandomValue<int>();
+                C = RandomHelper.RandomValue<int>();
+                D = RandomHelper.RandomValue<int>();
+                E = RandomHelper.RandomValue<int>();
+                return this;
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (obj is _sub p)
+                {
+                    return A == p.A && B == p.B && C == p.C && D == p.D && E == p.E;
+                }
+
+                return false;
+            }
         }
 
         public class _PrivateMembersClass
@@ -376,22 +440,43 @@ namespace Bssom.Serializer.Test
             private int B1 { get; set; }
             public int C1 { get; set; }
 
+            internal int D1;
+
+            protected int E1;
+
+            public static _PrivateMembersClass Create(int a1, int b1, int c1, int d1, int e1)
+            {
+                return new _PrivateMembersClass()
+                {
+                    A1 = a1,
+                    B1 = b1,
+                    C1 = c1,
+                    D1 = d1,
+                    E1 = e1
+                };
+            }
+
             public _PrivateMembersClass Init()
             {
                 A1 = RandomHelper.RandomValue<int>();
-                B1= RandomHelper.RandomValue<int>();
-                C1= RandomHelper.RandomValue<int>();
+                B1 = RandomHelper.RandomValue<int>();
+                C1 = RandomHelper.RandomValue<int>();
+                D1 = RandomHelper.RandomValue<int>();
+                E1 = RandomHelper.RandomValue<int>();
                 return this;
             }
 
             public override bool Equals(object obj)
             {
-                if (obj is _PrivateMembersClass p) {
-                    return A1 == p.A1 && B1 == p.B1 && C1 == p.C1;
+                if (obj is _PrivateMembersClass p)
+                {
+                    return A1 == p.A1 && B1 == p.B1 && C1 == p.C1 && D1 == p.D1 && E1 == p.E1;
                 }
 
                 return false;
             }
+
+
         }
 
         public class _Class_1

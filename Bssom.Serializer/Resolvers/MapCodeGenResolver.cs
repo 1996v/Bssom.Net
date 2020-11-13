@@ -70,7 +70,7 @@ namespace Bssom.Serializer.Internal
 {
     internal static class MapCodeGenResolverBuilder
     {
-        public static TypeInfo Build(DynamicFormatterAssembly assembly,  ObjectSerializationInfo serializationInfo)
+        public static TypeInfo Build(DynamicFormatterAssembly assembly, ObjectSerializationInfo serializationInfo)
         {
             Type type = serializationInfo.Type;
             TypeBuilder typeBuilder = assembly.DefineFormatterType(type);
@@ -271,7 +271,7 @@ namespace Bssom.Serializer.Internal
 
                             //1. MapCodeGenDeserializeCache<T>.NonPublicMemberSetActions[member.NonPublicSetterIndex].Invoke(t,val);
                             Lazy<Type> setMethod = new Lazy<Type>(() => typeof(Action<,>).MakeGenericType(serializationInfo.Type, member.Type));
-                            if (member.IsPropertyAndSetMethodIsNotPublic)
+                            if (member.SetMethodIsNotPublic)
                             {
                                 il.Emit(OpCodes.Ldsfld, npsas);
                                 il.EmitLdc_I4(member.NonPublicSetterIndex);
@@ -318,7 +318,7 @@ namespace Bssom.Serializer.Internal
                             }
 
                             il.EmitCall(methodInfo);
-                            if (member.IsPropertyAndSetMethodIsNotPublic)
+                            if (member.SetMethodIsNotPublic)
                             {
                                 il.EmitCall(setMethod.Value.GetMethod("Invoke"));
                             }
@@ -346,7 +346,7 @@ namespace Bssom.Serializer.Internal
 
                             //1. MapCodeGenDeserializeCache<T>.NonPublicMemberSetActions[member.NonPublicSetterIndex].Invoke(t,val);
                             Lazy<Type> setMethod = new Lazy<Type>(() => typeof(Action<,>).MakeGenericType(serializationInfo.Type, member.Type));
-                            if (member.IsPropertyAndSetMethodIsNotPublic)
+                            if (member.SetMethodIsNotPublic)
                             {
                                 il.Emit(OpCodes.Ldsfld, npsas);
                                 il.EmitLdc_I4(member.NonPublicSetterIndex);
@@ -393,7 +393,7 @@ namespace Bssom.Serializer.Internal
                             }
                             il.EmitCall(methodInfo);
 
-                            if (member.IsPropertyAndSetMethodIsNotPublic)
+                            if (member.SetMethodIsNotPublic)
                             {
                                 il.EmitCall(setMethod.Value.GetMethod("Invoke"));
                             }
@@ -577,20 +577,20 @@ namespace Bssom.Serializer.Internal
                 return _memberSetActions;
             }
 
-            int c = SerializeMemberInfos.Count(e => e.IsPropertyAndSetMethodIsNotPublic);
+            int c = SerializeMemberInfos.Count(e => e.SetMethodIsNotPublic);
             if (c > 0)
             {
                 object[] vals = new object[c];
                 for (int i = 0; i < SerializeMemberInfos.Length; i++)
                 {
-                    if (SerializeMemberInfos[i].IsPropertyAndSetMethodIsNotPublic)
+                    if (SerializeMemberInfos[i].SetMethodIsNotPublic)
                     {
-                        var propertyInfo = (PropertyInfo)SerializeMemberInfos[i].Member;
+                        var memInfo = SerializeMemberInfos[i].Member;
 
                         ParameterExpression instance = Expression.Parameter(Type);
-                        ParameterExpression setValue = Expression.Parameter(propertyInfo.PropertyType);
+                        ParameterExpression setValue = Expression.Parameter(SerializeMemberInfos[i].Type);
 
-                        vals[SerializeMemberInfos[i].NonPublicSetterIndex] = Expression.Lambda(typeof(Action<,>).MakeGenericType(Type, propertyInfo.PropertyType), Expression.Assign(Expression.Property(instance, propertyInfo), setValue), instance, setValue);
+                        vals[SerializeMemberInfos[i].NonPublicSetterIndex] = Expression.Lambda(typeof(Action<,>).MakeGenericType(Type, SerializeMemberInfos[i].Type), Expression.Assign(SerializeMemberInfos[i].GetPropertyOrField(instance), setValue), instance, setValue).Compile();
                     }
                 }
 
@@ -663,16 +663,26 @@ namespace Bssom.Serializer.Internal
                 //access
                 if (item is PropertyInfo propertyInfo)
                 {
-                    if (!allowPrivate)
+                    if (!propertyInfo.GetMethod.IsPublic || !propertyInfo.SetMethod.IsPublic)
                     {
-                        if (!propertyInfo.GetMethod.IsPublic || !propertyInfo.SetMethod.IsPublic)
-                        {
+                        if (!allowPrivate)
                             return;
-                        }
+
+                        nonPublicSetterIndex = ++nonPublicSetterIndexCounter;
                     }
 
-                    if (!propertyInfo.SetMethod.IsPublic)
+                }
+                else
+                {
+                    var field = (FieldInfo)item;
+
+                    if (!field.IsPublic)
+                    {
+                        if (!allowPrivate)
+                            return;
+
                         nonPublicSetterIndex = ++nonPublicSetterIndexCounter;
+                    }
                 }
 
                 //alias
@@ -847,7 +857,7 @@ namespace Bssom.Serializer.Internal
         public BssomFormatterAttribute FormatterAttribute;
         public int NonPublicSetterIndex;
 
-        public bool IsPropertyAndSetMethodIsNotPublic => NonPublicSetterIndex != -1;
+        public bool SetMethodIsNotPublic => NonPublicSetterIndex != -1;
 
         public SerializeMemberInfo(string name, Type type, MemberInfo mem, BssomFormatterAttribute formatterAttribute, int nonPublicSetterIndex)
         {
@@ -866,6 +876,13 @@ namespace Bssom.Serializer.Internal
         public void SetFormatterAttributeIndex(int index)
         {
             _formatterAttributeSlotIndex = index;
+        }
+
+        public Expression GetPropertyOrField(Expression instance)
+        {
+            if (Member is PropertyInfo property)
+                return Expression.Property(instance, property);
+            return Expression.Field(instance, (FieldInfo)Member);
         }
     }
     internal class MapCodeGenInlineTypes

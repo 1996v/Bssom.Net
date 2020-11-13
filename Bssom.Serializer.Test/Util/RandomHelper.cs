@@ -167,7 +167,10 @@ namespace Xunit
                 int coluCount = Rand.Next(10, 30);
                 for (int i = 0; i < coluCount; i++)
                 {
-                    dt.Columns.Add(RandomHelper.RandomValue<string>(false), typeof(object));
+                    string n = RandomHelper.RandomValue<string>(false);
+                    while(dt.Columns.Contains(n))
+                        n = RandomHelper.RandomValue<string>(false);
+                    dt.Columns.Add(n, typeof(object));
                 }
                 int rowCount = Rand.Next(20, 50);
                 for (int i = 0; i < rowCount; i++)
