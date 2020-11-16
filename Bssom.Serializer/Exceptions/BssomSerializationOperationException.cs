@@ -58,7 +58,7 @@ namespace Bssom.Serializer
             return new BssomSerializationOperationException(SerializationErrorCode.OperationObjectIsNull, $"BssomObject is null");
         }
 
-        public static BssomSerializationOperationException BssomValueTypeReadFromStreamNotSupportIndexOf(long position)
+        internal static BssomSerializationOperationException BssomValueTypeReadFromStreamNotSupportIndexOf(long position)
         {
             return new BssomSerializationOperationException(SerializationErrorCode.UnsupportedOperation, "从缓冲区中读取的BssomValue类型不支持IndexOf,只有Map,Array类型才支持. The BssomValue type read from the buffer does not support IndexOf, only Map and Array types support");
 

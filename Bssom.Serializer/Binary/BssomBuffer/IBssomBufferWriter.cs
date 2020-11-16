@@ -24,8 +24,8 @@ namespace Bssom.Serializer
         void Seek(long position, BssomSeekOrgin orgin = BssomSeekOrgin.Begin);
 
         /// <summary>
-        /// <para>设置当前写入器的位置,并且不对<paramref name="Buffered"/>的边界进行验证.</para>
-        /// <para>Set the position of the current writer, and do not verify the boundary of <paramref name="Buffered"/>.</para>
+        /// <para>设置当前写入器的位置,并且不对<see cref="Buffered"/>的边界进行验证.</para>
+        /// <para>Set the position of the current writer, and do not verify the boundary of <see cref="Buffered"/>.</para>
         /// </summary>
         /// <param name="position">相对于<paramref name="orgin"/>的字节偏移量 A byte offset relative to the <paramref name="orgin"/> parameter</param>
         /// <param name="orgin">指示用于获得新位置的参考点 indicating the reference point used to obtain the new position.</param>

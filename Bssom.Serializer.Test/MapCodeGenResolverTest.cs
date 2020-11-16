@@ -11,7 +11,7 @@ using Bssom.Serializer.Binary;
 using Xunit;
 namespace Bssom.Serializer.Test
 {
-    public partial class MapCodeGenResolverTest
+    public class MapCodeGenResolverTest
     {
         [Fact]
         public void ResolverGetFormatter_CustomClassTypeImpl_IsDynamicGenerateFormatterType()
@@ -382,7 +382,7 @@ namespace Bssom.Serializer.Test
             };
             var buf = BssomSerializer.Serialize(val);
             var val2 = BssomSerializer.Deserialize<_PrivateMembersClass>(buf, BssomSerializerOptions.DefaultAllowPrivate);
-            _PrivateMembersClass.Create(1,2,3,4,5).Equals(val2).IsTrue();
+            _PrivateMembersClass.Create(1, 2, 3, 4, 5).Equals(val2).IsTrue();
 
         }
 

@@ -127,9 +127,15 @@ namespace Bssom.Serializer.Binary
         public static void WriteUInt32FixNumber(IBssomBufferWriter writer, uint value)
         {
             ref byte refb = ref writer.GetRef(5);
+            WriteUInt32FixNumber(ref refb, value);
+            writer.Advance(5);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static void WriteUInt32FixNumber(ref byte refb, uint value)
+        {
             refb = FixUInt32;
             WriteUInt32LittleEndian(ref Unsafe.Add(ref refb, 1), (uint)value);
-            writer.Advance(5);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -267,6 +273,31 @@ namespace Bssom.Serializer.Binary
             else /*if (code == FixUInt64)*/
             {
                 reader.Seek(8, BssomSeekOrgin.Current);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int VariableNumberSizeByCode(int code)
+        {
+            if (code <= VariableUInt8Max)
+            {
+                return 1;
+            }
+            else if (code == VariableUInt9 || code == FixUInt8)
+            {
+                return 1 + 1;
+            }
+            else if (code == FixUInt16)
+            {
+                return  1 + 2;
+            }
+            else if (code == FixUInt32)
+            {
+                return 1 + 4;
+            }
+            else /*if (code == FixUInt64)*/
+            {
+                return 1 + 8;
             }
         }
 
@@ -962,6 +993,12 @@ namespace Bssom.Serializer.Binary
         public static int Array1NativeTypeSize(int elementSize, int count)
         {
             return Array1NativeTypeCodeSize + Array1TypeSizeWithOutTypeHead(elementSize, count);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int Array3HeaderSize(int count) {
+            //typeCode + len + Varlen(count) +  BssomBinaryPrimitives.FixUInt32NumberSize * count
+            return BssomBinaryPrimitives.BuildInTypeCodeSize + BssomBinaryPrimitives.FixUInt32NumberSize + BssomBinaryPrimitives.VariableNumberSize((ulong)count) + BssomBinaryPrimitives.FixUInt32NumberSize * count;
         }
 
         private static readonly int[] StaticPrimitiveTypeSizes = new int[] { BssomBinaryPrimitives.NullSize, BssomBinaryPrimitives.Int8Size, BssomBinaryPrimitives.Int16Size, BssomBinaryPrimitives.Int32Size, BssomBinaryPrimitives.Int64Size, BssomBinaryPrimitives.UInt8Size, BssomBinaryPrimitives.UInt16Size, BssomBinaryPrimitives.UInt32Size, BssomBinaryPrimitives.UInt64Size, BssomBinaryPrimitives.Float32Size, BssomBinaryPrimitives.Float64Size, BssomBinaryPrimitives.BooleanSize, BssomBinaryPrimitives.StandardDateTimeSize, };

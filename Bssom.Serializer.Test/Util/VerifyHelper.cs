@@ -118,6 +118,12 @@ namespace Xunit
             reader.ReadBssomType().Is(BssomType.Map2);
         }
 
+        public static void IsArray3(this byte[] bytes)
+        {
+            var reader = new BssomReader(new SimpleBufferWriter(bytes));
+            reader.ReadBssomType().Is(BssomType.Array3);
+        }
+
         public static void VerifyIDictWithMap2Type<T, TKey, TValue>(T value, BssomSerializerOptions option = null)
         {
             VerifyIDictAndReturnSerializeBytes<T, TKey, TValue>(value, option).IsMap2();
@@ -195,6 +201,17 @@ namespace Xunit
             var map = (BssomMap)BssomSerializer.Deserialize<object>(buf, option);
 
             value.GetPublicMembersWithDynamicObject().IsMap(map);
+        }
+
+        public static void ConvertArray3ObjectAndVerifyEntity(object value)
+        {
+            BssomSerializerOptions option = BssomSerializerOptions.IntKeyCompositedResolverOption;
+            var buf = BssomSerializer.Serialize(value, option);
+            BssomSerializer.Size(value, option).Is(buf.Length);
+            buf.IsArray3();
+            var map = (BssomArray)BssomSerializer.Deserialize<object>(buf, option);
+
+            //value.GetPublicMembersWithDynamicObject().IsMap(map);
         }
 
         public static void VerifyMap(BssomMap value, BssomSerializerOptions option = null)

@@ -10,16 +10,28 @@ namespace Bssom.Serializer
     public class BssomSerializerOptions
     {
         /// <summary>
-        /// <para>使用了<see cref="CompositedResolver"/>的默认配置集</para>
-        /// <para>The default configuration set of <see cref ="CompositedResolver"/> is used</para>
+        /// <para>使用了<see cref="CompositedResolver"/>的默认配置集, 默认只序列化实体中公开的元素</para>
+        /// <para>The default configuration set of <see cref ="CompositedResolver"/> is used, by default, only elements exposed in entities are serialized</para>
         /// </summary>
         public static BssomSerializerOptions Default = new BssomSerializerOptions();
 
         /// <summary>
-        /// <para>使用了<see cref="CompositedResolverAllowPrivate"/>的默认配置集</para>
-        /// <para>The default configuration set of <see cref ="CompositedResolverAllowPrivate"/> is used</para>
+        /// <para>使用了<see cref="CompositedResolverAllowPrivate"/>的默认配置集, 默认序列化实体中的所有元素</para>
+        /// <para>The default configuration set of <see cref ="CompositedResolverAllowPrivate"/> is used, by default, only all elements in the entity are serialized</para>
         /// </summary>
         public static BssomSerializerOptions DefaultAllowPrivate = new BssomSerializerOptions().WithFormatterResolver(CompositedResolverAllowPrivate.Instance);
+
+        /// <summary>
+        /// <para>使用了<see cref="IntKeyCompositedResolver"/>的默认配置集, 拥有更快的序列化性能和更紧凑的数据包, 实体中的成员必须被KeyAttribute标记</para>
+        /// <para>The default configuration set of <see cref ="CompositedResolverAllowPrivate"/> is used, with faster serialization performance and more compact packets, members in entities must be marked with <see cref="KeyAttribute"/></para>
+        /// </summary>
+        public static BssomSerializerOptions IntKeyCompositedResolverOption = new BssomSerializerOptions().WithFormatterResolver(IntKeyCompositedResolver.Instance);
+
+        /// <summary>
+        /// <para>使用了<see cref="IntKeyCompositedResolverAllowPrivate"/>的默认配置集, 拥有更快的序列化性能和更紧凑的数据包, 实体中的成员必须被KeyAttribute标记</para>
+        /// <para>The default configuration set of <see cref ="CompositedResolverAllowPrivate"/> is used, with faster serialization performance and more compact packets, members in entities must be marked with <see cref="KeyAttribute"/></para>
+        /// </summary>
+        public static BssomSerializerOptions IntKeyCompositedAllowPrivateResolverOption = new BssomSerializerOptions().WithFormatterResolver(IntKeyCompositedResolverAllowPrivate.Instance);
 
         protected BssomSerializerOptions() { }
 

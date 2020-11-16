@@ -28,6 +28,16 @@ namespace Bssom.Serializer
             throw BssomMapKeyUnsupportedType(type);
         }
 
+        internal static BssomSerializationTypeFormatterException Array3MembersMustDefindKeyAttribute(Type type, string memName)
+        {
+            return new BssomSerializationTypeFormatterException($"使用Array3Resolver在对{type.Name}类型格式化时发生了错误,被序列化的元素{memName}必须标记KeyAttribute或IgnoreKeyAttribute. An error occurred while formatting {type.Name} with Array3Resolver, and the serialized element:{memName} must be marked KeyAttribute or IgnoreKeyAttribute");
+        }
+
+        internal static BssomSerializationTypeFormatterException Array3KeyAttributeValueRepeated(Type type)
+        {
+            return new BssomSerializationTypeFormatterException($"使用Array3Resolver在对{type.Name}类型格式化时发生了错误,被KeyAttribute标记的元素的值重复. An error occurred using Array3Resolver while formatting the type {type.Name}, which was repeated by the value of the element tagged by KeyAttribute");
+        }
+
         internal static BssomSerializationTypeFormatterException TypeFormatterError(Type type, string message)
         {
             return new BssomSerializationTypeFormatterException($"在对{type.Name}类型格式化时发生了错误. An error occurred while formatting the {type.Name}, {message}");

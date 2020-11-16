@@ -8,6 +8,8 @@ namespace Bssom.Serializer.Internal
 {
     internal static class TypeBuildHelper
     {
+        #region Serialize
+
         public static MethodBuilder DefineSerializeMethod(TypeBuilder typeBuilder, Type type, string methodName = null)
         {
             MethodBuilder method = typeBuilder.DefineMethod(
@@ -44,6 +46,21 @@ namespace Bssom.Serializer.Internal
             il.Emit(OpCodes.Ret);
         }
 
+        public static void CallSerializeDelegate(MethodBuilder serializeMethod, Type genericType, FieldInfo fieldInfo)
+        {
+            ILGenerator il = serializeMethod.GetILGenerator();
+            il.Emit(OpCodes.Ldsfld, fieldInfo);
+            il.Emit(OpCodes.Ldarg_1);
+            il.Emit(OpCodes.Ldarg_2);
+            il.Emit(OpCodes.Ldarg_3);
+            il.Emit(OpCodes.Call, typeof(Serialize<>).MakeGenericType(genericType).GetMethod(nameof(Serialize<int>.Invoke)));
+            il.Emit(OpCodes.Ret);
+        }
+
+        #endregion
+
+        #region Deserialize
+
         public static MethodBuilder DefineDeserializeMethod(TypeBuilder typeBuilder, Type t)
         {
             MethodBuilder method = typeBuilder.DefineMethod(
@@ -51,6 +68,18 @@ namespace Bssom.Serializer.Internal
                MethodAttributes.Public | MethodAttributes.Final | MethodAttributes.Virtual,
                returnType: t,
                parameterTypes: new Type[] { typeof(BssomReader).MakeByRefType(), typeof(BssomDeserializeContext).MakeByRefType() });
+            method.DefineParameter(1, ParameterAttributes.None, "reader");
+            method.DefineParameter(2, ParameterAttributes.None, "context");
+            return method;
+        }
+
+        public static MethodBuilder DefineDeserializeDelegate(TypeBuilder typeBuilder, Type type)
+        {
+            MethodBuilder method = typeBuilder.DefineMethod(
+              nameof(Map1FormatterDeserialize<int>),
+                MethodAttributes.Public | MethodAttributes.Static,
+              returnType: type,
+              parameterTypes: new Type[] { typeof(BssomReader).MakeByRefType(), typeof(BssomDeserializeContext).MakeByRefType() });
             method.DefineParameter(1, ParameterAttributes.None, "reader");
             method.DefineParameter(2, ParameterAttributes.None, "context");
             return method;
@@ -85,26 +114,9 @@ namespace Bssom.Serializer.Internal
             il.Emit(OpCodes.Ret);
         }
 
-        public static void CallSerializeDelegate(MethodBuilder serializeMethod, Type genericType, FieldInfo fieldInfo)
-        {
-            ILGenerator il = serializeMethod.GetILGenerator();
-            il.Emit(OpCodes.Ldsfld, fieldInfo);
-            il.Emit(OpCodes.Ldarg_1);
-            il.Emit(OpCodes.Ldarg_2);
-            il.Emit(OpCodes.Ldarg_3);
-            il.Emit(OpCodes.Call, typeof(Serialize<>).MakeGenericType(genericType).GetMethod(nameof(Serialize<int>.Invoke)));
-            il.Emit(OpCodes.Ret);
-        }
+        #endregion
 
-        public static void CallSizeDelegate(MethodBuilder serializeMethod, Type genericType, FieldInfo fieldInfo)
-        {
-            ILGenerator il = serializeMethod.GetILGenerator();
-            il.Emit(OpCodes.Ldsfld, fieldInfo);
-            il.Emit(OpCodes.Ldarg_1);
-            il.Emit(OpCodes.Ldarg_2);
-            il.Emit(OpCodes.Call, typeof(Size<>).MakeGenericType(genericType).GetMethod(nameof(Size<int>.Invoke)));
-            il.Emit(OpCodes.Ret);
-        }
+        #region Size
 
         public static MethodBuilder DefineSizeMethod(TypeBuilder typeBuilder, Type type)
         {
@@ -130,6 +142,29 @@ namespace Bssom.Serializer.Internal
             return method;
         }
 
+        public static void CallOneMethodInSize(MethodBuilder serialize, MethodInfo method)
+        {
+            ILGenerator il = serialize.GetILGenerator();
+            il.Emit(OpCodes.Ldarg_1);
+            il.Emit(OpCodes.Ldarg_2);
+            il.Emit(OpCodes.Call, method);
+            il.Emit(OpCodes.Ret);
+        }
+
+        public static void CallSizeDelegate(MethodBuilder serializeMethod, Type genericType, FieldInfo fieldInfo)
+        {
+            ILGenerator il = serializeMethod.GetILGenerator();
+            il.Emit(OpCodes.Ldsfld, fieldInfo);
+            il.Emit(OpCodes.Ldarg_1);
+            il.Emit(OpCodes.Ldarg_2);
+            il.Emit(OpCodes.Call, typeof(Size<>).MakeGenericType(genericType).GetMethod(nameof(Size<int>.Invoke)));
+            il.Emit(OpCodes.Ret);
+        }
+
+        #endregion
+
+        #region Map1FormatterDeserializeDelegate
+
         public static MethodBuilder DefineMap1FormatterDeserializeDelegate(TypeBuilder typeBuilder, Type type)
         {
             MethodBuilder method = typeBuilder.DefineMethod(
@@ -143,13 +178,6 @@ namespace Bssom.Serializer.Internal
             return method;
         }
 
-        public static void CallOneMethodInSize(MethodBuilder serialize, MethodInfo method)
-        {
-            ILGenerator il = serialize.GetILGenerator();
-            il.Emit(OpCodes.Ldarg_1);
-            il.Emit(OpCodes.Ldarg_2);
-            il.Emit(OpCodes.Call, method);
-            il.Emit(OpCodes.Ret);
-        }
+        #endregion
     }
 }

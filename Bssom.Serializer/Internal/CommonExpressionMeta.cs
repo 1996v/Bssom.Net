@@ -73,6 +73,10 @@ namespace Bssom.Serializer.Internal
         public static readonly MethodInfo Type_SkipBlankCharacterAndReadBssomType;
         //Call: reader.TryReadNull()
         public static readonly Expression Call_Reader_TryReadNull;
+        //Type: reader.TryReadNullWithEnsureBuildInType()
+        public static readonly MethodInfo Type_Reader_TryReadNullWithEnsureBuildInType;
+        //Type: reader.SkipObject()
+        public static readonly MethodInfo Type_Reader_SkipObject;
 
         //Call: reader.ReadVariableNumber()
         public static readonly Expression Call_Reader_ReadVariableNumber;
@@ -95,10 +99,15 @@ namespace Bssom.Serializer.Internal
         public static readonly MethodInfo Type_Buffer_TryReadFixedRef;
         //Type: Buffer.UnFixed()
         public static readonly MethodInfo Type_Buffer_UnFixed;
+        //Type: Writer.WriteArray3Header()
+        public static readonly MethodInfo Type_Writer_WriteArray3Header;
+        //Type: Writer.WriteBackArray3Header()
+        public static readonly MethodInfo Type_Writer_WriteBackArray3Header;
 
         //Call: reader.GetMapStringKeyLength();
         public static readonly Expression Call_ReaderGetMapStringKeyLength;
-
+        //Call: reader.SkipObject();
+        public static readonly Expression Call_Reader_SkipObject;
 
 
         private const BindingFlags instanceAndInternalFlag = BindingFlags.NonPublic | BindingFlags.Instance;
@@ -150,6 +159,8 @@ namespace Bssom.Serializer.Internal
             Type_TryReadNull = typeof(BssomReader).GetMethod(nameof(BssomReader.TryReadNull));
             Type_SkipBlankCharacterAndReadBssomType = typeof(BssomReader).GetMethod(nameof(BssomReader.SkipBlankCharacterAndReadBssomType), instanceAndInternalFlag);
             Call_Reader_TryReadNull = Expression.Call(Par_Reader, Type_TryReadNull);
+            Type_Reader_TryReadNullWithEnsureBuildInType = typeof(BssomReader).GetMethod(nameof(BssomReader.TryReadNullWithEnsureBuildInType), instanceAndInternalFlag);
+            Type_Reader_SkipObject = typeof(BssomReader).GetMethod(nameof(BssomReader.SkipObject), instanceAndInternalFlag,null,new Type[] { },null);
 
             Call_Reader_ReadVariableNumber = Expression.Call(Par_Reader, typeof(BssomReader).GetMethod(nameof(BssomReader.ReadVariableNumber)));
             Call_Reader_SkipVariableNumber = Expression.Call(Par_Reader, typeof(BssomReader).GetMethod(nameof(BssomReader.SkipVariableNumber), instanceAndInternalFlag));
@@ -162,8 +173,12 @@ namespace Bssom.Serializer.Internal
             Type_MapHead_RouteLength = typeof(BssMapHead).GetField(nameof(BssMapHead.RouteLength));
             Type_Buffer_TryReadFixedRef = typeof(IBssomBuffer).GetMethod(nameof(IBssomBuffer.TryReadFixedRef));
             Type_Buffer_UnFixed = typeof(IBssomBuffer).GetMethod(nameof(IBssomBuffer.UnFixed));
+            Type_Writer_WriteArray3Header = typeof(BssomWriter).GetMethod(nameof(BssomWriter.WriteArray3Header), instanceAndInternalFlag);
+            Type_Writer_WriteBackArray3Header = typeof(BssomWriter).GetMethod(nameof(BssomWriter.WriteBackArray3Header), instanceAndInternalFlag);
 
             Call_ReaderGetMapStringKeyLength = Expression.Call(Par_Reader, typeof(BssomReader).GetMethod(nameof(BssomReader.GetMapStringKeyLength), instanceAndInternalFlag));
+
+            Call_Reader_SkipObject = Expression.Call(Par_Reader, Type_Reader_SkipObject);
         }
 
         //Call: MapFormatterHelper.Deserialize(ref reader,option)
@@ -193,7 +208,7 @@ namespace Bssom.Serializer.Internal
         //reader.TryReadNullWithEnsureBuildInType(BssomType.Array2)
         public static Expression Call_Reader_TryReadNullWithEnsureBuildInType(byte code)
         {
-            return Expression.Call(Par_Reader, typeof(BssomReader).GetMethod(nameof(BssomReader.TryReadNullWithEnsureBuildInType), instanceAndInternalFlag), Expression.Constant(code, typeof(byte)));
+            return Expression.Call(Par_Reader, Type_Reader_TryReadNullWithEnsureBuildInType, Expression.Constant(code, typeof(byte)));
         }
 
         //reader.TryReadNullWithEnsureArray1BuildInType(BssomType.Int8Code)
@@ -284,7 +299,18 @@ namespace Bssom.Serializer.Internal
         public static Expression Call_WriteRaw(Expression value)
         {
             return Expression.Call(Par_Writer, typeof(BssomWriter).GetMethod(nameof(BssomWriter.WriteRaw), new Type[] { value.Type }), value);
-            //return Expression.Call(Par_Writer, typeof(BssomWriter).GetMethod(nameof(BssomWriter.WriteRaw), instanceAndInternalFlag, null, new Type[] { value.Type }, null), value);
+        }
+
+        //Call: writer.WriteArray3Header(count);
+        public static Expression Call_WriteArray3Header(int count)
+        {
+            return Expression.Call(Par_Writer, Type_Writer_WriteArray3Header, Expression.Constant(count));
+        }
+
+        //Call: writer.WriteBackArray3Header
+        public static Expression Call_WriteBackArray3Header(Expression basePosition, Expression offset1, int count)
+        {
+            return Expression.Call(Par_Writer, Type_Writer_WriteBackArray3Header, basePosition, offset1, Expression.Constant(count));
         }
 
         //Call: writer.WriteBuildInType(val);
@@ -315,6 +341,8 @@ namespace Bssom.Serializer.Internal
                 Expression.Assign(Par_DeserializeContext, Expression.Property(map, nameof(IMapDataSource<int, int>.Context)))
                 );
         }
+
+
 
         //Call: reader.SeekAndSkipObject(len);
         public static Expression Call_Reader_SeekAndSkipObject(Expression len)
