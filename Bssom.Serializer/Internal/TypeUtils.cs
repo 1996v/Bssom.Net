@@ -175,5 +175,37 @@ namespace Bssom.Serializer.Internal
                    && (type.Name.StartsWith("<>") || type.Name.StartsWith("VB$"))
                    && (type.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic;
         }
+
+        public static IEnumerable<FieldInfo> GetAllFields(this Type type, BindingFlags bind)
+        {
+            if (type.BaseType != null)
+            {
+                foreach (var item in GetAllFields(type.BaseType, bind | BindingFlags.DeclaredOnly))
+                {
+                    yield return item;
+                }
+            }
+
+            foreach (var item in type.GetFields(bind | BindingFlags.DeclaredOnly))
+            {
+                yield return item;
+            }
+        }
+
+        public static IEnumerable<PropertyInfo> GetAllProperties(this Type type, BindingFlags bind)
+        {
+            if (type.BaseType != null)
+            {
+                foreach (var item in GetAllProperties(type.BaseType, bind | BindingFlags.DeclaredOnly))
+                {
+                    yield return item;
+                }
+            }
+
+            foreach (var item in type.GetProperties(bind | BindingFlags.DeclaredOnly))
+            {
+                yield return item;
+            }
+        }
     }
 }

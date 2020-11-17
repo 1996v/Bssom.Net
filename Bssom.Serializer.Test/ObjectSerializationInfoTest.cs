@@ -62,14 +62,18 @@ namespace Bssom.Serializer.Test
 
             public int B;
 
+            private int C;
+
+            private int D { get; set; }
+
         }
         public class _sub:_base {
 
-            private int C;
+            internal int E;
 
-            internal int D;
+            public int F;
 
-            public int E;
+            private int G;
         }
 
         [Fact]
@@ -77,24 +81,30 @@ namespace Bssom.Serializer.Test
         {
             var objserInfo = new ObjectSerializationInfo(typeof(_sub), false);
             objserInfo.SerializeMemberInfos.Length.Is(2);
-            objserInfo.SerializeMemberInfos[0].Name.Is(nameof(_sub.E));
-            objserInfo.SerializeMemberInfos[1].Name.Is(nameof(_base.B));
+            objserInfo.SerializeMemberInfos[0].Name.Is(nameof(_base.B));
+            objserInfo.SerializeMemberInfos[1].Name.Is(nameof(_sub.F));
         }
 
         [Fact]
         public void ExpentdType_PrivateMembersNonPublicSetterIndex_IsCorrectly()
         {
             var objserInfo = new ObjectSerializationInfo(typeof(_sub), true);
-            objserInfo.SerializeMemberInfos.Length.Is(5);
+            objserInfo.SerializeMemberInfos.Length.Is(7);
+            objserInfo.SerializeMemberInfos[0].Name.Is("A");
+            objserInfo.SerializeMemberInfos[1].Name.Is("D");
+            objserInfo.SerializeMemberInfos[2].Name.Is("B");
+            objserInfo.SerializeMemberInfos[3].Name.Is("C");
+            objserInfo.SerializeMemberInfos[4].Name.Is("E");
+            objserInfo.SerializeMemberInfos[5].Name.Is("F");
+            objserInfo.SerializeMemberInfos[6].Name.Is("G");
+
             objserInfo.SerializeMemberInfos[0].NonPublicSetterIndex.Is(0);
             objserInfo.SerializeMemberInfos[1].NonPublicSetterIndex.Is(1);
-            objserInfo.SerializeMemberInfos[2].NonPublicSetterIndex.Is(2);
-            objserInfo.SerializeMemberInfos[0].Name.Is("A");
-            objserInfo.SerializeMemberInfos[1].Name.Is("C");
-            objserInfo.SerializeMemberInfos[2].Name.Is("D");
-
-            objserInfo.SerializeMemberInfos[3].NonPublicSetterIndex.Is(-1);
-            objserInfo.SerializeMemberInfos[4].NonPublicSetterIndex.Is(-1);
+            objserInfo.SerializeMemberInfos[2].NonPublicSetterIndex.Is(-1);
+            objserInfo.SerializeMemberInfos[3].NonPublicSetterIndex.Is(2);
+            objserInfo.SerializeMemberInfos[4].NonPublicSetterIndex.Is(3);
+            objserInfo.SerializeMemberInfos[5].NonPublicSetterIndex.Is(-1);
+            objserInfo.SerializeMemberInfos[6].NonPublicSetterIndex.Is(4);
         }
     }
 }

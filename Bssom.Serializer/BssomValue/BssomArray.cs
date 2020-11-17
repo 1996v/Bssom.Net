@@ -530,6 +530,15 @@ namespace Bssom.Serializer
         }
 
         /// <summary>
+        /// <para>根据Index在数组中获取对应的值</para>
+        /// <para>Get the corresponding value in the array according to Index</para>
+        /// </summary>
+        public object GetObject(int index)
+        {
+            return GetRawValue(index);
+        }
+
+        /// <summary>
         /// <para>确定数组中特定项的索引</para>
         /// <para>Determines the index of a specific item in the array</para>
         /// </summary>

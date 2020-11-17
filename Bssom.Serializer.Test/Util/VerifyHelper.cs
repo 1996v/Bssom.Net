@@ -203,16 +203,20 @@ namespace Xunit
             value.GetPublicMembersWithDynamicObject().IsMap(map);
         }
 
-        public static void ConvertArray3ObjectAndVerifyEntity(object value)
+        public static BssomArray ConvertArray3ObjectAndVerifyEntity<T>(T value, BssomSerializerOptions option = null)
         {
-            BssomSerializerOptions option = BssomSerializerOptions.IntKeyCompositedResolverOption;
+            if (option == null)
+                option = BssomSerializerOptions.IntKeyCompositedResolverOption;
             var buf = BssomSerializer.Serialize(value, option);
             BssomSerializer.Size(value, option).Is(buf.Length);
             buf.IsArray3();
-            var map = (BssomArray)BssomSerializer.Deserialize<object>(buf, option);
+            var desObj = BssomSerializer.Deserialize<T>(buf, option);
 
-            //value.GetPublicMembersWithDynamicObject().IsMap(map);
+            Kooboo.Json.JsonSerializer.ToJson(value).Is(Kooboo.Json.JsonSerializer.ToJson(desObj));
+            return BssomSerializer.Deserialize<BssomArray>(buf, option);
         }
+
+
 
         public static void VerifyMap(BssomMap value, BssomSerializerOptions option = null)
         {
@@ -321,7 +325,7 @@ namespace Xunit
             UseJsonToolForValidation(value, option);
         }
 
-        public static void VerifyWithJson<T>(T value,T value2)
+        public static void VerifyWithJson<T>(T value, T value2)
         {
             Kooboo.Json.JsonSerializer.ToJson(value).Is(Kooboo.Json.JsonSerializer.ToJson(value2));
         }

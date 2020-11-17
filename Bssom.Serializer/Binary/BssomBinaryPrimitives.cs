@@ -37,6 +37,39 @@ namespace Bssom.Serializer.Binary
             }
         }
 
+        public static int WriteVariableNumber(ref byte refb, ulong value)
+        {
+            if (value <= VariableUInt8Max)
+            {
+                refb = unchecked((byte)value);
+                return 1;
+            }
+            else if (value <= VariableUInt9Max)
+            {
+                refb = VariableUInt9;
+                Unsafe.Add(ref refb, 1) = unchecked((byte)(value - VariableUInt8Max));
+                return 2;
+            }
+            else if (value <= ushort.MaxValue)
+            {
+                refb = FixUInt16;
+                WriteUInt16LittleEndian(ref Unsafe.Add(ref refb, 1), (ushort)value);
+                return 3;
+            }
+            else if (value <= uint.MaxValue)
+            {
+                refb = FixUInt32;
+                WriteUInt32LittleEndian(ref Unsafe.Add(ref refb, 1), (uint)value);
+                return 5;
+            }
+            else
+            {
+                refb = FixUInt64;
+                WriteUInt64LittleEndian(ref Unsafe.Add(ref refb, 1), value);
+                return 9;
+            }
+        }
+
         private static void WriteVariableNumberCore(IBssomBufferWriter writer, ulong value)
         {
             if (value <= VariableUInt8Max)
@@ -289,7 +322,7 @@ namespace Bssom.Serializer.Binary
             }
             else if (code == FixUInt16)
             {
-                return  1 + 2;
+                return 1 + 2;
             }
             else if (code == FixUInt32)
             {
@@ -996,12 +1029,13 @@ namespace Bssom.Serializer.Binary
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int Array3HeaderSize(int count) {
+        public static int Array3HeaderSize(int count)
+        {
             //typeCode + len + Varlen(count) +  BssomBinaryPrimitives.FixUInt32NumberSize * count
             return BssomBinaryPrimitives.BuildInTypeCodeSize + BssomBinaryPrimitives.FixUInt32NumberSize + BssomBinaryPrimitives.VariableNumberSize((ulong)count) + BssomBinaryPrimitives.FixUInt32NumberSize * count;
         }
 
-        private static readonly int[] StaticPrimitiveTypeSizes = new int[] { BssomBinaryPrimitives.NullSize, BssomBinaryPrimitives.Int8Size, BssomBinaryPrimitives.Int16Size, BssomBinaryPrimitives.Int32Size, BssomBinaryPrimitives.Int64Size, BssomBinaryPrimitives.UInt8Size, BssomBinaryPrimitives.UInt16Size, BssomBinaryPrimitives.UInt32Size, BssomBinaryPrimitives.UInt64Size, BssomBinaryPrimitives.Float32Size, BssomBinaryPrimitives.Float64Size, BssomBinaryPrimitives.BooleanSize, BssomBinaryPrimitives.StandardDateTimeSize, };
+        private static readonly int[] StaticPrimitiveTypeSizes = new int[] { BssomBinaryPrimitives.NullSize, BssomBinaryPrimitives.Int8Size + BssomBinaryPrimitives.BuildInTypeCodeSize, BssomBinaryPrimitives.Int16Size + BssomBinaryPrimitives.BuildInTypeCodeSize, BssomBinaryPrimitives.Int32Size + BssomBinaryPrimitives.BuildInTypeCodeSize, BssomBinaryPrimitives.Int64Size + BssomBinaryPrimitives.BuildInTypeCodeSize, BssomBinaryPrimitives.UInt8Size + BssomBinaryPrimitives.BuildInTypeCodeSize, BssomBinaryPrimitives.UInt16Size + BssomBinaryPrimitives.BuildInTypeCodeSize, BssomBinaryPrimitives.UInt32Size + BssomBinaryPrimitives.BuildInTypeCodeSize, BssomBinaryPrimitives.UInt64Size + BssomBinaryPrimitives.BuildInTypeCodeSize, BssomBinaryPrimitives.Float32Size + BssomBinaryPrimitives.BuildInTypeCodeSize, BssomBinaryPrimitives.Float64Size + BssomBinaryPrimitives.BuildInTypeCodeSize, BssomBinaryPrimitives.BooleanSize + BssomBinaryPrimitives.BuildInTypeCodeSize, BssomBinaryPrimitives.StandardDateTimeSize + BssomBinaryPrimitives.BuildInTypeCodeSize, };
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryGetPrimitiveTypeSizeFromStaticTypeSizes(byte type, out int size)
@@ -1020,10 +1054,10 @@ namespace Bssom.Serializer.Binary
         static BssomBinaryPrimitives()
         {
             StaticNativeTypeSizes = new sbyte[NativeBssomType.MaxCode + 1];
-            StaticNativeTypeSizes[NativeBssomType.CharCode] = BssomBinaryPrimitives.CharSize;
-            StaticNativeTypeSizes[NativeBssomType.GuidCode] = BssomBinaryPrimitives.GuidSize;
-            StaticNativeTypeSizes[NativeBssomType.DecimalCode] = BssomBinaryPrimitives.DecimalSize;
-            StaticNativeTypeSizes[NativeBssomType.DateTimeCode] = BssomBinaryPrimitives.NativeDateTimeSize;
+            StaticNativeTypeSizes[NativeBssomType.CharCode] = BssomBinaryPrimitives.NativeTypeCodeSize + BssomBinaryPrimitives.CharSize;
+            StaticNativeTypeSizes[NativeBssomType.GuidCode] = BssomBinaryPrimitives.NativeTypeCodeSize + BssomBinaryPrimitives.GuidSize;
+            StaticNativeTypeSizes[NativeBssomType.DecimalCode] = BssomBinaryPrimitives.NativeTypeCodeSize + BssomBinaryPrimitives.DecimalSize;
+            StaticNativeTypeSizes[NativeBssomType.DateTimeCode] = BssomBinaryPrimitives.NativeTypeCodeSize + BssomBinaryPrimitives.NativeDateTimeSize;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

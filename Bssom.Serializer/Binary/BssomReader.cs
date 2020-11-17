@@ -62,6 +62,12 @@ namespace Bssom.Serializer
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public byte PeekBssomType()
+        {
+            return PeekOne<byte>();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool TryReadNull()
         {
             if (PeekOne<byte>() == BssomType.NullCode)
@@ -343,14 +349,14 @@ namespace Bssom.Serializer
                 keyType = ReadBssomType();
                 if (BssomBinaryPrimitives.TryGetNativeTypeSizeFromStaticTypeSizes(keyType, out int size))
                 {
-                    return size;
+                    return size - BssomBinaryPrimitives.NativeTypeCodeSize;
                 }
             }
             else if (keyType != BssomType.NullCode)
             {
                 if (BssomBinaryPrimitives.TryGetPrimitiveTypeSizeFromStaticTypeSizes(keyType, out int size))
                 {
-                    return size;
+                    return size - BssomBinaryPrimitives.BuildInTypeCodeSize;
                 }
             }
             return BssomSerializationOperationException.UnexpectedCodeRead<int>(keyType, Position);
@@ -436,7 +442,7 @@ namespace Bssom.Serializer
         {
             if (BssomBinaryPrimitives.TryGetPrimitiveTypeSizeFromStaticTypeSizes(objType, out int size))
             {
-                return size;
+                return size - BssomBinaryPrimitives.BuildInTypeCodeSize;
             }
 
             switch (objType)
@@ -468,6 +474,7 @@ namespace Bssom.Serializer
                 case BssomType.Map1:
                 case BssomType.Map2:
                 case BssomType.Array2:
+                case BssomType.Array3:
                     return ReadVariableNumber();
 
                 case BssomType.Array1:

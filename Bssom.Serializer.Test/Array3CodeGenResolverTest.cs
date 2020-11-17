@@ -28,15 +28,14 @@ namespace Bssom.Serializer.Test
         [Fact]
         public void IncompleteMarkKeyAttribute_IsSerializationTypeError()
         {
-            VerifyHelper.Throws<BssomSerializationTypeFormatterException>(() => Array3CodeGenResolver.Instance.GetFormatter<_IncompleteMarkKeyAttributeClass>());
+            VerifyHelper.Throws<TypeInitializationException>(() => Array3CodeGenResolver.Instance.GetFormatter<_IncompleteMarkKeyAttributeClass>());
         }
 
         [Fact]
         public void RepeatedValuesMarkKeyAttribute_IsSerializationTypeError()
         {
-            VerifyHelper.Throws<BssomSerializationTypeFormatterException>(() => Array3CodeGenResolver.Instance.GetFormatter<_RepeatedValueMarkKeyAttributeClass>());
+            VerifyHelper.Throws<TypeInitializationException>(() => Array3CodeGenResolver.Instance.GetFormatter<_RepeatedValueMarkKeyAttributeClass>());
         }
-
 
         [Fact]
         public void CustomClassType_FormatterIsCorrectly()
@@ -63,7 +62,68 @@ namespace Bssom.Serializer.Test
         public void SpacingValues_FormatterIsCorrectly()
         {
             var val = RandomHelper.RandomValue<SpacingValuesClass>();
-            VerifyHelper.ConvertArray3ObjectAndVerifyEntity(val);
+            var ary3 = VerifyHelper.ConvertArray3ObjectAndVerifyEntity(val);
+
+            ary3.Count.Is(6);
+            ary3.GetObject(0).Equals(val.A).IsTrue();
+            ary3.GetObject(1).Equals(BssomNull.Value).IsTrue();
+            ary3.GetObject(2).Equals(BssomNull.Value).IsTrue();
+            ary3.GetObject(3).Equals(val.B).IsTrue();
+            ary3.GetObject(4).Equals(BssomNull.Value).IsTrue();
+            ary3.GetObject(5).Equals(val.C).IsTrue();
+        }
+
+        [Fact]
+        public void ExtensionTypeAllowPrivate_FormatterIsCorrectly()
+        {
+            var val = new _sub().Init();
+            var ary3 = VerifyHelper.ConvertArray3ObjectAndVerifyEntity(val, BssomSerializerOptions.IntKeyCompositedAllowPrivateResolverOption);
+
+            ary3.Count.Is(5);
+            ary3.GetObject(0).Equals(val.A1).IsTrue();
+            ary3.GetObject(1).Equals(val.B1).IsTrue();
+            ary3.GetObject(2).Equals(val.C1).IsTrue();
+            ary3.GetObject(3).Equals(val.D).IsTrue();
+            ary3.GetObject(4).Equals(val.E).IsTrue();
+        }
+
+        public class _base
+        {
+            [Key(0)]
+            internal int A { get; set; }
+            [Key(1)]
+            protected int B { get; set; }
+            [Key(2)]
+            private int C { get; set; }
+
+            public int A1 => A;
+            public int B1 => B;
+            public int C1 => C;
+
+            public void Init()
+            {
+                A = RandomHelper.RandomValue<int>();
+                B = RandomHelper.RandomValue<int>();
+                C = RandomHelper.RandomValue<int>();
+            }
+        }
+
+        public class _sub : _base
+        {
+            [Key(3)]
+            public int D { get; set; }
+            [Key(4)]
+            public int E { get; set; }
+
+            public new _sub Init()
+            {
+                D = RandomHelper.RandomValue<int>();
+                E = RandomHelper.RandomValue<int>();
+
+                base.Init();
+
+                return this;
+            }
         }
 
         public class _nonField

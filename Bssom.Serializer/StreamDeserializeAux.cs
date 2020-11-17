@@ -41,8 +41,12 @@ namespace Bssom.Serializer
             buffer[0] = objType;
             position++;
 
-            if (!BssomBinaryPrimitives.TryGetPrimitiveTypeSizeFromStaticTypeSizes(objType,
-                out size))
+            if (BssomBinaryPrimitives.TryGetPrimitiveTypeSizeFromStaticTypeSizes(objType,
+               out size))
+            {
+                size -= BssomBinaryPrimitives.BuildInTypeCodeSize;
+            }
+            else
             {
                 switch (objType)
                 {
@@ -98,7 +102,7 @@ namespace Bssom.Serializer
                         throw BssomSerializationOperationException.UnexpectedCodeRead(objType);
                 }
             }
-
+           
             return size;
         }
 

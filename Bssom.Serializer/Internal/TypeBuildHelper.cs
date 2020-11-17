@@ -76,7 +76,7 @@ namespace Bssom.Serializer.Internal
         public static MethodBuilder DefineDeserializeDelegate(TypeBuilder typeBuilder, Type type)
         {
             MethodBuilder method = typeBuilder.DefineMethod(
-              nameof(Map1FormatterDeserialize<int>),
+              nameof(IBssomFormatter<int>.Deserialize),
                 MethodAttributes.Public | MethodAttributes.Static,
               returnType: type,
               parameterTypes: new Type[] { typeof(BssomReader).MakeByRefType(), typeof(BssomDeserializeContext).MakeByRefType() });

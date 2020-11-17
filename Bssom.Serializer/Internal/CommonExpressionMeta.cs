@@ -145,7 +145,8 @@ namespace Bssom.Serializer.Internal
             Call_DeserializeContext_Option_Security_DepthStep = Expression.Call(Field_DeserializeContext_Option_Security, Type_OptionSecurity_DepthStep, Par_DeserializeContext);
 
             Type_DeserializeContext_Depth = typeof(BssomDeserializeContext).GetProperty(nameof(BssomDeserializeContext.Depth));
-            Call_DeserializeContext_Depth_DecrementAssign = Expression.PreDecrementAssign(Expression.Property(Par_DeserializeContext, Type_DeserializeContext_Depth));
+            var field_DeserializeContext_Depth = Expression.Property(Par_DeserializeContext, Type_DeserializeContext_Depth);
+            Call_DeserializeContext_Depth_DecrementAssign = Expression.Assign(field_DeserializeContext_Depth, Expression.Subtract(field_DeserializeContext_Depth, Expression.Constant(1)));
 
             PropertyInfo optionResolverType = typeof(BssomSerializerOptions).GetProperty(nameof(BssomSerializerOptions.FormatterResolver));
             DeserializeContextOptionResolver = Expression.Property(Field_DeserializeContext_Option, optionResolverType);
@@ -160,7 +161,7 @@ namespace Bssom.Serializer.Internal
             Type_SkipBlankCharacterAndReadBssomType = typeof(BssomReader).GetMethod(nameof(BssomReader.SkipBlankCharacterAndReadBssomType), instanceAndInternalFlag);
             Call_Reader_TryReadNull = Expression.Call(Par_Reader, Type_TryReadNull);
             Type_Reader_TryReadNullWithEnsureBuildInType = typeof(BssomReader).GetMethod(nameof(BssomReader.TryReadNullWithEnsureBuildInType), instanceAndInternalFlag);
-            Type_Reader_SkipObject = typeof(BssomReader).GetMethod(nameof(BssomReader.SkipObject), instanceAndInternalFlag,null,new Type[] { },null);
+            Type_Reader_SkipObject = typeof(BssomReader).GetMethod(nameof(BssomReader.SkipObject), instanceAndInternalFlag, null, new Type[] { }, null);
 
             Call_Reader_ReadVariableNumber = Expression.Call(Par_Reader, typeof(BssomReader).GetMethod(nameof(BssomReader.ReadVariableNumber)));
             Call_Reader_SkipVariableNumber = Expression.Call(Par_Reader, typeof(BssomReader).GetMethod(nameof(BssomReader.SkipVariableNumber), instanceAndInternalFlag));
@@ -200,9 +201,9 @@ namespace Bssom.Serializer.Internal
         }
 
         //Call: reader.Buffer.Seek(pos)
-        public static Expression Call_Reader_BufferSeek(Expression pos)
+        public static Expression Call_Reader_BufferSeek(Expression pos, BssomSeekOrgin orgin = BssomSeekOrgin.Begin)
         {
-            return Expression.Call(Field_ReaderBuffer, Type_Buffer_Seek, pos, Expression.Constant(BssomSeekOrgin.Begin, typeof(BssomSeekOrgin)));
+            return Expression.Call(Field_ReaderBuffer, Type_Buffer_Seek, pos, Expression.Constant(orgin, typeof(BssomSeekOrgin)));
         }
 
         //reader.TryReadNullWithEnsureBuildInType(BssomType.Array2)

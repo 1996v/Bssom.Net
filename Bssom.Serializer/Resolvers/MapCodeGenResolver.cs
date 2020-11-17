@@ -641,7 +641,7 @@ namespace Bssom.Serializer.Internal
             if (allowPrivate)
                 bind |= BindingFlags.NonPublic;
 
-            List<PropertyInfo> pors = type.GetProperties(bind).ToList();
+            List<PropertyInfo> pors = type.GetAllProperties(bind).ToList();
             if (type.IsInterface)
             {
                 Type[] interfaces = type.GetInterfaces();
@@ -739,7 +739,7 @@ namespace Bssom.Serializer.Internal
 
                 AddItem(item, item.PropertyType);
             }
-            FieldInfo[] fils = type.GetFields(bind);
+            IEnumerable<FieldInfo> fils = type.GetAllFields(bind);
             foreach (FieldInfo item in fils)
             {
                 if (item.IsDefined(ignoreAttribute, false) || item.IsDefined(compilerGenerated, false) || item.IsInitOnly)
@@ -1142,7 +1142,7 @@ namespace Bssom.Serializer.Internal
                     Expression.Assign(len, CommonExpressionMeta.Call_ReaderGetMapStringKeyLength),
                     BuildMap1FormatterDeserializeCore_ReadBranch(instance, len, key, seekLabel, serializationInfo, ap.Entries, 0, ap.Length),
                     Expression.Label(increLabel),
-                    Expression.PostIncrementAssign(forVariable),
+                    Expression.Assign(forVariable,Expression.Add(forVariable,Expression.Constant(1))),
                     Expression.Continue(continueLabel),
                     Expression.Label(seekLabel), CommonExpressionMeta.Call_Reader_SeekAndSkipObject(len), Expression.Goto(increLabel)
                 ),

@@ -404,6 +404,11 @@ namespace Bssom.Serializer
                                 throw BssomSerializationOperationException.UnexpectedCodeRead(info.Array1ElementType, reader.Position);
                             }
 
+                            if (info.Array1ElementTypeIsNativeType)
+                                eleSize -= BssomBinaryPrimitives.NativeTypeCodeSize;
+                            else
+                                eleSize -= BssomBinaryPrimitives.BuildInTypeCodeSize;
+
                             if (!indexOfInputSource.MoveNext())
                             {
                                 info.Offset = reader.Position + index * eleSize;
@@ -594,6 +599,11 @@ namespace Bssom.Serializer
                                 throw BssomSerializationOperationException.UnexpectedCodeRead(info.Array1ElementType, reader.Position);
                             }
 
+                            if (info.Array1ElementTypeIsNativeType)
+                                eleSize -= BssomBinaryPrimitives.NativeTypeCodeSize;
+                            else
+                                eleSize -= BssomBinaryPrimitives.BuildInTypeCodeSize;
+
                             if (!stringInputDataSource.MoveNext())
                             {
                                 info.Offset = reader.Position + index * eleSize;
@@ -695,6 +705,10 @@ namespace Bssom.Serializer
             {
                 if (BssomBinaryPrimitives.TryGetTypeSizeFromStaticTypeSizes(offsetInfo.Array1ElementTypeIsNativeType, offsetInfo.Array1ElementType, out int size))
                 {
+                    if (offsetInfo.Array1ElementTypeIsNativeType)
+                        size -= BssomBinaryPrimitives.NativeTypeCodeSize;
+                    else
+                        size -= BssomBinaryPrimitives.BuildInTypeCodeSize;
                     return size;
                 }
 

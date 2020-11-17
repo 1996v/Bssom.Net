@@ -63,7 +63,7 @@ namespace Bssom.Serializer.Internal
         {
             Type type = serializationInfo.Type;
             TypeBuilder typeBuilder = assembly.DefineFormatterType(type);
-            serializationInfo.SerializeMemberInfos.OrderByKeyIndex(type);
+            serializationInfo.SerializeMemberInfosOrderByKeyIndex(type);
 
             MethodBuilder serializeMethod = TypeBuildHelper.DefineSerializeMethod(typeBuilder, type);
             MethodBuilder deserializeMethod = TypeBuildHelper.DefineDeserializeMethod(typeBuilder, type);
@@ -79,11 +79,12 @@ namespace Bssom.Serializer.Internal
             return typeBuilder.CreateTypeInfo();
         }
 
-        private static void OrderByKeyIndex(this SerializeMemberInfo[] serializeMemberInfos, Type type)
+        private static void SerializeMemberInfosOrderByKeyIndex(this ObjectSerializationInfo serializationInfo, Type type)
         {
-            if (serializeMemberInfos.Length > 0)
+            if (serializationInfo.SerializeMemberInfos.Length > 0)
             {
-                serializeMemberInfos = serializeMemberInfos.OrderBy(e => e.KeyIndex).ToArray();
+                serializationInfo.SerializeMemberInfos = serializationInfo.SerializeMemberInfos.OrderBy(e => e.KeyIndex).ToArray();
+                SerializeMemberInfo[] serializeMemberInfos = serializationInfo.SerializeMemberInfos;
                 for (int i = 0; i < serializeMemberInfos.Length; i++)
                 {
                     var mem = serializeMemberInfos[i];
@@ -128,7 +129,8 @@ namespace Bssom.Serializer.Internal
             else
             {
                 int maxLen = keys[keys.Length - 1].KeyIndex + 1;
-                //uint position,entry1,entry2,entry3...
+                //long position;
+                //uint entry1,entry2,entry3...
                 variables = new ParameterExpression[1 + maxLen];
                 variables[0] = Expression.Variable(typeof(long), "elementOffPosition");
                 for (int i = 1; i < variables.Length; i++)
@@ -136,16 +138,16 @@ namespace Bssom.Serializer.Internal
                     variables[i] = Expression.Variable(typeof(uint), $"entry{i}");
                 }
 
-                //elementOffPosition = writer.WriteArray3Header(keys.Length);
-                ary.Add(Expression.Assign(variables[0], CommonExpressionMeta.Call_WriteArray3Header(keys.Length)));
+                //position = writer.WriteArray3Header(keys.Length);
+                ary.Add(Expression.Assign(variables[0], CommonExpressionMeta.Call_WriteArray3Header(maxLen)));
 
                 //0,3,5  --> maxLen = 6
                 FieldInfo memFormatters = serializationInfo.StoreMemberFormatterInstances();
                 int realIndex = 0;
                 for (int i = 0; i < maxLen; i++)
                 {
-                    //entry1 = writer.Position;
-                    ary.Add(Expression.Assign(variables[i + 1], CommonExpressionMeta.Field_WriterPos));
+                    //entry1 = (uint) (writer.Position - position);
+                    ary.Add(Expression.Assign(variables[i + 1], Expression.Convert(Expression.Subtract(CommonExpressionMeta.Field_WriterPos, variables[0]), typeof(uint))));
 
                     if (keys[realIndex].KeyIndex != i)
                     {
@@ -161,7 +163,7 @@ namespace Bssom.Serializer.Internal
                 }
 
                 //writer.WriteBackArray3Header()
-                ary.Add(CommonExpressionMeta.Call_WriteBackArray3Header(variables[0], variables[1], keys.Length));
+                ary.Add(CommonExpressionMeta.Call_WriteBackArray3Header(variables[0], variables[1], maxLen));
             }
 
             ary.Add(Expression.Label(returnTarget));
@@ -175,12 +177,12 @@ namespace Bssom.Serializer.Internal
 
         #region Deserialize
 
-        public static Expression<Deserialize<T>> BuildDeserializeLambda<T>(ObjectSerializationInfo serializationInfo, ParameterExpression instance)
+        public static Expression<Deserialize<T>> BuildDeserializeLambda<T>(ObjectSerializationInfo serializationInfo)
         {
-            return Expression.Lambda<Deserialize<T>>(BuildDeserializeCore(typeof(T), serializationInfo, instance));
+            return Expression.Lambda<Deserialize<T>>(BuildDeserializeCore(typeof(T), serializationInfo), CommonExpressionMeta.Par_Reader, CommonExpressionMeta.Par_DeserializeContext);
         }
 
-        private static Expression BuildDeserializeCore(Type t, ObjectSerializationInfo serializationInfo, ParameterExpression instance)
+        private static Expression BuildDeserializeCore(Type t, ObjectSerializationInfo serializationInfo)
         {
             List<Expression> ary = new List<Expression>();
             LabelTarget returnTarget = Expression.Label(t, "returnLable");
@@ -198,6 +200,7 @@ namespace Bssom.Serializer.Internal
                 Expression.Return(returnTarget, Expression.Default(t))));
 
             //T t = new T();
+            ParameterExpression instance = Expression.Parameter(t, "instance");
             if (serializationInfo.IsDefaultNoArgsCtor)
             {
                 ary.Add(Expression.Assign(instance, Expression.New(t)));
@@ -231,25 +234,33 @@ namespace Bssom.Serializer.Internal
             ary.Add(Expression.Assign(num, CommonExpressionMeta.Call_Reader_ReadVariableNumber));
             //i = 0;
             ary.Add(Expression.Assign(forVariable, Expression.Constant(0)));
-            //switch(i)
-            //  case 0: instance.Key0 = readValue();
-            //  case 3: instance.Key1 = readValue();
-            //  case 5: instance.Key2 = readValue();
-            //  default: skipObj();
+
             var members = serializationInfo.SerializeMemberInfos;
-            FieldInfo memFormatters = serializationInfo.StoreMemberFormatterInstances();
-            SwitchCase[] switchCases = new SwitchCase[members.Length];
-            for (int i = 0; i < members.Length; i++)
+            if (members.Length > 0)
             {
-                switchCases[i] = Expression.SwitchCase(SpecialCodeGenExpression.ReadValues(members[i], instance, memFormatters), Expression.Constant(members[i].KeyIndex));
+                //reader.Buffer.Seek(offsetSegment, Current)
+                ary.Add(CommonExpressionMeta.Call_Reader_BufferSeek(Expression.Convert(Expression.Multiply(num, Expression.Constant(BssomBinaryPrimitives.FixUInt32NumberSize)), typeof(Int64)), BssomSeekOrgin.Current));
+                //switch(i)
+                //  case 0: instance.Key0 = readValue();
+                //  case 3: instance.Key1 = readValue();
+                //  case 5: instance.Key2 = readValue();
+                //  default: skipObj();
+                FieldInfo memFormatters = serializationInfo.StoreMemberFormatterInstances();
+                SwitchCase[] switchCases = new SwitchCase[members.Length];
+                for (int i = 0; i < members.Length; i++)
+                {
+                    switchCases[i] = Expression.SwitchCase(SpecialCodeGenExpression.ReadValues(members[i], instance, memFormatters), Expression.Constant(members[i].KeyIndex));
+                }
+                Expression content = Expression.Switch(
+                    typeof(void),
+                    forVariable,
+                    CommonExpressionMeta.Call_Reader_SkipObject,
+                    null,
+                    switchCases
+                    );
+
+                ary.Add(For(forVariable, Expression.LessThan(forVariable, num), Expression.Assign(forVariable,Expression.Add(forVariable,Expression.Constant(1))), content));
             }
-            Expression content = Expression.Switch(forVariable,
-                CommonExpressionMeta.Call_Reader_SkipObject,
-                switchCases
-                );
-
-            ary.Add(For(forVariable, Expression.LessThan(forVariable, num), Expression.PostIncrementAssign(forVariable), content));
-
             //context.Depth--;
             ary.Add(CommonExpressionMeta.Call_DeserializeContext_Depth_DecrementAssign);
 
@@ -257,7 +268,7 @@ namespace Bssom.Serializer.Internal
 
             ary.Add(Expression.Label(returnTarget, instance));
 
-            return Expression.Block(new ParameterExpression[] { num, forVariable, }, ary);
+            return Expression.Block(new ParameterExpression[] { instance, num, forVariable, }, ary);
         }
 
         private static Expression For(ParameterExpression loopVar, Expression condition, Expression increment, Expression loopContent)
@@ -355,7 +366,7 @@ namespace Bssom.Serializer.Internal
 
             Expression<Serialize<T>> serializeExpression = Array3DynamicExpressionBuild.BuildSerializeLambda<T>(objectSerializationInfo, instance);
             Expression<Size<T>> sizeExpression = Array3DynamicExpressionBuild.BuildSizeLambda<T>(objectSerializationInfo, instance);
-            Expression<Deserialize<T>> deserializeExpression = Array3DynamicExpressionBuild.BuildDeserializeLambda<T>(objectSerializationInfo, instance);
+            Expression<Deserialize<T>> deserializeExpression = Array3DynamicExpressionBuild.BuildDeserializeLambda<T>(objectSerializationInfo);
 
             Serialize = serializeExpression.Compile();
             Size = sizeExpression.Compile();
