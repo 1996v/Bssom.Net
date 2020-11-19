@@ -9,6 +9,9 @@ using System.Runtime.CompilerServices;
 using Bssom.Serializer.Resolvers;
 using Bssom.Serializer.Binary;
 using Xunit;
+using System.Reflection.Emit;
+using System.Runtime.InteropServices;
+
 namespace Bssom.Serializer.Test
 {
     public class Array3CodeGenResolverTest
@@ -58,11 +61,118 @@ namespace Bssom.Serializer.Test
             VerifyHelper.ConvertArray3ObjectAndVerifyEntity(val);
         }
 
-        [Fact]
-        public void SpacingValues_FormatterIsCorrectly()
+        struct s
         {
+            public uint num2;
+            public uint num3;
+            public uint num4;
+            public uint num5;
+            public uint num6;
+            public uint num7;
+        }
+        [StructLayout(LayoutKind.Explicit, Size = 24)]
+        struct hh { }
+        public static void Serialize2(SpacingValuesClass value)
+        {
+            BssomSerializeContext context = new BssomSerializeContext(BssomSerializerOptions.IntKeyCompositedResolverOption, default);
+            using (ExpandableBufferWriter buffer = ExpandableBufferWriter.CreateGlobar())
+            {
+                BssomWriter writer = new BssomWriter(buffer);
+                if (value == null)
+                {
+                    writer.WriteNull();
+                    return;
+                }
+                long num = writer.WriteArray3Header(6);
+                uint num2 = 0, num3 = 0, num4 = 0, num5 = 0, num6 = 0, num7 = 0;
+
+                num2 = (uint)(writer.Position - num);
+                writer.Write(value.A);
+                num3 = (uint)(writer.Position - num);
+                writer.WriteNull();
+                num4 = (uint)(writer.Position - num);
+                writer.WriteNull();
+                num5 = (uint)(writer.Position - num);
+                writer.Write(value.B);
+                num6 = (uint)(writer.Position - num);
+                writer.WriteNull();
+                num7 = (uint)(writer.Position - num);
+                writer.Write(value.C);
+              
+                writer.WriteBackArray3Header(num, ref num2, 6);
+            }
+        }
+        public static unsafe void Serialize(SpacingValuesClass value)
+        {
+            BssomSerializeContext context = new BssomSerializeContext(BssomSerializerOptions.IntKeyCompositedResolverOption, default);
+            using (ExpandableBufferWriter buffer = ExpandableBufferWriter.CreateGlobar())
+            {
+                BssomWriter writer = new BssomWriter(buffer);
+                if (value == null)
+                {
+                    writer.WriteNull();
+                    return;
+                }
+                long num = writer.WriteArray3Header(6);
+                hh h = new hh();
+                Unsafe.Add(ref Unsafe.AsRef<uint>(Unsafe.AsPointer(ref h)), 0) = (uint)(writer.Position - num);
+                writer.Write(value.A);
+                Unsafe.Add(ref Unsafe.AsRef<uint>(Unsafe.AsPointer(ref h)), 1) = (uint)(writer.Position - num);
+                writer.WriteNull();
+                Unsafe.Add(ref Unsafe.AsRef<uint>(Unsafe.AsPointer(ref h)), 2) = (uint)(writer.Position - num);
+                writer.WriteNull();
+                Unsafe.Add(ref Unsafe.AsRef<uint>(Unsafe.AsPointer(ref h)), 3) = (uint)(writer.Position - num);
+                writer.Write(value.B);
+                Unsafe.Add(ref Unsafe.AsRef<uint>(Unsafe.AsPointer(ref h)), 4) = (uint)(writer.Position - num);
+                writer.WriteNull();
+                Unsafe.Add(ref Unsafe.AsRef<uint>(Unsafe.AsPointer(ref h)), 5) = (uint)(writer.Position - num);
+                writer.Write(value.C);
+               
+
+                writer.WriteBackArray3Header(num, ref Unsafe.AsRef<uint>(Unsafe.AsPointer(ref h)), 6);
+
+            }
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        public static void ss(uint n1, uint n2, uint n3, uint n41, uint n11, uint n31)
+        {
+            if (n1 != n2 && n2 == n3 && n3 == n41 && n3 == n11 && n3 == n31)
+            {
+                throw new Exception();
+            }
+        }
+
+        unsafe delegate byte* sss(int num);
+        private static sss qwe()
+        {
+
+            DynamicMethod dynamicMethod = new DynamicMethod("Add", typeof(byte*), new Type[] { typeof(int) }, true);
+            var iLGenerator = dynamicMethod.GetILGenerator();
+            dynamicMethod.DefineParameter(0, System.Reflection.ParameterAttributes.In, "i");//Ldarg_0
+
+
+            iLGenerator.Emit(OpCodes.Ldarg_0);
+            iLGenerator.Emit(OpCodes.Conv_U);
+            iLGenerator.Emit(OpCodes.Localloc);
+            //iLGenerator.Emit(OpCodes.Ret);
+            return (sss)dynamicMethod.CreateDelegate(typeof(sss));
+        }
+
+        [Fact]
+        public unsafe void SpacingValues_FormatterIsCorrectly()
+        {
+            //int po = 3;
+            //hh h = new hh();
+            //void* ww = Unsafe.AsPointer(ref po);
+            //void* ww2 = Unsafe.AsPointer(ref h);
+
+            //sss r1 = qwe();
+            //byte* pp = r1(4);
             var val = RandomHelper.RandomValue<SpacingValuesClass>();
+            //Serialize(val);
+
             var ary3 = VerifyHelper.ConvertArray3ObjectAndVerifyEntity(val);
+
 
             ary3.Count.Is(6);
             ary3.GetObject(0).Equals(val.A).IsTrue();

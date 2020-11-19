@@ -406,6 +406,22 @@ namespace Bssom.Serializer.Test
             bsfm.IndexOf("[H123123123]").IsExists.IsFalse();
         }
 
+        [Fact]
+        public void Array3_IndexOf_FunctionIsCorrectly()
+        {
+            var val = RandomHelper.RandomValue<_spacingValuesClass>();
+            var buf = BssomSerializer.Serialize(val, BssomSerializerOptions.IntKeyCompositedResolverOption);
+
+            var bsfm = new BssomFieldMarshaller(buf);
+
+            bsfm.ReadValue<Int32>(bsfm.IndexOf("$0")).Is(val.A);
+            bsfm.ReadValue<object>(bsfm.IndexOf("$1")).Is(BssomNull.Value);
+            bsfm.ReadValue<object>(bsfm.IndexOf("$2")).Is(BssomNull.Value);
+            bsfm.ReadValue<Int32>(bsfm.IndexOf("$3")).Is(val.B);
+            bsfm.ReadValue<object>(bsfm.IndexOf("$4")).Is(BssomNull.Value);
+            bsfm.ReadValue<Int32>(bsfm.IndexOf("$5")).Is(val.C);
+        }
+
         [Theory]
         [InlineData(typeof(List<byte>))]//Array1
         [InlineData(typeof(List<int>))]//Array1
@@ -849,5 +865,15 @@ namespace Bssom.Serializer.Test
     public class _class3
     {
 
+    }
+
+    public class _spacingValuesClass
+    {
+        [Key(0)]
+        public int A { get; set; }
+        [Key(3)]
+        public int B { get; set; }
+        [Key(5)]
+        public int C { get; set; }
     }
 }

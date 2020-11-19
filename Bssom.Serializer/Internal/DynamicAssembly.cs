@@ -28,6 +28,14 @@ namespace Bssom.Serializer.Internal
             moduleBuilder = assemblyBuilder.DefineDynamicModule(moduleName + ".dll");
         }
 
+        public TypeBuilder DefineType(string name, TypeAttributes attr, PackingSize packingSize, int typesize)
+        {
+            lock (gate)
+            {
+                return moduleBuilder.DefineType(name, attr, null, packingSize, typesize);
+            }
+        }
+
         public TypeBuilder DefineType(string name, TypeAttributes attr, Type parent, Type[] interfaces)
         {
             lock (gate)
@@ -109,6 +117,22 @@ namespace Bssom.Serializer.Internal
             VerifyTypeIsPublic(interfaceType);
 
             TypeBuilder typeBuilder = DefineType("Bssom.DynamicInterfaceImp." + SubtractFullNameRegex.Replace(interfaceType.FullName, string.Empty).Replace(".", "_") + Interlocked.Increment(ref nameSequence), TypeAttributes.Public | TypeAttributes.Sealed, null, new[] { interfaceType });
+            return typeBuilder;
+        }
+    }
+
+    internal class DynamicStackallocBlocksAssembly : DynamicAssembly
+    {
+        private int nameSequence = 0;
+        private static readonly Regex SubtractFullNameRegex = new Regex(@", Version=\d+.\d+.\d+.\d+, Culture=\w+, PublicKeyToken=\w+", RegexOptions.Compiled);
+
+        public DynamicStackallocBlocksAssembly(string moduleName) : base(moduleName)
+        {
+        }
+
+        public TypeBuilder DefineBlockType(int blockSize)
+        {
+            TypeBuilder typeBuilder = DefineType($"Bssom.DynamicStackallocBlocks.Block{blockSize}", TypeAttributes.Public | TypeAttributes.Sealed | TypeAttributes.ExplicitLayout, PackingSize.Unspecified, blockSize);
             return typeBuilder;
         }
     }

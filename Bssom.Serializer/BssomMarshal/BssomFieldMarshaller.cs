@@ -447,6 +447,34 @@ namespace Bssom.Serializer
                         }
                         throw BssomSerializationOperationException.ArrayTypeIndexOutOfBounds(index, count);
                     }
+                case BssomType.Array3:
+                    {
+                        int index = indexOfInputSource.CurrentArrayIndex();
+
+                        long basePosition = reader.Position - 1;
+                        reader.SkipVariableNumber();//len
+                        int count = reader.ReadVariableNumber();//count
+                        if (index < count)
+                        {
+                            var skipBytes = index * BssomBinaryPrimitives.FixUInt32NumberSize;
+                            if (skipBytes != 0)
+                                reader.BssomBuffer.Seek(skipBytes, BssomSeekOrgin.Current);
+                            int off = reader.ReadVariableNumber();
+
+                            if (!indexOfInputSource.MoveNext())
+                            {
+                                info.Offset = basePosition + off;
+                                info.IsArray1Type = false;
+                                return info;
+                            }
+                            else
+                            {
+                                reader.BssomBuffer.Seek(off, BssomSeekOrgin.Current);
+                                goto Next;
+                            }
+                        }
+                        throw BssomSerializationOperationException.ArrayTypeIndexOutOfBounds(index, count);
+                    }
                 case BssomType.NullCode:
                     throw BssomSerializationOperationException.BssomObjectIsNull();
                 default:
@@ -637,6 +665,34 @@ namespace Bssom.Serializer
                             }
                             else
                             {
+                                goto Next;
+                            }
+                        }
+                        throw BssomSerializationOperationException.ArrayTypeIndexOutOfBounds(index, count);
+                    }
+                case BssomType.Array3:
+                    {
+                        int index = stringInputDataSource.GetCurrentArrayIndex();
+
+                        long basePosition = reader.Position - 1;
+                        reader.SkipVariableNumber();//len
+                        int count = reader.ReadVariableNumber();//count
+                        if (index < count)
+                        {
+                            var skipBytes = index * BssomBinaryPrimitives.FixUInt32NumberSize;
+                            if (skipBytes != 0)
+                                reader.BssomBuffer.Seek(skipBytes, BssomSeekOrgin.Current);
+                            int off = reader.ReadVariableNumber();
+
+                            if (!stringInputDataSource.MoveNext())
+                            {
+                                info.Offset = basePosition + off;
+                                info.IsArray1Type = false;
+                                return info;
+                            }
+                            else
+                            {
+                                reader.BssomBuffer.Seek(off, BssomSeekOrgin.Current);
                                 goto Next;
                             }
                         }

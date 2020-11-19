@@ -160,6 +160,7 @@ namespace Bssom.Serializer
             return position;//return pos
         }
 
+
         internal void WriteBackArray3Header(long basePosition, ref uint refOffset1, int count)
         {
             long curPos = BufferWriter.Position;
@@ -172,8 +173,12 @@ namespace Bssom.Serializer
             //write Field:count
             refb = ref Unsafe.Add(ref refb, BssomBinaryPrimitives.WriteVariableNumber(ref refb, (uint)count));
 
+            var p0 = Unsafe.Add(ref refOffset1, 0);
+            var p1 = Unsafe.Add(ref refOffset1, 1);
+
             for (int i = 0; i < count; i++)
             {
+                var p = Unsafe.Add(ref refOffset1, i);
                 BssomBinaryPrimitives.WriteUInt32FixNumber(ref refb, Unsafe.Add(ref refOffset1, i));
                 refb = ref Unsafe.Add(ref refb, BssomBinaryPrimitives.FixUInt32NumberSize);
             }
