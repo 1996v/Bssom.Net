@@ -1,4 +1,5 @@
 ﻿using Bssom.Serializer;
+using Bssom.Serializer.Internal;
 using Bssom.Serializer.Resolvers;
 using Xunit;
 
@@ -29,6 +30,7 @@ namespace DynamicAssemblyDumper
         {
             Array3CodeGenResolverAllowPrivate.Instance.GetFormatter<_sub>();
             Array3CodeGenResolverAllowPrivate.Instance.Save();
+            StackallocBlockProvider.AssemblySave();
         }
     }
 }

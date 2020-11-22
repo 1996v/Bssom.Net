@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 
 namespace Bssom.Serializer.Internal
 {
-    internal static class StackallocBlockProvider
+    public static class StackallocBlockProvider
     {
         internal const string ModuleName = "Bssom.StackallocBlocks";
 
@@ -32,15 +32,23 @@ namespace Bssom.Serializer.Internal
                 return blockType;
             }
         }
+
+#if NETFRAMEWORK
+        public static AssemblyBuilder AssemblySave()
+        {
+            return DynamicAssembly.Save();
+        }
+#endif
     }
 
     internal static class StackallocBlockHelper
     {
         public readonly static MethodInfo _WriteUIntMethodInfo = typeof(StackallocBlockHelper).GetMethod(nameof(WriteUInt));
 
-        public static unsafe void WriteUInt(void* ptr, int uintIndex, uint uintValue)
+        public static unsafe void WriteUInt(IntPtr ptr, int uintIndex, uint uintValue)
         {
-            Unsafe.Add(ref Unsafe.AsRef<uint>(ptr), uintIndex) = uintValue;
+            var uPtr = (uint*)ptr.ToPointer();
+            *(uPtr + uintIndex) = uintValue;
         }
     }
 }

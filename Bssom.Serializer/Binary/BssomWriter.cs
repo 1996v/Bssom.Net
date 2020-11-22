@@ -161,11 +161,12 @@ namespace Bssom.Serializer
         }
 
 
-        internal void WriteBackArray3Header(long basePosition, ref uint refOffset1, int count)
+        internal unsafe void WriteBackArray3Header(long basePosition, IntPtr refOffset1, int count)
         {
+            uint* refOffPtr1 = (uint*)refOffset1.ToPointer();
             long curPos = BufferWriter.Position;
             BufferWriter.SeekWithOutVerify(basePosition + 1, BssomSeekOrgin.Begin);
-            ref byte refb = ref BufferWriter.GetRef((int)refOffset1 - 1);//lenPos
+            ref byte refb = ref BufferWriter.GetRef((int)(*refOffPtr1) - 1);//lenPos
             //writeback len
             BssomBinaryPrimitives.WriteUInt32FixNumber(ref refb, checked((uint)(curPos - basePosition - BssomBinaryPrimitives.BuildInTypeCodeSize)));
             refb = ref Unsafe.Add(ref refb, BssomBinaryPrimitives.FixUInt32NumberSize);
@@ -173,13 +174,9 @@ namespace Bssom.Serializer
             //write Field:count
             refb = ref Unsafe.Add(ref refb, BssomBinaryPrimitives.WriteVariableNumber(ref refb, (uint)count));
 
-            var p0 = Unsafe.Add(ref refOffset1, 0);
-            var p1 = Unsafe.Add(ref refOffset1, 1);
-
             for (int i = 0; i < count; i++)
             {
-                var p = Unsafe.Add(ref refOffset1, i);
-                BssomBinaryPrimitives.WriteUInt32FixNumber(ref refb, Unsafe.Add(ref refOffset1, i));
+                BssomBinaryPrimitives.WriteUInt32FixNumber(ref refb, *(refOffPtr1 + i));
                 refb = ref Unsafe.Add(ref refb, BssomBinaryPrimitives.FixUInt32NumberSize);
             }
 

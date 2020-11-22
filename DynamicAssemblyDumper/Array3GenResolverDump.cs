@@ -1,5 +1,8 @@
 ﻿using Bssom.Serializer;
+using Bssom.Serializer.Internal;
 using Bssom.Serializer.Resolvers;
+using System;
+using System.Runtime.InteropServices;
 using Xunit;
 
 namespace DynamicAssemblyDumper
@@ -46,6 +49,10 @@ namespace DynamicAssemblyDumper
             Array3CodeGenResolver.Instance.GetFormatter<_SpacingValuesClass>();
             Array3CodeGenResolver.Instance.GetFormatter<_NonField>();
             Array3CodeGenResolver.Instance.Save();
+            StackallocBlockProvider.AssemblySave();
         }
+
+     
     }
+ 
 }

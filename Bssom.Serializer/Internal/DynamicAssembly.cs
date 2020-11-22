@@ -3,6 +3,7 @@
 using System;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 
@@ -28,11 +29,11 @@ namespace Bssom.Serializer.Internal
             moduleBuilder = assemblyBuilder.DefineDynamicModule(moduleName + ".dll");
         }
 
-        public TypeBuilder DefineType(string name, TypeAttributes attr, PackingSize packingSize, int typesize)
+        public TypeBuilder DefineStructType(string name, TypeAttributes attr, PackingSize packingSize, int typesize)
         {
             lock (gate)
             {
-                return moduleBuilder.DefineType(name, attr, null, packingSize, typesize);
+                return moduleBuilder.DefineType(name, attr, typeof(ValueType), packingSize, typesize);
             }
         }
 
@@ -132,7 +133,7 @@ namespace Bssom.Serializer.Internal
 
         public TypeBuilder DefineBlockType(int blockSize)
         {
-            TypeBuilder typeBuilder = DefineType($"Bssom.DynamicStackallocBlocks.Block{blockSize}", TypeAttributes.Public | TypeAttributes.Sealed | TypeAttributes.ExplicitLayout, PackingSize.Unspecified, blockSize);
+            TypeBuilder typeBuilder = DefineStructType($"Bssom.DynamicStackallocBlocks.Block{blockSize}", TypeAttributes.Public | TypeAttributes.Sealed | TypeAttributes.ExplicitLayout | TypeAttributes.BeforeFieldInit, PackingSize.Unspecified, blockSize);
             return typeBuilder;
         }
     }

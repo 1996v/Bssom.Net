@@ -107,6 +107,11 @@ namespace Bssom.Serializer.Internal
             return Expression.Lambda<Serialize<T>>(BuildSerializeCore(typeof(T), serializationInfo, instance), CommonExpressionMeta.Par_Writer, CommonExpressionMeta.Par_SerializeContext, instance);
         }
 
+        public unsafe static IntPtr AsPointer<T>(ref T t)
+        {
+            return new IntPtr(Unsafe.AsPointer(ref t));
+        }
+
         private static Expression BuildSerializeCore(Type type, ObjectSerializationInfo serializationInfo, ParameterExpression instance)
         {
             List<Expression> ary = new List<Expression>();
@@ -132,57 +137,28 @@ namespace Bssom.Serializer.Internal
                 Type stackallocBlockType = StackallocBlockProvider.GetOrCreateType(maxLen * sizeof(uint));
                 //long position;
                 //Block{size} block;
-                variables = new ParameterExpression[1 + maxLen];
+                //IntPtr blockPtr;
+                variables = new ParameterExpression[3];
                 variables[0] = Expression.Variable(typeof(long), "elementOffPosition");
-                variables[1] = Expression.Variable(stackallocBlockType, "elementOffPosition");
-                //for (int i = 1; i < variables.Length; i++)
-                //{
-                //    variables[i] = Expression.Variable(typeof(uint), $"entry{i}");
-                //}
+                variables[1] = Expression.Variable(stackallocBlockType, "block");
+                variables[2] = Expression.Variable(typeof(IntPtr),"blockPtr");
 
                 //position = writer.WriteArray3Header(keys.Length);
                 ary.Add(Expression.Assign(variables[0], CommonExpressionMeta.Call_WriteArray3Header(maxLen)));
                 //block = new Block{size}();
                 ary.Add(Expression.Assign(variables[1], Expression.New(stackallocBlockType)));
-
-                var asRefMethodType = typeof(Unsafe).GetMethod(nameof(Unsafe.AsRef), new Type[] { typeof(void*) }).MakeGenericMethod(typeof(uint));
-                var asPointerMethodType = typeof(Unsafe).GetMethod(nameof(Unsafe.AsPointer)).MakeGenericMethod(stackallocBlockType);
-                var asPointerExpression = Expression.Call(null, asPointerMethodType, variables[1]);
-                var asRefExpression = Expression.Call(null, asRefMethodType, asPointerExpression);
+                //blockPtr = AsPointer(ref block);
+                ary.Add(Expression.Assign(variables[2], ExpressionTreeAux.AsPointerExpression(variables[1])));
 
                 //0,3,5  --> maxLen = 6
                 FieldInfo memFormatters = serializationInfo.StoreMemberFormatterInstances();
                 int realIndex = 0;
+
+
                 for (int i = 0; i < maxLen; i++)
                 {
-                    //entry1 = (uint) (writer.Position - position);
-                    //ary.Add(Expression.Assign(variables[i + 1], Expression.Convert(Expression.Subtract(CommonExpressionMeta.Field_WriterPos, variables[0]), typeof(uint))));
-
-                    //Unsafe.Add(ref Unsafe.AsRef<uint>(Unsafe.AsPointer(ref block)), i) = (uint) (writer.Position - position);
-                 
-
-                    MethodInfo asAddMethodType = null;
-                    foreach (var item in typeof(Unsafe).GetMethods())
-                    {
-                        if (item.Name == nameof(Unsafe.Add))
-                        {
-                            var paras = item.GetParameters();
-                            if (paras.Length == 2)
-                            {
-                                if (paras[0].ParameterType.IsByRef && paras[0].ParameterType.ContainsGenericParameters && paras[1].ParameterType == typeof(int))
-                                {
-                                    asAddMethodType = item;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    asAddMethodType = asAddMethodType.MakeGenericMethod(typeof(uint));
-
-                  
-                    //var addExpession = Expression.Call(null, asAddMethodType, asRefExpression, Expression.Constant(i));
-
-                    ary.Add(Expression.Call(null, StackallocBlockHelper._WriteUIntMethodInfo, asPointerExpression, Expression.Constant(i), Expression.Convert(Expression.Subtract(CommonExpressionMeta.Field_WriterPos, variables[0]), typeof(uint))));
+                    //StackallocBlockHelper.WriteUInt(blockPtr, 0, (uint)(writer.Position - position));
+                    ary.Add(Expression.Call(null, StackallocBlockHelper._WriteUIntMethodInfo, variables[2], Expression.Constant(i), Expression.Convert(Expression.Subtract(CommonExpressionMeta.Field_WriterPos, variables[0]), typeof(uint))));
 
                     if (keys[realIndex].KeyIndex != i)
                     {
@@ -197,9 +173,8 @@ namespace Bssom.Serializer.Internal
                     }
                 }
 
-                //ref Unsafe.AsRef<uint>(Unsafe.AsPointer(ref block))
-                //writer.WriteBackArray3Header()
-                ary.Add(CommonExpressionMeta.Call_WriteBackArray3Header(variables[0], asRefExpression, maxLen));
+                //writer.WriteBackArray3Header(blockPtr)
+                ary.Add(CommonExpressionMeta.Call_WriteBackArray3Header(variables[0], variables[2], maxLen));
             }
 
             ary.Add(Expression.Label(returnTarget));

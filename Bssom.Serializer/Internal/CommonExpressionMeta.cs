@@ -3,7 +3,7 @@ using Bssom.Serializer.BssMap;
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
-
+using System.Runtime.CompilerServices;
 
 namespace Bssom.Serializer.Internal
 {
@@ -365,5 +365,21 @@ namespace Bssom.Serializer.Internal
               );
         }
 
+    }
+
+    internal static class ExpressionTreeAux
+    {
+        public static readonly MethodInfo AsPointerMethodType = typeof(ExpressionTreeAux).GetMethod(nameof(ExpressionTreeAux.AsPointer));
+
+        public unsafe static IntPtr AsPointer<T>(ref T t)
+        {
+            return new IntPtr(Unsafe.AsPointer(ref t));
+        }
+
+        public static Expression AsPointerExpression(Expression instance)
+        {
+            var asPointerMethodType = typeof(ExpressionTreeAux).GetMethod(nameof(ExpressionTreeAux.AsPointer)).MakeGenericMethod(instance.Type);
+            return Expression.Call(null, asPointerMethodType, instance);
+        }
     }
 }

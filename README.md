@@ -43,6 +43,13 @@ Bssom.Net采取了[Bssom协议](https://github.com/1996v/Bssom)， 使序列化�
 	* [ObjectResolver](#objectresolver)
 	* [CompositedResolver](#compositedresolver)
 	* [CompositedResolverAllowPrivate](#compositedresolverallowprivate)
+	* [Array3CodeGenResolver](#array3codegenresolver)
+	* [Array3CodeGenResolverAllowPrivate](#array3codegenresolverallowprivate)
+	* [IntKeyCompositedResolver](#intkeycompositedresolver)
+	* [IntKeyCompositedResolverAllowPrivate](#intkeycompositedresolverallowprivate)
+	* [无合约的复合解析器](#无合约的复合解析器)
+	* [有合约的复合解析器](#有合约的复合解析器)
+	* [默认支持的类型](#默认支持的类型)
 * [5.扩展](#5扩展)
 * [6.高级API](#6高级API)
 	* [BssomSerializer](#bssomserializer)
@@ -62,6 +69,7 @@ Bssom.Net采取了[Bssom协议](https://github.com/1996v/Bssom)， 使序列化�
 	* [ReadValue](#readvalue)
 	* [ReadAllMapKeys](#readallmapkeys)
 	* [TryWriteValue](#trywritevalue)
+	* [Other](#other)
 	* [如何使用特性](#如何使用特性)
 	* [如何定义扩展](#如何定义扩展)
 * [12.局限性](#12局限性)
@@ -71,7 +79,7 @@ Bssom.Net采取了[Bssom协议](https://github.com/1996v/Bssom)， 使序列化�
 
 ## 1.性能
 ![](https://user-images.githubusercontent.com/30827194/97228887-808af380-1812-11eb-846d-821ed0a7d978.png)
-这里是与.NET平台下非常优秀的两款序列化程序([MessagePack](https://github.com/neuecc/MessagePack-CSharp) 和 [Protobuf-net](https://github.com/protobuf-net/protobuf-net))进行性能比较的基准。  
+这里直接与.NET平台下非常优秀的两款序列化程序([MessagePack](https://github.com/neuecc/MessagePack-CSharp) 和 [Protobuf-net](https://github.com/protobuf-net/protobuf-net))进行性能比较的基准。  
 
 柱状数据代表执行相同任务所花费的时间，  **越低代表性能越快**，  折线数据代表执行相同任务所产生的GC，  **越低代表在执行中所产生的垃圾越少** ， 从性能比较结果可以看出Bssom.Net的性能是非常优异的。
 
@@ -158,6 +166,12 @@ GetFormatter | 获取对象的格式化器实例
 <a name="objectresolver">ObjectResolver</a> | 提供了`Object`类型的解析器
 <a name="compositedresolver">CompositedResolver</a> | 复合解析器，组合了`Object`,`Primitive`,`Attribute`,`BssomValue`,`BuildIn`,`IDictionary`,`ICollection`,`MapCodeGen`解析器
 <a name="compositedresolverallowprivate">CompositedResolverAllowPrivate</a> | 复合解析器，组合了`Object`,`Primitive`,`Attribute`,`BssomValue`,`BuildIn`,`IDictionary`,`ICollection`,`MapCodeGenAllowPrivate`解析器
+<a name="array3codegenresolver">Array3CodeGenResolver</a> | 有合约的解析器，会对类型中的公开字段和属性进行BssomArray([Array3](https://github.com/1996v/Bssom#array3))类型编组，被序列化的类型中的元素必须标记[KeyAttribute](#keyattribute)，该解析器使用元素偏移量下标来代替StringKey以获得更快的字段编组性能
+<a name="array3codegenresolverallowprivate">Array3CodeGenResolverAllowPrivate</a> | 有合约的解析器，会对类型中的所有(公开的和非公开的)字段和属性进行BssomArray([Array3](https://github.com/1996v/Bssom#array3))类型编组，被序列化的类型中的元素必须标记[KeyAttribute](#keyattribute)，该解析器使用元素偏移量下标来代替StringKey以获得更快的字段编组性能
+<a name="intkeycompositedresolver">IntKeyCompositedResolver</a> | 有合约的复合解析器，提供更快的序列化性能，组合了`Object`,`Primitive`,`Attribute`,`BssomValue`,`BuildIn`,`IDictionary`,`ICollection`,`Array3CodeGenResolver`解析器
+<a name="intkeycompositedresolverallowprivate">IntKeyCompositedResolverAllowPrivate</a> | 有合约的复合解析器，提供更快的序列化性能，组合了`Object`,`Primitive`,`Attribute`,`BssomValue`,`BuildIn`,`IDictionary`,`ICollection`,`Array3CodeGenResolverAllowPrivate`解析器
+
+
 
 >  因为`IDictionaryResolver`和`ICollectionResolver`中定义的足够抽象的规则，Bssom.Net不需要为未来.NET可能出现的新的`IDictionary`或`IColloction`实现而编写特定的解析代码
   
@@ -165,6 +179,34 @@ GetFormatter | 获取对象的格式化器实例
 在Bssom.Net中可以通过`BssomSerializerOptions`中的`FormatterResolver`属性来注入序列化所需要的解析器，  默认为`CompositedResolver`,  `CompositedResolver`将会对类型依次从 `Object`,`Primitive`,`Attribute`,`BssomValue`,`BuildIn`,`IDictionary`,`ICollection`,`MapCodeGen`解析器中进行查找，  直到找到对应的解析器。
 
 >  如果你想序列化对象中的私有字段，请使用`CompositedResolverAllowPrivate`，   在`BssomSerializerOptions`中可以直接使用`DefaultAllowPrivate`默认配置集
+
+### 无合约的复合解析器
+Bssom.Net在序列化时默认使用无合约的复合解析器[CompositedResolver](#compositedresolver)，该解析器不要求你为需要被序列化的类型做出任何代码改变，可以开箱即用。
+```c#
+var obj = new MyClass();
+BssomSerializer.Serialize(obj);//使用默认的解析器CompositedResolver来对obj进行解析
+```
+### 有合约的复合解析器
+Bssom.Net提供了序列化性能更快的有合约的复合解析器[IntKeyCompositedResolver](#intkeycompositedresolver)，得益于Bssom的Array3格式，该解析器在反序列化时没有查找字符串类型Key的开销，它比`CompositedResolver`性能更快。使用`IntKeyCompositedResolver`需要显式的为类型中的元素标记[KeyAttribute](#keyattribute)。
+```c#
+public class MyClass
+{
+    [Key(0)]
+    public int Name;
+    [Key(1)]
+    public string Address;
+}
+BssomSerializer.Serialize(obj, option = BssomSerializerOptions.IntKeyCompositedResolverOption);//使用指定的IntKeyCompositedResolver来对obj进行解析
+```
+
+### 默认支持的类型
+这些类型可以默认进行序列化：
+* [Primitive](https://docs.microsoft.com/en-us/dotnet/api/system.type.isprimitive?view=net-5.0#remarks)(`byte`,`int`...),`string`,`DateTime`,`Guid`,`Decimal`...
+* `Nullable<>`,`Lazy<>`,`IGrouping<,>`,`ILookup<,>`,`AnonymousType`,`StringDictionary`,`StringBuilder`,`BitArray`,`NameValueCollection`,`Version`,`Uri`,`TimeSpan`,`DBNull`,`DataTable`...
+* `Dictionary<,>`,`IDictionary<,>`,`Hashtable`,`SortedDictionary<,>`,`ReadOnlyDictionary<,>`,`ConcurrentDictionary<,>`,`IReadOnlyDictionary<,>`,`SortedList<,>`...
+* `Array[]`,`Array[,]`,`Array[,,]`,`Array[,,,]`,`ArraySegment<>`,`IList`,`ArrayList`,`LinkedList<>`,`Queue<>`,`Stack<>`,`ISet<>`,`HashSet<>`,`ReadOnlyCollection<>`,`ICollection<>`,`IEnumerable<>`,`IReadOnlyCollection<>`，`IReadOnlyList<>`,`Collection<>`,`ConcurrentQueue<>`,`ConcurrentStack<>`,`ConcurrentBag<>`...
+* Any IDictionary : Bssom.Net总结了FCL中键值对类型的特征，抽象了对应的规则，任意具有对等(序列化和反序列化)的键值对特征(行为或构造器)的类型都可以以键值对的格式来进行解析 
+* Any ICollection : Bssom.Net总结了FCL中集合类型的特征，抽象了对应的规则，任意具有对等(序列化和反序列化)的集合特征(行为或构造器)的类型都可以以集合的格式来进行解析 
 
 ## 5.扩展
 
@@ -219,7 +261,7 @@ ReadValue | 通过指定的偏移量信息来读取整个元素
 ReadValueType | 通过指定的偏移量信息仅读取元素类型
 ReadValueTypeCode | 通过指定的偏移量信息仅读取元素类型的二进制码
 ReadValueSize | 通过指定的偏移量信息来获取元素在Bssom二进制中所存储的大小
-ReadArrayCountByMapType | 通过指定的偏移量信息来读取BssomArray的元素数量
+ReadArrayCountByArrayType | 通过指定的偏移量信息来读取BssomArray的元素数量
 ReadAllKeysByMapType | 通过指定的偏移量信息来读取BssomMap中的元数据(包含Key和值的偏移量)
 TryWrite | 通过指定的偏移量信息在Bssom二进制中重新对值进行写入，  若写入值的宽度大于被写入槽的宽度，则失败
 
@@ -286,14 +328,17 @@ Bssom.Net对`IDictionaryResolver`, `ICollectionResolver`, `MapCodeGenResolver`, 
 另外，对于`Size`方法，MapCodeGenResolver的处理也是非常快速的，因为它已经提前计算好了元数据的大小，并且内联了基元字段本身的固定大小.
 ![](https://user-images.githubusercontent.com/30827194/97229619-9e0c8d00-1813-11eb-8954-df92e96c7d18.png)
 
+在
+
 ## 9.特性
 
-Bssom.Net中目前拥有5个特性.
+Bssom.Net中目前拥有6个特性.
 -  **AliasAttribute** : 别名特性，用于修改Map格式对象字段在二进制中所保存的字段名称
 -  **BssomFormatterAttribute** : 自定义格式化特性，当字段属性或类型被该特性标记后，此类型的格式化将采用该特性所指定的格式化器
 -  **IgnoreKeyAttribute** : 忽略某一个Key，序列化时将忽略被标记的字段，适用于Map格式
 -  **OnlyIncludeAttribute** : 仅包含某一个Key，序列化时仅包含该Key，适用于Map格式，与`IgnoreKeyAttribute`作用相反，优先级更高
 -  **SerializationConstructorAttribute** : 为类型的反序列化指定一个构造函数
+-  **KeyAttribute** ：<a name="keyattribute"></a>使用`IntKeyCompositedResolver`为对象进行解析时，需要为对象中的元素标记Key下标
 
 ## 10.更多的可能性
 
@@ -402,7 +447,7 @@ public void MyTest()
 
 ## 11.如何使用
 
-Bssom.Net是无合约的，开箱即用，这里有些示例代码.
+Bssom.Net默认是无合约的，开箱即用，这里有些示例代码.
 
 ### Size
 [BssomSerializer.Size](#sizeapi) 方法用于 获取对象被序列化后的二进制数据大小，高性能的内部实现，几乎无开销
@@ -419,7 +464,7 @@ int size = BssomSerializer.Size(ref context, value);
 ```
 
 ### Serialize
-[BssomSerializer.Serialize](#serializeapi) 方法用于 将给定的值序列化为Bssom二进制，高性能的内部实现，以下是部分常用方法，每个方法都拥有CancellationToken的重载
+[BssomSerializer.Serialize](#serializeapi) 方法用于 将给定的值序列化为Bssom二进制，高性能的内部实现，以下是部分常用方法，每个方法都拥有CancellationToken的重载(CancellationToken可以中断正在进行的序列化操作)。
 ```c#
 //直接对对象进行序列化,将返回一个被序列化后的字节数组
 object value = RandomHelper.RandomValue<object>();
@@ -456,7 +501,7 @@ Stream stream = new MemoryStream();
 await BssomSerializer.SerializeAsync(stream, value, option: BssomSerializerOptions.Default);
 ```
 ### Deserialize
-[BssomSerializer.Deserialize](#deserializeapi) 方法用于 将给定的Bssom缓冲区反序列化为对象，高性能的内部实现，以下是部分常用方法，每个方法都拥有CancellationToken的重载
+[BssomSerializer.Deserialize](#deserializeapi) 方法用于 将给定的Bssom缓冲区反序列化为对象，高性能的内部实现，以下是部分常用方法，每个方法都拥有CancellationToken的重载(CancellationToken可以中断正在进行的序列化操作)。
 ```c#
 //从给定的字节数组中反序列化对象
 byte[] buf = remote();
@@ -540,6 +585,25 @@ var buf = BssomSerializer.Serialize(val);
 var bsfm = new BssomFieldMarshaller(buf);
 BssomFieldOffsetInfo fieldOffInfo = bsfm.IndexOf("[Data]$1")
 bsfm.ReadValue<int>(fieldOffInfo).Is(2);
+```
+```c#
+//通过内嵌的简单字段访问语言,以下标方式,获取一个对象
+public class MarkKeyClass
+{
+    [Key(0)]
+    public string Name;
+    [Key(1)]
+    public string Nature;
+}
+
+var val = new MarkKeyClass() {
+            Name = "bssom",
+            Nature = "Binary",
+        };
+var buf = BssomSerializer.Serialize(val, option = BssomSerializerOptions.IntKeyCompositedResolverOption);
+var bsfm = new BssomFieldMarshaller(buf);//buf is array3 format
+BssomFieldOffsetInfo fieldOffInfo = bsfm.IndexOf("$1")
+bsfm.ReadValue<string>(fieldOffInfo).Is("Binary");
 ```
 ```c#
 //通过自定义的字段访问形式,组合获取一个对象
@@ -640,6 +704,14 @@ bsfm.TryWrite(bsfm.IndexOf("$2[Name]"), "zz");
 var upVal = BssomSerializer.Deserialize<MyClass>(buf);
 ((MyClass)upVal[1]).Name.Is("zz");
 ```
+### Other
+以上代码示例主要演示了 **序列化**(`BssomSerializer.Serialize`) 和 **元素编组**(`BssomFieldMarshaller`) 两个方面，Bssom.Net还有如下方法未在演示中出现：
+- BssomFieldMarshaller.ReadValueSize : 从缓冲区中获取下一个对象的二进制大小
+- BssomFieldMarshaller.ReadValueType : 从缓冲区中获取下一个对象的[Bssom类型](https://github.com/1996v/Bssom#%E7%B1%BB%E5%9E%8B%E7%B3%BB%E7%BB%9F)
+- BssomFieldMarshaller.ReadValueTypeCode : 从缓冲区中获取下一个对象的[Bssom类型码](https://github.com/1996v/Bssom#%E6%A6%82%E8%BF%B0)
+- BssomFieldMarshaller.ReadArrayCountByArrayType ：从缓冲区中获取下一个数组对象的元素数量
+- BssomFieldMarshaller.IndexOfArray3Item : 获取Array3格式中指定下标元素的偏移量
+
 
 ### [如何使用特性](#9特性)
 ### [如何定义扩展](#5扩展)

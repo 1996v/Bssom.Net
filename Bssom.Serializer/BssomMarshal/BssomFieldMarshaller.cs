@@ -166,9 +166,9 @@ namespace Bssom.Serializer
         /// <param name="offsetInfo">用于读取元素的位置信息. Location information for reading</param>
         /// <returns>Array对象的元素数量. The number of elements of the Array object</returns>
         /// <exception cref="BssomSerializationOperationException">缓冲区<paramref name="offsetInfo"/>位置处的对象并不是Array类型,类型读取错误. The object at the position of the buffer <paramref name="offsetInfo"/> is not a Array type, and the type is read incorrectly</exception>
-        public int ReadArrayCountByMapType(BssomFieldOffsetInfo offsetInfo)
+        public int ReadArrayCountByArrayType(BssomFieldOffsetInfo offsetInfo)
         {
-            return ReadArrayCountByMapType(bufferWriter.GetBssomBuffer(), offsetInfo);
+            return ReadArrayCountByArrayType(bufferWriter.GetBssomBuffer(), offsetInfo);
         }
 
         /// <summary>
@@ -199,6 +199,27 @@ namespace Bssom.Serializer
         public bool TryWrite<T>(BssomFieldOffsetInfo offsetInfo, T value, BssomSerializerOptions option = null)
         {
             return TryWrite<T>(bufferWriter, offsetInfo, value, option);
+        }
+
+        /// <summary>
+        /// <para>获取Array3格式中指定下标元素的偏移量</para>
+        /// <para>Gets the offset of the index element specified in Array3 format</para>
+        /// </summary>
+        /// <param name="index">需要访问元素的下标. need to access the index of the element</param>
+        /// <returns>返回该字段在缓冲区中的位置结构,若没有找到该字段,则<see cref="BssomFieldOffsetInfo.Offset"/>值为-1. Return the position structure of the field in the buffer. If the field is not found, the value of <see cref="BssomFieldOffsetInfo.Offset"/> is -1</returns>
+        public BssomFieldOffsetInfo IndexOfArray3Item(int index, long indexOfStartPosition = -1)
+        {
+            if (indexOfStartPosition == -1)
+            {
+                indexOfStartPosition = basePos;
+            }
+
+            if (bufferWriter.Position != indexOfStartPosition)
+            {
+                bufferWriter.Seek(indexOfStartPosition, BssomSeekOrgin.Begin);
+            }
+
+            return IndexOfArray3Item(index, bufferWriter.GetBssomBuffer());
         }
 
         #region StaticMethod
@@ -235,7 +256,7 @@ namespace Bssom.Serializer
 
         public static int ReadArrayCount(byte[] buffer, int start, int end, BssomFieldOffsetInfo offsetInfo)
         {
-            return ReadArrayCountByMapType(new SimpleBufferWriter(buffer, start, end), offsetInfo);
+            return ReadArrayCountByArrayType(new SimpleBufferWriter(buffer, start, end), offsetInfo);
         }
 
         public static IEnumerable<KeyValuePair<TKey, BssomFieldOffsetInfo>> ReadAllKeysByMapType<TKey>(byte[] buffer, int start, int end, BssomFieldOffsetInfo offsetInfo, BssomSerializerOptions option = null)
@@ -461,15 +482,15 @@ namespace Bssom.Serializer
                                 reader.BssomBuffer.Seek(skipBytes, BssomSeekOrgin.Current);
                             int off = reader.ReadVariableNumber();
 
+                            info.Offset = basePosition + off;
                             if (!indexOfInputSource.MoveNext())
                             {
-                                info.Offset = basePosition + off;
                                 info.IsArray1Type = false;
                                 return info;
                             }
                             else
                             {
-                                reader.BssomBuffer.Seek(off, BssomSeekOrgin.Current);
+                                reader.BssomBuffer.Seek(info.Offset);
                                 goto Next;
                             }
                         }
@@ -684,15 +705,15 @@ namespace Bssom.Serializer
                                 reader.BssomBuffer.Seek(skipBytes, BssomSeekOrgin.Current);
                             int off = reader.ReadVariableNumber();
 
+                            info.Offset = basePosition + off;
                             if (!stringInputDataSource.MoveNext())
                             {
-                                info.Offset = basePosition + off;
                                 info.IsArray1Type = false;
                                 return info;
                             }
                             else
                             {
-                                reader.BssomBuffer.Seek(off, BssomSeekOrgin.Current);
+                                reader.BssomBuffer.Seek(info.Offset);
                                 goto Next;
                             }
                         }
@@ -703,6 +724,37 @@ namespace Bssom.Serializer
                 default:
                     throw BssomSerializationOperationException.BssomValueTypeReadFromStreamNotSupportIndexOf(reader.Position);
             }
+        }
+
+        public static BssomFieldOffsetInfo IndexOfArray3Item(int index, IBssomBuffer buffer)
+        {
+            if (buffer is null)
+            {
+                throw new ArgumentNullException(nameof(buffer));
+            }
+
+            if (index < 0)
+            {
+                throw new ArgumentException(nameof(index));
+            }
+
+            BssomReader reader = new BssomReader(buffer);
+
+            byte typeCode = reader.SkipBlankCharacterAndReadBssomType();
+            if (typeCode == BssomType.Array3)
+            {
+                long basePos = reader.Position - 1;
+                reader.SkipVariableNumber();
+                int count = reader.ReadVariableNumber();
+                if (index < count)
+                {
+                    reader.BssomBuffer.Seek(index * BssomBinaryPrimitives.FixUInt32NumberSize, BssomSeekOrgin.Current);
+                    int off = reader.ReadVariableNumber();
+                    return new BssomFieldOffsetInfo(basePos + off);
+                }
+                throw BssomSerializationOperationException.ArrayTypeIndexOutOfBounds(index, count);
+            }
+            throw BssomSerializationOperationException.UnexpectedCodeRead(typeCode, reader.Position);
         }
 
         public static T ReadValue<T>(IBssomBuffer buffer, BssomFieldOffsetInfo offsetInfo, BssomSerializerOptions option = null)
@@ -815,7 +867,7 @@ namespace Bssom.Serializer
             return typeCode;
         }
 
-        public static int ReadArrayCountByMapType(IBssomBuffer buffer, BssomFieldOffsetInfo offsetInfo)
+        public static int ReadArrayCountByArrayType(IBssomBuffer buffer, BssomFieldOffsetInfo offsetInfo)
         {
             if (buffer is null)
             {
@@ -841,11 +893,12 @@ namespace Bssom.Serializer
                 {
                     reader.BssomBuffer.Seek(BssomBinaryPrimitives.BuildInTypeCodeSize, BssomSeekOrgin.Current);
                 }
-
+                reader.SkipVariableNumber();
                 return reader.ReadVariableNumber();
             }
-            else if (typeCode == BssomType.Array2)
+            else if (typeCode == BssomType.Array2 || typeCode == BssomType.Array3)
             {
+                reader.SkipVariableNumber();
                 return reader.ReadVariableNumber();
             }
             throw BssomSerializationOperationException.UnexpectedCodeRead(typeCode, reader.Position);
