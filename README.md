@@ -1,4 +1,4 @@
-## A small, high performance, powerful serializer using bssom binary protocol [中文Readme](https://github.com/1996v/Bssom.Net/README.CN.md)
+## A small, high performance, powerful serializer using bssom binary protocol [中文Readme](https://github.com/1996v/Bssom.Net/blob/master/README.CN.md)
 [![Nuget](https://img.shields.io/nuget/v/BssomSerializer.svg)](https://www.nuget.org/packages/BssomSerializer/) 
 ### 
 **Bssom.Net** is a high-performance **structured binary serializer** implemented using the **BSSOM**  protocol, suitable for storage services and computing services, it has the following characteristics: **small, fast and functional**.
