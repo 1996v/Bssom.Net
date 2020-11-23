@@ -73,7 +73,7 @@ Bssom.Net uses the [Bssom](https://github.com/1996v/Bssom) protocol, makes seria
 	* [How to use Attribute](#how-to-use-attribute)
 	* [How to define an extension](#how-to-define-an-extension)
 * [12.Limitations](#12limitations)
-	* [BssomSerializationArgumentException.BssomMapKeySame](#bssomserializationargumentexception.bssommapkeysame)
+	* [BssomSerializationArgumentException.BssomMapKeySame](#bssomserializationargumentexceptionbssommapkeysame)
 * [13.How to contribute](#13how-to-contribute)
 * [14.Who is using](#14who-is-using)
 
@@ -203,8 +203,8 @@ These types can be serialized by default：
 * `Nullable<>`,`Lazy<>`,`IGrouping<,>`,`ILookup<,>`,`AnonymousType`,`StringDictionary`,`StringBuilder`,`BitArray`,`NameValueCollection`,`Version`,`Uri`,`TimeSpan`,`DBNull`,`DataTable`...
 * `Dictionary<,>`,`IDictionary<,>`,`Hashtable`,`SortedDictionary<,>`,`ReadOnlyDictionary<,>`,`ConcurrentDictionary<,>`,`IReadOnlyDictionary<,>`,`SortedList<,>`...
 * `Array[]`,`Array[,]`,`Array[,,]`,`Array[,,,]`,`ArraySegment<>`,`IList`,`ArrayList`,`LinkedList<>`,`Queue<>`,`Stack<>`,`ISet<>`,`HashSet<>`,`ReadOnlyCollection<>`,`ICollection<>`,`IEnumerable<>`,`IReadOnlyCollection<>`，`IReadOnlyList<>`,`Collection<>`,`ConcurrentQueue<>`,`ConcurrentStack<>`,`ConcurrentBag<>`...
-* Any IDictionary : Bssom.Net summarizes the characteristics of IDictionary types in FCL and abstracts the corresponding rules. Any type with equivalent (serialization and deserialization) IDictionary characteristics (behavior or constructor) can be key-valued(Map) Parse the format
-* Any ICollection : Bssom.Net summarizes the characteristics of ICollection types in FCL and abstracts the corresponding rules. Any type with equivalent (serialization and deserialization) ICollection characteristics (behavior or constructor) can be parsed in a collection format
+* **Any IDictionary** : Bssom.Net summarizes the characteristics of IDictionary types in FCL and abstracts the corresponding rules. Any type with equivalent (serialization and deserialization) IDictionary characteristics (behavior or constructor) can be key-valued(Map) Parse the format
+* **Any ICollection** : Bssom.Net summarizes the characteristics of ICollection types in FCL and abstracts the corresponding rules. Any type with equivalent (serialization and deserialization) ICollection characteristics (behavior or constructor) can be parsed in a collection format
 
 ## 5.Extensions
 
@@ -710,7 +710,7 @@ The above code sample mainly demonstrates the two aspects of **Serialization**(`
 - BssomFieldMarshaller.IndexOfArray3Item : Get the offset of the specified Index element in Array3 format
 
 
-### [How to contribute](#9attributes)
+### [How to use Attribute](#9attributes)
 ### [How to define an extension](#5extensions)
 
 ## 12.Limitations

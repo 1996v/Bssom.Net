@@ -73,7 +73,7 @@ Bssom.Net采取了[Bssom协议](https://github.com/1996v/Bssom)， 使序列化�
 	* [如何使用特性](#如何使用特性)
 	* [如何定义扩展](#如何定义扩展)
 * [12.局限性](#12局限性)
-	* [BssomSerializationArgumentException.BssomMapKeySame](#bssomserializationargumentexception.bssommapkeysame)
+	* [BssomSerializationArgumentException.BssomMapKeySame](#bssomserializationargumentexceptionbssommapkeysame)
 * [13.如何参与项目贡献](#13如何参与项目贡献)
 * [14.谁在使用](#14谁在使用)
 
@@ -205,8 +205,8 @@ BssomSerializer.Serialize(obj, option = BssomSerializerOptions.IntKeyCompositedR
 * `Nullable<>`,`Lazy<>`,`IGrouping<,>`,`ILookup<,>`,`AnonymousType`,`StringDictionary`,`StringBuilder`,`BitArray`,`NameValueCollection`,`Version`,`Uri`,`TimeSpan`,`DBNull`,`DataTable`...
 * `Dictionary<,>`,`IDictionary<,>`,`Hashtable`,`SortedDictionary<,>`,`ReadOnlyDictionary<,>`,`ConcurrentDictionary<,>`,`IReadOnlyDictionary<,>`,`SortedList<,>`...
 * `Array[]`,`Array[,]`,`Array[,,]`,`Array[,,,]`,`ArraySegment<>`,`IList`,`ArrayList`,`LinkedList<>`,`Queue<>`,`Stack<>`,`ISet<>`,`HashSet<>`,`ReadOnlyCollection<>`,`ICollection<>`,`IEnumerable<>`,`IReadOnlyCollection<>`，`IReadOnlyList<>`,`Collection<>`,`ConcurrentQueue<>`,`ConcurrentStack<>`,`ConcurrentBag<>`...
-* Any IDictionary : Bssom.Net总结了FCL中键值对类型的特征，抽象了对应的规则，任意具有对等(序列化和反序列化)的键值对特征(行为或构造器)的类型都可以以键值对的格式来进行解析 
-* Any ICollection : Bssom.Net总结了FCL中集合类型的特征，抽象了对应的规则，任意具有对等(序列化和反序列化)的集合特征(行为或构造器)的类型都可以以集合的格式来进行解析 
+* **Any IDictionary** : Bssom.Net总结了FCL中键值对类型的特征，抽象了对应的规则，任意具有对等(序列化和反序列化)的键值对特征(行为或构造器)的类型都可以以键值对的格式来进行解析 
+* **Any ICollection** : Bssom.Net总结了FCL中集合类型的特征，抽象了对应的规则，任意具有对等(序列化和反序列化)的集合特征(行为或构造器)的类型都可以以集合的格式来进行解析 
 
 ## 5.扩展
 
