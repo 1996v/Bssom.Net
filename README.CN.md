@@ -707,8 +707,8 @@ var upVal = BssomSerializer.Deserialize<MyClass>(buf);
 ### Other
 以上代码示例主要演示了 **序列化**(`BssomSerializer.Serialize`) 和 **元素编组**(`BssomFieldMarshaller`) 两个方面，Bssom.Net还有如下方法未在演示中出现：
 - BssomFieldMarshaller.ReadValueSize : 从缓冲区中获取下一个对象的二进制大小
-- BssomFieldMarshaller.ReadValueType : 从缓冲区中获取下一个对象的[Bssom类型](https://github.com/1996v/Bssom#%E7%B1%BB%E5%9E%8B%E7%B3%BB%E7%BB%9F)
-- BssomFieldMarshaller.ReadValueTypeCode : 从缓冲区中获取下一个对象的[Bssom类型码](https://github.com/1996v/Bssom#%E6%A6%82%E8%BF%B0)
+- BssomFieldMarshaller.ReadValueType : 从缓冲区中获取下一个对象的[Bssom类型](https://github.com/1996v/Bssom#type-system)
+- BssomFieldMarshaller.ReadValueTypeCode : 从缓冲区中获取下一个对象的[Bssom类型码](https://github.com/1996v/Bssom#overview)
 - BssomFieldMarshaller.ReadArrayCountByArrayType ：从缓冲区中获取下一个数组对象的元素数量
 - BssomFieldMarshaller.IndexOfArray3Item : 获取Array3格式中指定下标元素的偏移量
 

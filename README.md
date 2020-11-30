@@ -704,8 +704,8 @@ var upVal = BssomSerializer.Deserialize<MyClass>(buf);
 ### Other
 The above code sample mainly demonstrates the two aspects of **Serialization**(`BssomSerializer.Serialize`) and element **Marshall**(`BssomFieldMarshaller`)，Bssom.Net also has the following methods that did not appear in the demo：
 - BssomFieldMarshaller.ReadValueSize : Get the binary size of the next object from the buffer
-- BssomFieldMarshaller.ReadValueType : Get the [Bssom type](https://github.com/1996v/Bssom#%E7%B1%BB%E5%9E%8B%E7%B3%BB%E7%BB%9F) of the next object from the buffer
-- BssomFieldMarshaller.ReadValueTypeCode : Get the [Bssom type code](https://github.com/1996v/Bssom#%E6%A6%82%E8%BF%B0) of the next object from the buffer
+- BssomFieldMarshaller.ReadValueType : Get the [Bssom type](https://github.com/1996v/Bssom#type-system) of the next object from the buffer
+- BssomFieldMarshaller.ReadValueTypeCode : Get the [Bssom type code](https://github.com/1996v/Bssom#overview) of the next object from the buffer
 - BssomFieldMarshaller.ReadArrayCountByArrayType ：Get the number of elements of the next array object from the buffer
 - BssomFieldMarshaller.IndexOfArray3Item : Get the offset of the specified Index element in Array3 format
 
