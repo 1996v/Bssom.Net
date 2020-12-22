@@ -18,6 +18,6 @@ namespace Bssom.Serializer.BssMap
         }
 
         public int MapHeadSize => (int)(MapRouteDataStartPos - ReadPosition);
-        public long DataEndPosition => ReadPosition + BssMapObjMarshal.DefaultMapLengthFieldSize + MapHead.DataLength - 1;
+        public long DataEndPosition => ReadPosition + BssMapObjMarshal.DefaultMapLengthFieldSize + MapHead.DataLength;
     }
 }

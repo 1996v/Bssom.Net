@@ -396,6 +396,22 @@ namespace Bssom.Serializer.Test
 
         }
 
+        [Fact]
+        public void ModelCaseTest_ProfilingModel()
+        {
+            List<ProfilingModel> list = new List<ProfilingModel>();
+            for (int i = 1; i < 3; i++)
+            {
+                list.Add(new ProfilingModel() { Temperature = i });
+            }
+
+            var bytes = BssomSerializer.Serialize(list);
+            var proModelList = BssomSerializer.Deserialize<List<ProfilingModel>>(bytes);
+            proModelList[0].Temperature.Is(1);
+            proModelList[1].Temperature.Is(2);
+        }
+    }
+
         public class _base
         {
 
@@ -616,5 +632,12 @@ namespace Bssom.Serializer.Test
         public int eField_1;
         public long eField_2;
 
+    }
+
+    public class ProfilingModel
+    {
+        public double Temperature { get; set; }
+
+        public object MarPhyQParameter { get; set; }
     }
 }
