@@ -15,6 +15,11 @@ namespace Xunit
 {
     internal static class VerifyHelper
     {
+        public static void IsSafeAction(Action testCode)
+        {
+            testCode();
+        }
+
         public static void Throws<T>(Action testCode, Func<T, bool> ex) where T : Exception
         {
             try

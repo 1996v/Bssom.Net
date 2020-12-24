@@ -9,6 +9,7 @@ using Xunit;
 
 namespace Bssom.Serializer.Test
 {
+
     public class ICollectionResolverTest_Array1_Array
     {
         [Fact]
@@ -189,7 +190,7 @@ namespace Bssom.Serializer.Test
         public void DateTimeArrayFormatter_FormatterTypeIsArray1TypeAndFormatterIsCorrectly()
         {
             var val = RandomHelper.RandomValue<DateTime[]>();
-            VerifyHelper.VerifyEntityWithArray1(val,BssomSerializerOptions.Default.WithIsUseStandardDateTime(true));
+            VerifyHelper.VerifyEntityWithArray1(val, BssomSerializerOptions.Default.WithIsUseStandardDateTime(true));
         }
 
         [Fact]

@@ -225,9 +225,12 @@ namespace Bssom.Serializer
             WriteArray1BuildInType(BssomType.UInt8Code);
             WriteVariableNumber(BssomBinaryPrimitives.Array1TypeSizeWithOutTypeHeadAndLength(BssomBinaryPrimitives.UInt8Size, value.Length));//len
             WriteVariableNumber(value.Length);
-            ref byte refb = ref BufferWriter.GetRef(value.Length);
-            Unsafe.CopyBlock(ref refb, ref value[0], (uint)value.Length);
-            BufferWriter.Advance(value.Length);
+            if (value.Length > 0)
+            {
+                ref byte refb = ref BufferWriter.GetRef(value.Length);
+                Unsafe.CopyBlock(ref refb, ref value[0], (uint)value.Length);
+                BufferWriter.Advance(value.Length);
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -236,9 +239,12 @@ namespace Bssom.Serializer
             WriteArray1BuildInType(BssomType.UInt8Code);
             WriteVariableNumber(BssomBinaryPrimitives.Array1TypeSizeWithOutTypeHeadAndLength(BssomBinaryPrimitives.UInt8Size, value.Count));//len
             WriteVariableNumber(value.Count);
-            ref byte refb = ref BufferWriter.GetRef(value.Count);
-            Unsafe.CopyBlock(ref refb, ref value.Array[value.Offset], (uint)value.Count);
-            BufferWriter.Advance(value.Count);
+            if (value.Count > 0)
+            {
+                ref byte refb = ref BufferWriter.GetRef(value.Count);
+                Unsafe.CopyBlock(ref refb, ref value.Array[value.Offset], (uint)value.Count);
+                BufferWriter.Advance(value.Count);
+            }
         }
 
         private void WriteDateTimeCore(DateTime value, bool isUseStandardDateTime, bool isWriteTypeCode)
@@ -298,8 +304,11 @@ namespace Bssom.Serializer
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void WriteRaw(byte[] value, int start, int len)
         {
-            Unsafe.CopyBlockUnaligned(ref BufferWriter.GetRef(len), ref value[start], (uint)len);
-            BufferWriter.Advance(len);
+            if (value.Length > 0)
+            {
+                Unsafe.CopyBlockUnaligned(ref BufferWriter.GetRef(len), ref value[start], (uint)len);
+                BufferWriter.Advance(len);
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

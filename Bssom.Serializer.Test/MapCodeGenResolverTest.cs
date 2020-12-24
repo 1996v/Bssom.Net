@@ -412,171 +412,171 @@ namespace Bssom.Serializer.Test
         }
     }
 
-        public class _base
+    public class _base
+    {
+
+        protected int A { get; set; }
+
+        public int B;
+
+    }
+    public class _sub : _base
+    {
+
+        private int C;
+
+        internal int D;
+
+        public int E;
+
+        public _sub Init()
         {
-
-            protected int A { get; set; }
-
-            public int B;
-
+            A = RandomHelper.RandomValue<int>();
+            B = RandomHelper.RandomValue<int>();
+            C = RandomHelper.RandomValue<int>();
+            D = RandomHelper.RandomValue<int>();
+            E = RandomHelper.RandomValue<int>();
+            return this;
         }
-        public class _sub : _base
+
+        public override bool Equals(object obj)
         {
-
-            private int C;
-
-            internal int D;
-
-            public int E;
-
-            public _sub Init()
+            if (obj is _sub p)
             {
-                A = RandomHelper.RandomValue<int>();
-                B = RandomHelper.RandomValue<int>();
-                C = RandomHelper.RandomValue<int>();
-                D = RandomHelper.RandomValue<int>();
-                E = RandomHelper.RandomValue<int>();
-                return this;
+                return A == p.A && B == p.B && C == p.C && D == p.D && E == p.E;
             }
 
-            public override bool Equals(object obj)
-            {
-                if (obj is _sub p)
-                {
-                    return A == p.A && B == p.B && C == p.C && D == p.D && E == p.E;
-                }
-
-                return false;
-            }
-        }
-
-        public class _PrivateMembersClass
-        {
-            private int A1;
-            private int B1 { get; set; }
-            public int C1 { get; set; }
-
-            internal int D1;
-
-            protected int E1;
-
-            public static _PrivateMembersClass Create(int a1, int b1, int c1, int d1, int e1)
-            {
-                return new _PrivateMembersClass()
-                {
-                    A1 = a1,
-                    B1 = b1,
-                    C1 = c1,
-                    D1 = d1,
-                    E1 = e1
-                };
-            }
-
-            public _PrivateMembersClass Init()
-            {
-                A1 = RandomHelper.RandomValue<int>();
-                B1 = RandomHelper.RandomValue<int>();
-                C1 = RandomHelper.RandomValue<int>();
-                D1 = RandomHelper.RandomValue<int>();
-                E1 = RandomHelper.RandomValue<int>();
-                return this;
-            }
-
-            public override bool Equals(object obj)
-            {
-                if (obj is _PrivateMembersClass p)
-                {
-                    return A1 == p.A1 && B1 == p.B1 && C1 == p.C1 && D1 == p.D1 && E1 == p.E1;
-                }
-
-                return false;
-            }
-
-
-        }
-
-        public class _Class_1
-        {
-            public int A1;
-            public long B1;
-            public short C1;
-            public byte D1;
-            public string _1234567A { get; set; }
-            public Guid _2234567B { get; set; }
-            public DateTime _3234567C { get; set; }
-        }
-
-        public class _Class_2<T1, T2>
-        {
-            public T1 A1;
-            public T2 B1;
-            public short C1;
-            public byte D1;
-            public string _1234567A { get; set; }
-            public Guid _2234567B { get; set; }
-            public DateTime _3234567C { get; set; }
-            public List<string> _3234567C1 { get; set; }
-        }
-
-        public class _Class_3
-        {
-        }
-
-        public class _Class_4
-        {
-            public short C1;
-            public byte D1;
-        }
-
-        public class _Class_5
-        {
-            public short C1sdfsdfsf;
-            public byte D1fffsdfsd;
-            public byte D2;
-            public byte D3;
-        }
-
-        public class _PrivateSet
-        {
-            public long A { get; private set; }
-            public int B { get; set; }
-            public bool C { get; internal set; }
-
-            public void Assgin(long a, int b, bool c)
-            {
-                A = a;
-                B = b;
-                C = c;
-            }
-        }
-
-
-        public struct _Struct_2<T1, T2>
-        {
-            public T1 A1;
-            public T2 B1;
-            public short C1;
-            public byte D1;
-            public string _1234567A { get; set; }
-            public Guid _2234567B { get; set; }
-            public DateTime _3234567C { get; set; }
-            public List<string> _3234567C1 { get; set; }
-        }
-
-        public class _NestClass0
-        {
-            public string A1;
-            public Dictionary<int, int> B1;
-            public string C1;
-        }
-
-        public class _NestClass11
-        {
-            public int A1;
-            public _Struct_1 B1;
-            public string C1;
+            return false;
         }
     }
+
+    public class _PrivateMembersClass
+    {
+        private int A1;
+        private int B1 { get; set; }
+        public int C1 { get; set; }
+
+        internal int D1;
+
+        protected int E1;
+
+        public static _PrivateMembersClass Create(int a1, int b1, int c1, int d1, int e1)
+        {
+            return new _PrivateMembersClass()
+            {
+                A1 = a1,
+                B1 = b1,
+                C1 = c1,
+                D1 = d1,
+                E1 = e1
+            };
+        }
+
+        public _PrivateMembersClass Init()
+        {
+            A1 = RandomHelper.RandomValue<int>();
+            B1 = RandomHelper.RandomValue<int>();
+            C1 = RandomHelper.RandomValue<int>();
+            D1 = RandomHelper.RandomValue<int>();
+            E1 = RandomHelper.RandomValue<int>();
+            return this;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is _PrivateMembersClass p)
+            {
+                return A1 == p.A1 && B1 == p.B1 && C1 == p.C1 && D1 == p.D1 && E1 == p.E1;
+            }
+
+            return false;
+        }
+
+
+    }
+
+    public class _Class_1
+    {
+        public int A1;
+        public long B1;
+        public short C1;
+        public byte D1;
+        public string _1234567A { get; set; }
+        public Guid _2234567B { get; set; }
+        public DateTime _3234567C { get; set; }
+    }
+
+    public class _Class_2<T1, T2>
+    {
+        public T1 A1;
+        public T2 B1;
+        public short C1;
+        public byte D1;
+        public string _1234567A { get; set; }
+        public Guid _2234567B { get; set; }
+        public DateTime _3234567C { get; set; }
+        public List<string> _3234567C1 { get; set; }
+    }
+
+    public class _Class_3
+    {
+    }
+
+    public class _Class_4
+    {
+        public short C1;
+        public byte D1;
+    }
+
+    public class _Class_5
+    {
+        public short C1sdfsdfsf;
+        public byte D1fffsdfsd;
+        public byte D2;
+        public byte D3;
+    }
+
+    public class _PrivateSet
+    {
+        public long A { get; private set; }
+        public int B { get; set; }
+        public bool C { get; internal set; }
+
+        public void Assgin(long a, int b, bool c)
+        {
+            A = a;
+            B = b;
+            C = c;
+        }
+    }
+
+
+    public struct _Struct_2<T1, T2>
+    {
+        public T1 A1;
+        public T2 B1;
+        public short C1;
+        public byte D1;
+        public string _1234567A { get; set; }
+        public Guid _2234567B { get; set; }
+        public DateTime _3234567C { get; set; }
+        public List<string> _3234567C1 { get; set; }
+    }
+
+    public class _NestClass0
+    {
+        public string A1;
+        public Dictionary<int, int> B1;
+        public string C1;
+    }
+
+    public class _NestClass11
+    {
+        public int A1;
+        public _Struct_1 B1;
+        public string C1;
+    }
+
     public struct _Struct_1
     {
         public int A1;
@@ -641,3 +641,4 @@ namespace Bssom.Serializer.Test
         public object MarPhyQParameter { get; set; }
     }
 }
+
