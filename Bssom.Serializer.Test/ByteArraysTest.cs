@@ -6,10 +6,10 @@ namespace Bssom.Serializer.Test
     public class ByteArraysTest
     {
         [Fact]
-        public void ByteArrayLengthIsZero_SerializeIsCorrectly()
+        public void ByteArrayLengthIsZero_FormatterIsCorrectly()
         {
             var val = new byte[0];
-            VerifyHelper.IsSafeAction(() => BssomSerializer.Serialize(val));
+            VerifyHelper.IsSafeAction(() => BssomSerializer.Deserialize<byte[]>(BssomSerializer.Serialize(val)));
         }
 
         [Fact]
@@ -20,10 +20,10 @@ namespace Bssom.Serializer.Test
         }
 
         [Fact]
-        public void BytesSegmentLengthIsZero_SerializeIsCorrectly()
+        public void BytesSegmentLengthIsZero_FormatterIsCorrectly()
         {
             var val = new ArraySegment<byte>(new byte[0]);
-            VerifyHelper.IsSafeAction(() => BssomSerializer.Serialize(val));
+            VerifyHelper.IsSafeAction(() => BssomSerializer.Deserialize<ArraySegment<byte>>(BssomSerializer.Serialize(val)));
         }
     }
 }
