@@ -546,9 +546,12 @@ namespace Bssom.Serializer
 
             SkipVariableNumber();
             byte[] val = new byte[ReadVariableNumber()];
-            ref byte refb = ref BssomBuffer.ReadRef(val.Length);
-            Unsafe.CopyBlock(ref val[0], ref refb, (uint)val.Length);
-            BssomBuffer.SeekWithOutVerify(val.Length, BssomSeekOrgin.Current);
+            if (val.Length > 0)
+            {
+                ref byte refb = ref BssomBuffer.ReadRef(val.Length);
+                Unsafe.CopyBlock(ref val[0], ref refb, (uint)val.Length);
+                BssomBuffer.SeekWithOutVerify(val.Length, BssomSeekOrgin.Current);
+            }
             return val;
         }
     }
